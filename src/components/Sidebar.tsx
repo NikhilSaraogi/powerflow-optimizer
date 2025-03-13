@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { HomeIcon, LineChartIcon, Gauge, MessageSquareText, Settings } from 'lucide-react';
+import { HomeIcon, LineChartIcon, Gauge, MessageSquareText, Settings, FileText } from 'lucide-react';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -45,6 +45,19 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
                 <LineChartIcon className="h-5 w-5" />
                 <span className={`ml-3 whitespace-nowrap overflow-hidden transition-opacity ${isOpen ? 'opacity-100' : 'opacity-0'}`}>
                   Analytics
+                </span>
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to="/reports"
+                className={({ isActive }) => 
+                  `flex items-center p-3 rounded-lg transition-all hover:bg-adani-blue/60 ${isActive ? 'bg-adani-blue' : ''}`
+                }
+              >
+                <FileText className="h-5 w-5" />
+                <span className={`ml-3 whitespace-nowrap overflow-hidden transition-opacity ${isOpen ? 'opacity-100' : 'opacity-0'}`}>
+                  Reports
                 </span>
               </NavLink>
             </li>

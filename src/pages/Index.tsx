@@ -83,24 +83,6 @@ const Index = () => {
           
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <NotificationPanel notifications={dashboardData.notificationData} />
-            
-            {/* Additional information/instructions panel */}
-            <div className="bg-white rounded-lg shadow-md p-4 border border-gray-100 animate-fade-in h-fit">
-              <h3 className="text-lg font-semibold text-adani-navy mb-4">HP Heater Optimization Guide</h3>
-              <p className="text-gray-600 mb-3">
-                This dashboard provides real-time monitoring of HP Heaters with recommendations and alerts:
-              </p>
-              <ul className="list-disc list-inside text-gray-600 space-y-2 mb-3">
-                <li>Monitor key parameters like Heat Load, TTD, DCA, and TR in the heater cards above</li>
-                <li>Check recommendations for optimal heater level settings</li>
-                <li>Review alerts and root cause analysis for potential issues</li>
-                <li>Visit the Analytics page for detailed trend analysis</li>
-              </ul>
-              <p className="text-gray-600">
-                For a detailed view of parameter trends and historical data, please navigate to the Analytics page
-                using the sidebar menu.
-              </p>
-            </div>
           </div>
         </main>
       </div>
