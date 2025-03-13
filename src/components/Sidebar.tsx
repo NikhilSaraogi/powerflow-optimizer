@@ -1,80 +1,84 @@
 
 import React from 'react';
-import { Home, LineChart, MessageSquare, Settings, Thermometer, HelpCircle, ChevronLeft, ChevronRight } from 'lucide-react';
+import { NavLink } from 'react-router-dom';
+import { HomeIcon, LineChartIcon, Gauge, MessageSquareText, Settings } from 'lucide-react';
 
 interface SidebarProps {
   isOpen: boolean;
   toggle: () => void;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggle }) => {
+const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
   return (
-    <aside 
-      className={`fixed top-0 left-0 h-full bg-white shadow-lg border-r border-gray-200 transition-all duration-300 z-20 
-        ${isOpen ? 'w-64' : 'w-16'}`}
+    <div 
+      className={`fixed h-full bg-adani-navy text-white transition-all duration-300 ease-in-out z-10 ${isOpen ? 'w-64' : 'w-16'}`}
     >
       <div className="flex flex-col h-full">
-        <div className="p-4 flex justify-end">
-          <button 
-            onClick={toggle} 
-            className="p-1 rounded-full hover:bg-gray-100 transition-colors"
-            aria-label={isOpen ? "Close sidebar" : "Open sidebar"}
-          >
-            {isOpen ? (
-              <ChevronLeft className="h-5 w-5 text-adani-navy" />
-            ) : (
-              <ChevronRight className="h-5 w-5 text-adani-navy" />
-            )}
-          </button>
+        <div className="p-4 border-b border-adani-navy-light">
+          <h2 className={`text-xl font-bold whitespace-nowrap overflow-hidden ${isOpen ? 'opacity-100' : 'opacity-0'}`}>
+            Heater Optimization
+          </h2>
         </div>
         
-        <nav className="flex-1 overflow-y-auto py-4">
-          <ul className="space-y-2 px-2">
+        <nav className="flex-1 py-4 px-2">
+          <ul className="space-y-2">
             <li>
-              <a href="#" className="sidebar-item active">
-                <Home className="h-5 w-5" />
-                {isOpen && <span>Dashboard</span>}
-              </a>
+              <NavLink
+                to="/"
+                className={({ isActive }) => 
+                  `flex items-center p-3 rounded-lg transition-all hover:bg-adani-blue/60 ${isActive ? 'bg-adani-blue' : ''}`
+                }
+              >
+                <HomeIcon className="h-5 w-5" />
+                <span className={`ml-3 whitespace-nowrap overflow-hidden transition-opacity ${isOpen ? 'opacity-100' : 'opacity-0'}`}>
+                  Dashboard
+                </span>
+              </NavLink>
             </li>
             <li>
-              <a href="#" className="sidebar-item">
-                <Thermometer className="h-5 w-5" />
-                {isOpen && <span>HP Heaters</span>}
-              </a>
+              <NavLink
+                to="/analytics"
+                className={({ isActive }) => 
+                  `flex items-center p-3 rounded-lg transition-all hover:bg-adani-blue/60 ${isActive ? 'bg-adani-blue' : ''}`
+                }
+              >
+                <LineChartIcon className="h-5 w-5" />
+                <span className={`ml-3 whitespace-nowrap overflow-hidden transition-opacity ${isOpen ? 'opacity-100' : 'opacity-0'}`}>
+                  Analytics
+                </span>
+              </NavLink>
             </li>
             <li>
-              <a href="#" className="sidebar-item">
-                <LineChart className="h-5 w-5" />
-                {isOpen && <span>Analytics</span>}
-              </a>
-            </li>
-            <li>
-              <a href="#" className="sidebar-item">
-                <MessageSquare className="h-5 w-5" />
-                {isOpen && <span>Feedback</span>}
-              </a>
+              <NavLink
+                to="/feedback"
+                className={({ isActive }) => 
+                  `flex items-center p-3 rounded-lg transition-all hover:bg-adani-blue/60 ${isActive ? 'bg-adani-blue' : ''}`
+                }
+              >
+                <MessageSquareText className="h-5 w-5" />
+                <span className={`ml-3 whitespace-nowrap overflow-hidden transition-opacity ${isOpen ? 'opacity-100' : 'opacity-0'}`}>
+                  Feedback
+                </span>
+              </NavLink>
             </li>
           </ul>
         </nav>
         
-        <div className="p-4 border-t border-gray-200">
-          <ul className="space-y-2">
-            <li>
-              <a href="#" className="sidebar-item">
-                <Settings className="h-5 w-5" />
-                {isOpen && <span>Settings</span>}
-              </a>
-            </li>
-            <li>
-              <a href="#" className="sidebar-item">
-                <HelpCircle className="h-5 w-5" />
-                {isOpen && <span>Help</span>}
-              </a>
-            </li>
-          </ul>
+        <div className="p-4 border-t border-adani-navy-light">
+          <NavLink
+            to="/settings"
+            className={({ isActive }) => 
+              `flex items-center p-3 rounded-lg transition-all hover:bg-adani-blue/60 ${isActive ? 'bg-adani-blue' : ''}`
+            }
+          >
+            <Settings className="h-5 w-5" />
+            <span className={`ml-3 whitespace-nowrap overflow-hidden transition-opacity ${isOpen ? 'opacity-100' : 'opacity-0'}`}>
+              Settings
+            </span>
+          </NavLink>
         </div>
       </div>
-    </aside>
+    </div>
   );
 };
 
