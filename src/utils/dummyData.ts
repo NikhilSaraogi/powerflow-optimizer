@@ -1,3 +1,4 @@
+
 export const topBarData = {
   ecoInletTemp: { value: 220.5, unit: "°C", status: "healthy" as const },
   load: { value: 660, unit: "MW", status: "healthy" as const },
@@ -22,7 +23,8 @@ export const heaterData = [
     fwTempOutlet: { value: 215.2, unit: "°C", status: "healthy" as const },
     extractionTemp: { value: 342.8, unit: "°C", status: "healthy" as const },
     extractionPressure: { value: 32.6, unit: "bar", status: "healthy" as const },
-    heaterLevel: { value: 52, unit: "%", status: "healthy" as const }
+    heaterLevel: { value: 52, unit: "%", status: "healthy" as const },
+    predictedEcoInlet: { value: 223.1, unit: "°C", status: "healthy" as const }
   },
   {
     id: 2,
@@ -40,7 +42,8 @@ export const heaterData = [
     fwTempOutlet: { value: 198.6, unit: "°C", status: "warning" as const },
     extractionTemp: { value: 318.5, unit: "°C", status: "warning" as const },
     extractionPressure: { value: 25.8, unit: "bar", status: "warning" as const },
-    heaterLevel: { value: 65, unit: "%", status: "warning" as const }
+    heaterLevel: { value: 65, unit: "%", status: "warning" as const },
+    predictedEcoInlet: { value: 219.8, unit: "°C", status: "warning" as const }
   },
   {
     id: 3,
@@ -58,7 +61,8 @@ export const heaterData = [
     fwTempOutlet: { value: 185.1, unit: "°C", status: "critical" as const },
     extractionTemp: { value: 302.6, unit: "°C", status: "critical" as const },
     extractionPressure: { value: 18.5, unit: "bar", status: "critical" as const },
-    heaterLevel: { value: 78, unit: "%", status: "critical" as const }
+    heaterLevel: { value: 78, unit: "%", status: "critical" as const },
+    predictedEcoInlet: { value: 215.3, unit: "°C", status: "critical" as const }
   }
 ];
 
@@ -66,26 +70,26 @@ export const notificationData = [
   {
     id: "n1",
     type: "recommendation" as const,
-    title: "Optimize HP Heater 2 Level",
-    message: "Reduce heater level to 55% to improve heat transfer efficiency and lower TTD value.",
+    title: "Optimize HP Heater 1 Level",
+    message: "Maintain heater level at 52% to achieve eco inlet temperature of 223.1°C for optimal performance.",
     timestamp: "10:32 AM",
     priority: "medium" as const
   },
   {
     id: "n2",
     type: "recommendation" as const,
-    title: "Adjust HP Heater 3 Drain Control",
-    message: "Increase drain flow rate by 5% to reduce heater level and improve heat transfer rate.",
+    title: "Adjust HP Heater 2 Level",
+    message: "Reduce heater level to 55% to improve heat transfer efficiency and increase eco inlet temperature to 219.8°C.",
     timestamp: "10:15 AM",
     priority: "high" as const
   },
   {
     id: "n3",
     type: "recommendation" as const,
-    title: "Eco Inlet Temperature Recommendation",
-    message: "Maintain current feed water flow rate to stabilize eco inlet temperature around 222°C.",
+    title: "HP Heater 3 Level Correction",
+    message: "Urgent: Decrease heater level from 78% to 60% to recover performance and achieve predicted eco inlet of 215.3°C.",
     timestamp: "09:45 AM",
-    priority: "low" as const
+    priority: "high" as const
   },
   {
     id: "n4",

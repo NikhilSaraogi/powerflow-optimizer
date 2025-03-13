@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Bell, AlertTriangle, CheckCircle2, Info } from 'lucide-react';
+import { Bell, AlertTriangle, CheckCircle2, Info, ThermometerIcon } from 'lucide-react';
 
 interface Notification {
   id: string;
@@ -34,6 +34,17 @@ const NotificationPanel: React.FC<NotificationPanelProps> = ({ notifications }) 
     }
   };
   
+  // Function to highlight predicted values in message
+  const highlightMessage = (message: string) => {
+    // Look for patterns like "eco inlet temperature of 223.1°C" or "heater level at 52%"
+    const levelPattern = /(\d+\.?\d*)%/g;
+    const tempPattern = /(\d+\.?\d*)°C/g;
+    
+    return message
+      .replace(levelPattern, '<span class="font-semibold text-adani-blue">$&</span>')
+      .replace(tempPattern, '<span class="font-semibold text-adani-green">$&</span>');
+  };
+  
   return (
     <div className="grid grid-cols-1 gap-6 animate-fade-in">
       <div className="bg-white rounded-lg shadow-md border border-gray-100 overflow-hidden">
@@ -52,7 +63,10 @@ const NotificationPanel: React.FC<NotificationPanelProps> = ({ notifications }) 
                       <h4 className="font-medium text-adani-navy">{notification.title}</h4>
                       <span className="text-xs text-gray-500">{notification.timestamp}</span>
                     </div>
-                    <p className="text-sm text-gray-600">{notification.message}</p>
+                    <p 
+                      className="text-sm text-gray-600" 
+                      dangerouslySetInnerHTML={{ __html: highlightMessage(notification.message) }}
+                    />
                   </div>
                 </li>
               ))}
