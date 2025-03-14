@@ -9,9 +9,9 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
 </head>
-<body class="bg-gray-50 min-h-screen">
+<body class="bg-gray-50 min-h-screen overflow-x-hidden">
   <!-- Header -->
-  <header class="bg-adani-blue text-white p-4 flex justify-between items-center shadow-md">
+  <header class="bg-adani-blue text-white p-4 flex justify-between items-center shadow-md fixed top-0 left-0 right-0 z-20">
     <div class="flex items-center">
       <button id="sidebar-toggle" class="mr-4 focus:outline-none">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -30,9 +30,9 @@
     </div>
   </header>
 
-  <div class="flex">
+  <div class="flex pt-16">
     <!-- Sidebar -->
-    <aside id="sidebar" class="bg-adani-navy text-white fixed h-full transition-all duration-300 shadow-lg">
+    <aside id="sidebar" class="bg-adani-navy text-white fixed h-full transition-all duration-300 shadow-lg z-10 top-16">
       <nav class="p-4">
         <ul class="space-y-2">
           <li>
@@ -60,7 +60,7 @@
             </a>
           </li>
           <li>
-            <a href="#" class="block p-2 rounded hover:bg-white hover:bg-opacity-10 flex items-center">
+            <a href="feedback.html" class="block p-2 rounded hover:bg-white hover:bg-opacity-10 flex items-center">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 sidebar-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
               </svg>
@@ -81,14 +81,14 @@
     </aside>
 
     <!-- Main Content -->
-    <main id="main-content" class="flex-1 p-6 transition-all duration-300">
+    <main id="main-content" class="flex-1 p-6 transition-all duration-300 min-h-screen">
       <!-- Top Bar Stats -->
-      <div class="grid grid-cols-4 gap-4 mb-6" id="top-bar-container">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6" id="top-bar-container">
         <!-- Top bar items will be populated by JavaScript -->
       </div>
       
       <!-- Heater Cards -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6" id="heater-cards-container">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6" id="heater-cards-container">
         <!-- Heater cards will be populated by JavaScript -->
       </div>
       

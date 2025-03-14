@@ -8,9 +8,9 @@
   <link rel="stylesheet" href="styles.css">
   <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
 </head>
-<body class="bg-gray-50 min-h-screen">
+<body class="bg-gray-50 min-h-screen overflow-x-hidden">
   <!-- Header -->
-  <header class="bg-adani-blue text-white p-4 flex justify-between items-center shadow-md">
+  <header class="bg-adani-blue text-white p-4 flex justify-between items-center shadow-md fixed top-0 left-0 right-0 z-20">
     <div class="flex items-center">
       <button id="sidebar-toggle" class="mr-4 focus:outline-none">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -29,9 +29,9 @@
     </div>
   </header>
 
-  <div class="flex">
+  <div class="flex pt-16">
     <!-- Sidebar -->
-    <aside id="sidebar" class="bg-adani-navy text-white fixed h-full transition-all duration-300 shadow-lg">
+    <aside id="sidebar" class="bg-adani-navy text-white fixed h-full transition-all duration-300 shadow-lg z-10 top-16">
       <nav class="p-4">
         <ul class="space-y-2">
           <li>
@@ -80,7 +80,7 @@
     </aside>
 
     <!-- Main Content -->
-    <main id="main-content" class="flex-1 p-6 transition-all duration-300">
+    <main id="main-content" class="flex-1 p-6 transition-all duration-300 min-h-screen">
       <div class="max-w-3xl mx-auto">
         <div class="bg-white rounded-lg shadow-md overflow-hidden">
           <div class="bg-adani-blue p-6 text-white">

@@ -1,6 +1,6 @@
 
 // Sample data - Replace with your API calls
-const dashboardData = {
+let dashboardData = {
   topBarData: {
     ecoInletTemp: { value: 220.5, unit: "°C", status: "healthy" },
     load: { value: 660, unit: "MW", status: "healthy" },
@@ -17,8 +17,7 @@ const dashboardData = {
       dca: { value: 4.5, unit: "°C", status: "healthy", change: 0.1 },
       tr: { value: 0.92, unit: "", status: "healthy", change: 0.0 },
       heaterLevel: { value: 52, unit: "%", status: "healthy" },
-      predictedEcoInlet: { value: 223.1, unit: "°C", status: "healthy" },
-      enthalpy: { value: 3260, unit: "kJ/kg", status: "healthy" }
+      predictedEcoInlet: { value: 223.1, unit: "°C", status: "healthy" }
     },
     {
       id: 2,
@@ -29,8 +28,7 @@ const dashboardData = {
       dca: { value: 5.2, unit: "°C", status: "warning", change: 0.8 },
       tr: { value: 0.89, unit: "", status: "warning", change: -0.02 },
       heaterLevel: { value: 65, unit: "%", status: "warning" },
-      predictedEcoInlet: { value: 219.8, unit: "°C", status: "warning" },
-      enthalpy: { value: 3180, unit: "kJ/kg", status: "warning" }
+      predictedEcoInlet: { value: 219.8, unit: "°C", status: "warning" }
     },
     {
       id: 3,
@@ -41,8 +39,7 @@ const dashboardData = {
       dca: { value: 6.8, unit: "°C", status: "critical", change: 2.2 },
       tr: { value: 0.83, unit: "", status: "critical", change: -0.05 },
       heaterLevel: { value: 78, unit: "%", status: "critical" },
-      predictedEcoInlet: { value: 215.3, unit: "°C", status: "critical" },
-      enthalpy: { value: 3020, unit: "kJ/kg", status: "critical" }
+      predictedEcoInlet: { value: 215.3, unit: "°C", status: "critical" }
     }
   ],
   notificationData: [
@@ -85,72 +82,35 @@ const dashboardData = {
       message: "Heater level exceeding optimal range. Check drain valve operation and control system.",
       timestamp: "10:22 AM",
       priority: "high"
-    },
-    {
-      id: "n6",
-      type: "recommendation",
-      title: "Optimize Extraction Flow",
-      message: "Adjust extraction flow to HP Heater 1 to 630 t/h for optimal heat transfer ratio.",
-      timestamp: "11:05 AM",
-      priority: "medium"
-    },
-    {
-      id: "n7",
-      type: "rca",
-      title: "HP Heater 2 TTD Increase",
-      message: "Increasing TTD indicates potential scaling on tube surfaces. Monitor closely and schedule chemical cleaning.",
-      timestamp: "10:45 AM",
-      priority: "medium"
-    },
-    {
-      id: "n8",
-      type: "alert",
-      title: "HP Heater 2 Drain Control",
-      message: "Drain control valve showing fluctuation. Check actuator response and calibrate if necessary.",
-      timestamp: "09:30 AM",
-      priority: "medium"
     }
-  ],
-  heaterTimeSeriesData: [
-    { name: "06:00", heater1: 51.8, heater2: 49.2, heater3: 46.5 },
-    { name: "07:00", heater1: 52.0, heater2: 49.5, heater3: 47.2 },
-    { name: "08:00", heater1: 52.2, heater2: 49.0, heater3: 46.8 },
-    { name: "09:00", heater1: 52.3, heater2: 48.8, heater3: 45.8 },
-    { name: "10:00", heater1: 52.4, heater2: 48.7, heater3: 45.1 },
-    { name: "11:00", heater1: 52.5, heater2: 48.5, heater3: 44.5 }
-  ],
-  temperatureTimeSeriesData: [
-    { name: "06:00", fwInlet: 190.5, fwOutlet: 212.8, extraction: 340.2 },
-    { name: "07:00", fwInlet: 191.2, fwOutlet: 213.5, extraction: 341.5 },
-    { name: "08:00", fwInlet: 192.0, fwOutlet: 214.2, extraction: 342.0 },
-    { name: "09:00", fwInlet: 192.2, fwOutlet: 214.6, extraction: 342.5 },
-    { name: "10:00", fwInlet: 192.5, fwOutlet: 215.2, extraction: 342.8 },
-    { name: "11:00", fwInlet: 192.8, fwOutlet: 215.5, extraction: 343.0 }
-  ],
-  enthalpyTimeSeriesData: [
-    { name: "06:00", heater1: 3255, heater2: 3175, heater3: 3018 },
-    { name: "07:00", heater1: 3257, heater2: 3177, heater3: 3019 },
-    { name: "08:00", heater1: 3258, heater2: 3178, heater3: 3020 },
-    { name: "09:00", heater1: 3259, heater2: 3179, heater3: 3020 },
-    { name: "10:00", heater1: 3260, heater2: 3180, heater3: 3020 },
-    { name: "11:00", heater1: 3262, heater2: 3181, heater3: 3021 }
   ]
 };
 
-// API Endpoints Configuration
-const apiConfig = {
-  baseUrl: "https://api.adani-power.com/v1", // Replace with your actual API base URL
-  endpoints: {
-    heaterData: "/heaters/data",
-    topBarData: "/dashboard/topbar",
-    notifications: "/notifications/latest",
-    timeSeriesData: "/timeseries/heaters"
-  },
-  headers: {
-    "Content-Type": "application/json",
-    "Authorization": "Bearer YOUR_API_TOKEN" // Replace with actual token or authentication method
+// Initialize sidebar state and handle toggle
+let sidebarCollapsed = false;
+const sidebar = document.getElementById('sidebar');
+const mainContent = document.getElementById('main-content');
+const sidebarToggle = document.getElementById('sidebar-toggle');
+
+function toggleSidebar() {
+  sidebarCollapsed = !sidebarCollapsed;
+  
+  if (sidebarCollapsed) {
+    sidebar.classList.remove('w-64');
+    sidebar.classList.add('w-16');
+    mainContent.classList.remove('ml-64');
+    mainContent.classList.add('ml-16');
+    sidebar.classList.remove('sidebar-expanded');
+    sidebar.classList.add('sidebar-collapsed');
+  } else {
+    sidebar.classList.remove('w-16');
+    sidebar.classList.add('w-64');
+    mainContent.classList.remove('ml-16');
+    mainContent.classList.add('ml-64');
+    sidebar.classList.add('sidebar-expanded');
+    sidebar.classList.remove('sidebar-collapsed');
   }
-};
+}
 
 // Helper functions
 function getStatusColorClass(status) {
@@ -165,33 +125,33 @@ function getChangeIcon(change) {
   return '<span class="text-gray-500">◆ ' + change.toFixed(1) + '</span>';
 }
 
-function updateDateTime() {
+function updateTime() {
   const now = new Date();
-  const dateOptions = { 
-    weekday: 'long', 
-    year: 'numeric', 
-    month: 'long', 
-    day: 'numeric' 
-  };
-  const timeOptions = { 
+  const timeString = now.toLocaleTimeString('en-US', { 
     hour: '2-digit', 
-    minute: '2-digit', 
-    second: '2-digit', 
-    hour12: true 
-  };
+    minute: '2-digit',
+    second: '2-digit'
+  });
+  const dateString = now.toLocaleDateString('en-US', { 
+    weekday: 'short', 
+    year: 'numeric', 
+    month: 'short', 
+    day: 'numeric' 
+  });
   
-  const dateTimeString = now.toLocaleString();
-  const dateString = now.toLocaleDateString(undefined, dateOptions);
-  const timeString = now.toLocaleTimeString(undefined, timeOptions);
-  
-  document.getElementById('current-time').textContent = dateTimeString;
-  
-  if (document.getElementById('recommendations-time')) {
-    document.getElementById('recommendations-time').textContent = timeString;
+  const currentTimeElement = document.getElementById('current-time');
+  if (currentTimeElement) {
+    currentTimeElement.innerText = `${dateString} ${timeString}`;
   }
   
-  if (document.getElementById('alerts-time')) {
-    document.getElementById('alerts-time').textContent = timeString;
+  const recommendationsTimeElement = document.getElementById('recommendations-time');
+  if (recommendationsTimeElement) {
+    recommendationsTimeElement.textContent = dateString + ' ' + timeString;
+  }
+  
+  const alertsTimeElement = document.getElementById('alerts-time');
+  if (alertsTimeElement) {
+    alertsTimeElement.textContent = dateString + ' ' + timeString;
   }
 }
 
@@ -208,36 +168,20 @@ function highlightMessage(message) {
 
 // Initialize UI
 function initDashboard() {
-  updateDateTime();
-  setInterval(updateDateTime, 1000);
-  
+  updateTime();
+  setInterval(updateTime, 1000);
   renderTopBar();
   renderHeaterCards();
   renderNotifications();
   
   // Set up sidebar toggle
-  document.getElementById('sidebar-toggle').addEventListener('click', toggleSidebar);
-  
-  // Initialize with sidebar expanded
-  document.getElementById('sidebar').classList.add('w-64');
-  document.getElementById('main-content').classList.add('ml-64');
-}
+  if (sidebarToggle) {
+    sidebarToggle.addEventListener('click', toggleSidebar);
+  }
 
-function toggleSidebar() {
-  const sidebar = document.getElementById('sidebar');
-  const mainContent = document.getElementById('main-content');
-  
-  if (sidebar.classList.contains('w-64')) {
-    sidebar.classList.remove('w-64');
-    sidebar.classList.add('w-16');
-    sidebar.classList.add('sidebar-collapsed');
-    mainContent.classList.remove('ml-64');
-    mainContent.classList.add('ml-16');
-  } else {
-    sidebar.classList.remove('w-16');
-    sidebar.classList.remove('sidebar-collapsed');
-    sidebar.classList.add('w-64');
-    mainContent.classList.remove('ml-16');
+  // Set default sidebar state
+  if (sidebar && mainContent) {
+    sidebar.classList.add('w-64', 'sidebar-expanded');
     mainContent.classList.add('ml-64');
   }
 }
@@ -245,6 +189,8 @@ function toggleSidebar() {
 // Render Top Bar
 function renderTopBar() {
   const container = document.getElementById('top-bar-container');
+  if (!container) return;
+  
   const { ecoInletTemp, load, hdrPressure, feedWaterFlow } = dashboardData.topBarData;
   
   container.innerHTML = `
@@ -301,6 +247,8 @@ function renderTopBar() {
 // Render Heater Cards
 function renderHeaterCards() {
   const container = document.getElementById('heater-cards-container');
+  if (!container) return;
+  
   container.innerHTML = '';
   
   dashboardData.heaterData.forEach(heater => {
@@ -348,7 +296,7 @@ function renderHeaterCards() {
           </div>
         </div>
         
-        <div class="grid grid-cols-3 gap-4">
+        <div class="grid grid-cols-2 gap-4">
           <div>
             <h4 class="text-xs font-medium text-gray-500">TR</h4>
             <p class="text-lg font-semibold ${getStatusColorClass(heater.tr.status)}">
@@ -357,15 +305,9 @@ function renderHeaterCards() {
             </p>
           </div>
           <div>
-            <h4 class="text-xs font-medium text-gray-500">Level</h4>
+            <h4 class="text-xs font-medium text-gray-500">Heater Level</h4>
             <p class="text-lg font-semibold ${getStatusColorClass(heater.heaterLevel.status)}">
-              ${heater.heaterLevel.value}${heater.heaterLevel.unit}
-            </p>
-          </div>
-          <div>
-            <h4 class="text-xs font-medium text-gray-500">Enthalpy</h4>
-            <p class="text-lg font-semibold ${getStatusColorClass(heater.enthalpy.status)}">
-              ${heater.enthalpy.value}${heater.enthalpy.unit}
+              ${heater.heaterLevel.value} ${heater.heaterLevel.unit}
             </p>
           </div>
         </div>
@@ -380,6 +322,8 @@ function renderHeaterCards() {
 function renderNotifications() {
   const recommendationsContainer = document.getElementById('recommendations-container');
   const alertsContainer = document.getElementById('alerts-container');
+  
+  if (!recommendationsContainer || !alertsContainer) return;
   
   const recommendations = dashboardData.notificationData.filter(n => n.type === 'recommendation');
   const alerts = dashboardData.notificationData.filter(n => n.type === 'rca' || n.type === 'alert');
@@ -446,50 +390,28 @@ function renderNotifications() {
   }
 }
 
-// Fetch data from API
+// Function to fetch data from API
 async function fetchDataFromAPI() {
   try {
-    // In a real implementation, you would fetch data from your API endpoints
-    // For example:
-    /*
-    const topBarResponse = await fetch(`${apiConfig.baseUrl}${apiConfig.endpoints.topBarData}`, {
-      method: 'GET',
-      headers: apiConfig.headers
-    });
+    // Replace with your actual API call
+    // const response = await fetch('https://your-api-endpoint.com/dashboard-data');
+    // const data = await response.json();
+    // updateDashboard(data);
     
-    const topBarData = await topBarResponse.json();
-    
-    const heatersResponse = await fetch(`${apiConfig.baseUrl}${apiConfig.endpoints.heaterData}`, {
-      method: 'GET',
-      headers: apiConfig.headers
-    });
-    
-    const heatersData = await heatersResponse.json();
-    
-    const notificationsResponse = await fetch(`${apiConfig.baseUrl}${apiConfig.endpoints.notifications}`, {
-      method: 'GET',
-      headers: apiConfig.headers
-    });
-    
-    const notificationsData = await notificationsResponse.json();
-    
-    // Update the dashboardData object with fetched data
-    dashboardData.topBarData = topBarData;
-    dashboardData.heaterData = heatersData;
-    dashboardData.notificationData = notificationsData;
-    */
-    
-    // For now, we'll use the sample data
+    // For demo, we'll use the dummy data
     updateDashboard(dashboardData);
   } catch (error) {
     console.error('Error fetching data from API:', error);
-    // Show error message to user or retry
   }
 }
 
-// Update dashboard with new data
+// Update dashboard with new data - fixed to avoid Assignment to constant variable error
 function updateDashboard(data) {
-  dashboardData = data;
+  // Update each section of dashboardData instead of reassigning the whole object
+  dashboardData.topBarData = data.topBarData;
+  dashboardData.heaterData = data.heaterData;
+  dashboardData.notificationData = data.notificationData;
+  
   renderTopBar();
   renderHeaterCards();
   renderNotifications();

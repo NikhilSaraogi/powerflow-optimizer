@@ -13,18 +13,22 @@ function toggleSidebar() {
     sidebar.classList.add('w-16');
     mainContent.classList.remove('ml-64');
     mainContent.classList.add('ml-16');
+    sidebar.classList.remove('sidebar-expanded');
+    sidebar.classList.add('sidebar-collapsed');
   } else {
     sidebar.classList.remove('w-16');
     sidebar.classList.add('w-64');
     mainContent.classList.remove('ml-16');
     mainContent.classList.add('ml-64');
+    sidebar.classList.add('sidebar-expanded');
+    sidebar.classList.remove('sidebar-collapsed');
   }
 }
 
 sidebarToggle.addEventListener('click', toggleSidebar);
 
 // Set default sidebar state
-sidebar.classList.add('w-64');
+sidebar.classList.add('w-64', 'sidebar-expanded');
 mainContent.classList.add('ml-64');
 
 // Update current time
