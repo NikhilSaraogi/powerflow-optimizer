@@ -1,0 +1,258 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Adani Power - Reports</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
+</head>
+<body class="bg-gray-50 min-h-screen">
+  <!-- Header -->
+  <header class="bg-adani-blue text-white p-4 flex justify-between items-center shadow-md">
+    <div class="flex items-center">
+      <button id="sidebar-toggle" class="mr-4 focus:outline-none">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
+      <img src="https://www.adanipower.com/-/media/Project/Power/Header-Footer/logo.png" alt="Adani Power Logo" class="h-8 mr-3">
+      <div>
+        <h1 class="text-xl font-bold">HP Heater Reports</h1>
+        <div class="text-sm opacity-80" id="current-time"></div>
+      </div>
+    </div>
+    <div class="text-right">
+      <div class="text-sm opacity-80">Mundra Power Plant</div>
+      <div class="text-sm opacity-80">Unit 5</div>
+    </div>
+  </header>
+
+  <div class="flex">
+    <!-- Sidebar -->
+    <aside id="sidebar" class="bg-adani-navy text-white fixed h-full transition-all duration-300 shadow-lg">
+      <nav class="p-4">
+        <ul class="space-y-2">
+          <li>
+            <a href="index.html" class="block p-2 rounded hover:bg-white hover:bg-opacity-10 flex items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 sidebar-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+              </svg>
+              <span class="sidebar-text">Dashboard</span>
+            </a>
+          </li>
+          <li>
+            <a href="analytics.html" class="block p-2 rounded hover:bg-white hover:bg-opacity-10 flex items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 sidebar-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+              </svg>
+              <span class="sidebar-text">Analytics</span>
+            </a>
+          </li>
+          <li>
+            <a href="reports.html" class="block p-2 rounded bg-white bg-opacity-20 flex items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 sidebar-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              <span class="sidebar-text">Reports</span>
+            </a>
+          </li>
+          <li>
+            <a href="feedback.html" class="block p-2 rounded hover:bg-white hover:bg-opacity-10 flex items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 sidebar-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
+              </svg>
+              <span class="sidebar-text">Feedback</span>
+            </a>
+          </li>
+          <li>
+            <a href="#" class="block p-2 rounded hover:bg-white hover:bg-opacity-10 flex items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 sidebar-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+              <span class="sidebar-text">Settings</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main id="main-content" class="flex-1 p-6 transition-all duration-300">
+      <!-- Top Bar Stats -->
+      <div class="grid grid-cols-4 gap-4 mb-6" id="top-bar-container">
+        <!-- Top bar items will be populated by JavaScript -->
+      </div>
+      
+      <div class="flex justify-between items-center mt-6 mb-4">
+        <h1 class="text-2xl font-bold text-adani-navy">Reports</h1>
+        
+        <div class="flex items-center space-x-4">
+          <div class="flex items-center space-x-2">
+            <label for="start-date" class="text-sm text-gray-600">Start:</label>
+            <input 
+              type="date" 
+              id="start-date"
+              class="border rounded px-2 py-1 text-sm" 
+            />
+          </div>
+          
+          <div class="flex items-center space-x-2">
+            <label for="end-date" class="text-sm text-gray-600">End:</label>
+            <input 
+              type="date" 
+              id="end-date"
+              class="border rounded px-2 py-1 text-sm" 
+            />
+          </div>
+          
+          <button class="px-3 py-1 bg-white border rounded text-sm flex items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            Last 7 Days
+          </button>
+          
+          <button class="px-3 py-1 bg-white border rounded text-sm flex items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+            Last 30 Days
+          </button>
+        </div>
+      </div>
+      
+      <div class="bg-white p-4 rounded-lg shadow-md">
+        <div class="flex border-b mb-4">
+          <button class="px-4 py-2 border-b-2 border-adani-blue text-adani-blue font-medium">Benefits Report</button>
+          <button class="px-4 py-2 border-b-2 border-transparent hover:text-adani-blue">RCA & Recommendations</button>
+        </div>
+        
+        <!-- Benefits Report Tab -->
+        <div id="benefits-tab" class="block">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+            <div class="bg-white p-4 rounded-lg border">
+              <h3 class="text-lg font-medium text-gray-600 mb-1">Avg. Daily Eco Inlet Gain</h3>
+              <p class="text-sm text-gray-500 mb-2">Last 7 days</p>
+              <div class="text-3xl font-bold text-adani-green flex items-center">
+                +2.31°C
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                </svg>
+              </div>
+            </div>
+            
+            <div class="bg-white p-4 rounded-lg border">
+              <h3 class="text-lg font-medium text-gray-600 mb-1">Est. Heat Rate Improvement</h3>
+              <p class="text-sm text-gray-500 mb-2">Based on current gain</p>
+              <div class="text-3xl font-bold text-adani-blue">
+                0.48%
+              </div>
+            </div>
+            
+            <div class="bg-white p-4 rounded-lg border">
+              <h3 class="text-lg font-medium text-gray-600 mb-1">Est. Annual Savings</h3>
+              <p class="text-sm text-gray-500 mb-2">Coal consumption reduction</p>
+              <div class="text-3xl font-bold text-adani-green">
+                ₹14.2M
+              </div>
+            </div>
+          </div>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <div class="bg-white p-4 rounded-lg border">
+              <div class="flex justify-between mb-4">
+                <div>
+                  <h3 class="text-lg font-medium text-gray-600">Daily Eco Inlet Temperature Gain</h3>
+                  <p class="text-sm text-gray-500">Showing increase in economizer inlet temperature</p>
+                </div>
+                <button class="px-3 py-1 bg-white border rounded text-sm flex items-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                  </svg>
+                  Export Data
+                </button>
+              </div>
+              <div class="h-[300px]">
+                <canvas id="ecoInletChart"></canvas>
+              </div>
+            </div>
+            
+            <div class="bg-white p-4 rounded-lg border">
+              <div class="flex justify-between mb-4">
+                <div>
+                  <h3 class="text-lg font-medium text-gray-600">Daily Benefits Summary</h3>
+                  <p class="text-sm text-gray-500">Based on heater optimization</p>
+                </div>
+                <button class="px-3 py-1 bg-white border rounded text-sm flex items-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                  </svg>
+                  Export Report
+                </button>
+              </div>
+              <div class="border rounded overflow-hidden">
+                <table class="min-w-full divide-y divide-gray-200">
+                  <thead>
+                    <tr>
+                      <th class="px-3 py-2 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
+                      <th class="px-3 py-2 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase">Gain (°C)</th>
+                      <th class="px-3 py-2 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase">HP1 Level</th>
+                      <th class="px-3 py-2 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase">HP2 Level</th>
+                      <th class="px-3 py-2 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase">HP3 Level</th>
+                    </tr>
+                  </thead>
+                  <tbody id="daily-gains-table" class="bg-white divide-y divide-gray-200">
+                    <!-- Table data will be populated by JavaScript -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- RCA Tab -->
+        <div id="rca-tab" class="hidden">
+          <div class="grid grid-cols-1 gap-6">
+            <div class="bg-white p-4 rounded-lg border">
+              <div class="flex justify-between mb-4">
+                <div>
+                  <h3 class="text-lg font-medium text-gray-600">Recommendations & Root Cause Analysis</h3>
+                  <p class="text-sm text-gray-500">Recent actions and alerts for heaters</p>
+                </div>
+                <button class="px-3 py-1 bg-white border rounded text-sm flex items-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                  Export Full Report
+                </button>
+              </div>
+              <div class="border rounded overflow-hidden">
+                <table class="min-w-full divide-y divide-gray-200">
+                  <thead>
+                    <tr>
+                      <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase">Date & Time</th>
+                      <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase">Type</th>
+                      <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase">Priority</th>
+                      <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase">Title</th>
+                      <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase">Message</th>
+                    </tr>
+                  </thead>
+                  <tbody id="notifications-table" class="bg-white divide-y divide-gray-200">
+                    <!-- Table data will be populated by JavaScript -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="reports.js"></script>
+</body>
+</html>
