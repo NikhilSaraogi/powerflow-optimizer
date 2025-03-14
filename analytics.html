@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Adani Power - HP Heater Optimization</title>
+  <title>Analytics - HP Heater Optimization</title>
   <link rel="stylesheet" href="styles.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -73,7 +73,7 @@
         <nav class="flex-1 py-4 px-2">
           <ul class="space-y-2">
             <li>
-              <a href="index.html" class="flex items-center p-3 rounded-lg transition-all hover:bg-adani-blue/60 bg-adani-blue">
+              <a href="index.html" class="flex items-center p-3 rounded-lg transition-all hover:bg-adani-blue/60">
                 <svg class="h-5 w-5 min-w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                 </svg>
@@ -83,7 +83,7 @@
               </a>
             </li>
             <li>
-              <a href="analytics.html" class="flex items-center p-3 rounded-lg transition-all hover:bg-adani-blue/60">
+              <a href="analytics.html" class="flex items-center p-3 rounded-lg transition-all hover:bg-adani-blue/60 bg-adani-blue">
                 <svg class="h-5 w-5 min-w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                 </svg>
@@ -131,54 +131,64 @@
     
     <!-- Main Content -->
     <main id="main-content" class="flex-1 p-6 transition-all duration-300 ml-64">
-      <!-- Top Bar Stats -->
-      <div id="top-bar-container" class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-        <!-- Top bar items will be populated by JavaScript -->
-      </div>
+      <h1 class="text-2xl font-bold text-adani-navy mb-6">Analytics Dashboard</h1>
       
-      <!-- Heater Cards -->
-      <div id="heater-cards-container" class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-        <!-- Heater cards will be populated by JavaScript -->
-      </div>
-      
-      <!-- Notifications -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 animate-fade-in">
-        <div class="bg-white rounded-lg shadow-md border border-gray-100 overflow-hidden h-[400px] flex flex-col">
-          <div class="px-4 py-3 bg-adani-blue text-white font-medium flex items-center justify-between">
-            <div class="flex items-center">
-              <svg class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              Recommendations
-            </div>
-            <div class="text-xs opacity-80" id="recommendations-time"></div>
-          </div>
-          <div class="scroll-area max-h-full overflow-y-auto flex-1" id="recommendations-container">
-            <!-- Recommendations will be populated by JavaScript -->
-          </div>
+      <!-- Parameter Trend Charts -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div class="bg-white rounded-lg shadow-md p-4 border border-gray-100">
+          <h3 class="text-lg font-semibold text-adani-navy mb-4">Heat Load Trend (MW)</h3>
+          <canvas id="heat-load-chart" height="250"></canvas>
         </div>
         
-        <div class="bg-white rounded-lg shadow-md border border-gray-100 overflow-hidden h-[400px] flex flex-col">
-          <div class="px-4 py-3 bg-adani-navy text-white font-medium flex items-center justify-between">
-            <div class="flex items-center">
-              <svg class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-              </svg>
-              RCA & Alerts
-            </div>
-            <div class="text-xs opacity-80" id="alerts-time"></div>
-          </div>
-          <div class="scroll-area max-h-full overflow-y-auto flex-1" id="alerts-container">
-            <!-- Alerts will be populated by JavaScript -->
-          </div>
+        <div class="bg-white rounded-lg shadow-md p-4 border border-gray-100">
+          <h3 class="text-lg font-semibold text-adani-navy mb-4">Flow Trend (t/h)</h3>
+          <canvas id="flow-chart" height="250"></canvas>
         </div>
       </div>
       
-      <!-- Toast Container -->
-      <div id="toast-container" class="fixed top-4 right-4 z-50"></div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div class="bg-white rounded-lg shadow-md p-4 border border-gray-100">
+          <h3 class="text-lg font-semibold text-adani-navy mb-4">TTD Trend (°C)</h3>
+          <canvas id="ttd-chart" height="250"></canvas>
+        </div>
+        
+        <div class="bg-white rounded-lg shadow-md p-4 border border-gray-100">
+          <h3 class="text-lg font-semibold text-adani-navy mb-4">DCA Trend (°C)</h3>
+          <canvas id="dca-chart" height="250"></canvas>
+        </div>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+        <div class="bg-white rounded-lg shadow-md p-4 border border-gray-100">
+          <h3 class="text-lg font-semibold text-adani-navy mb-4">TR Trend</h3>
+          <canvas id="tr-chart" height="200"></canvas>
+        </div>
+        
+        <div class="bg-white rounded-lg shadow-md p-4 border border-gray-100">
+          <h3 class="text-lg font-semibold text-adani-navy mb-4">Heater Level Trend (%)</h3>
+          <canvas id="level-chart" height="200"></canvas>
+        </div>
+        
+        <div class="bg-white rounded-lg shadow-md p-4 border border-gray-100">
+          <h3 class="text-lg font-semibold text-adani-navy mb-4">Eco Inlet Temp Trend (°C)</h3>
+          <canvas id="eco-inlet-chart" height="200"></canvas>
+        </div>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div class="bg-white rounded-lg shadow-md p-4 border border-gray-100">
+          <h3 class="text-lg font-semibold text-adani-navy mb-4">Enthalpy Trend (kJ/kg)</h3>
+          <canvas id="enthalpy-chart" height="250"></canvas>
+        </div>
+        
+        <div class="bg-white rounded-lg shadow-md p-4 border border-gray-100">
+          <h3 class="text-lg font-semibold text-adani-navy mb-4">Temperature Trend (°C)</h3>
+          <canvas id="temperature-chart" height="250"></canvas>
+        </div>
+      </div>
     </main>
   </div>
 
-  <script src="scripts.js"></script>
+  <script src="analytics.js"></script>
 </body>
 </html>
