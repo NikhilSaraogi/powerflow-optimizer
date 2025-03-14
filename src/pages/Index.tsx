@@ -75,15 +75,13 @@ const Index = () => {
             feedWaterFlow={dashboardData.topBarData.feedWaterFlow}
           />
           
-          <div className="grid grid-cols-3 gap-6 mb-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
             {dashboardData.heaterData.map((heater) => (
               <HeaterCard key={heater.id} data={heater} />
             ))}
           </div>
           
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <NotificationPanel notifications={dashboardData.notificationData} />
-          </div>
+          <NotificationPanel notifications={dashboardData.notificationData} />
         </main>
       </div>
     </div>

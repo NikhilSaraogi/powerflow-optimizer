@@ -15,7 +15,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
     >
       <div className="flex flex-col h-full">
         <div className="p-4 border-b border-adani-navy-light">
-          <h2 className={`text-xl font-bold whitespace-nowrap overflow-hidden ${isOpen ? 'opacity-100' : 'opacity-0'}`}>
+          <h2 className={`text-xl font-bold whitespace-nowrap overflow-hidden transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'opacity-0'}`}>
             Heater Optimization
           </h2>
         </div>
@@ -29,8 +29,8 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
                   `flex items-center p-3 rounded-lg transition-all hover:bg-adani-blue/60 ${isActive ? 'bg-adani-blue' : ''}`
                 }
               >
-                <HomeIcon className="h-5 w-5" />
-                <span className={`ml-3 whitespace-nowrap overflow-hidden transition-opacity ${isOpen ? 'opacity-100' : 'opacity-0'}`}>
+                <HomeIcon className="h-5 w-5 min-w-5" />
+                <span className={`ml-3 whitespace-nowrap overflow-hidden transition-opacity duration-300 ${isOpen ? 'opacity-100 w-auto' : 'opacity-0 w-0'}`}>
                   Dashboard
                 </span>
               </NavLink>
@@ -42,8 +42,8 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
                   `flex items-center p-3 rounded-lg transition-all hover:bg-adani-blue/60 ${isActive ? 'bg-adani-blue' : ''}`
                 }
               >
-                <LineChartIcon className="h-5 w-5" />
-                <span className={`ml-3 whitespace-nowrap overflow-hidden transition-opacity ${isOpen ? 'opacity-100' : 'opacity-0'}`}>
+                <LineChartIcon className="h-5 w-5 min-w-5" />
+                <span className={`ml-3 whitespace-nowrap overflow-hidden transition-opacity duration-300 ${isOpen ? 'opacity-100 w-auto' : 'opacity-0 w-0'}`}>
                   Analytics
                 </span>
               </NavLink>
@@ -55,8 +55,8 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
                   `flex items-center p-3 rounded-lg transition-all hover:bg-adani-blue/60 ${isActive ? 'bg-adani-blue' : ''}`
                 }
               >
-                <FileText className="h-5 w-5" />
-                <span className={`ml-3 whitespace-nowrap overflow-hidden transition-opacity ${isOpen ? 'opacity-100' : 'opacity-0'}`}>
+                <FileText className="h-5 w-5 min-w-5" />
+                <span className={`ml-3 whitespace-nowrap overflow-hidden transition-opacity duration-300 ${isOpen ? 'opacity-100 w-auto' : 'opacity-0 w-0'}`}>
                   Reports
                 </span>
               </NavLink>
@@ -68,8 +68,8 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
                   `flex items-center p-3 rounded-lg transition-all hover:bg-adani-blue/60 ${isActive ? 'bg-adani-blue' : ''}`
                 }
               >
-                <MessageSquareText className="h-5 w-5" />
-                <span className={`ml-3 whitespace-nowrap overflow-hidden transition-opacity ${isOpen ? 'opacity-100' : 'opacity-0'}`}>
+                <MessageSquareText className="h-5 w-5 min-w-5" />
+                <span className={`ml-3 whitespace-nowrap overflow-hidden transition-opacity duration-300 ${isOpen ? 'opacity-100 w-auto' : 'opacity-0 w-0'}`}>
                   Feedback
                 </span>
               </NavLink>
@@ -84,8 +84,8 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
               `flex items-center p-3 rounded-lg transition-all hover:bg-adani-blue/60 ${isActive ? 'bg-adani-blue' : ''}`
             }
           >
-            <Settings className="h-5 w-5" />
-            <span className={`ml-3 whitespace-nowrap overflow-hidden transition-opacity ${isOpen ? 'opacity-100' : 'opacity-0'}`}>
+            <Settings className="h-5 w-5 min-w-5" />
+            <span className={`ml-3 whitespace-nowrap overflow-hidden transition-opacity duration-300 ${isOpen ? 'opacity-100 w-auto' : 'opacity-0 w-0'}`}>
               Settings
             </span>
           </NavLink>

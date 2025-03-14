@@ -46,14 +46,23 @@ const NotificationPanel: React.FC<NotificationPanelProps> = ({ notifications }) 
       .replace(tempPattern, '<span class="font-semibold text-adani-green">$&</span>');
   };
   
+  // Get current date and time
+  const getCurrentDateTime = () => {
+    const now = new Date();
+    return now.toLocaleDateString() + ' ' + now.toLocaleTimeString();
+  };
+  
   return (
-    <div className="grid grid-cols-1 gap-6 animate-fade-in">
-      <div className="bg-white rounded-lg shadow-md border border-gray-100 overflow-hidden">
-        <div className="px-4 py-3 bg-adani-blue text-white font-medium flex items-center">
-          <CheckCircle2 className="h-5 w-5 mr-2" />
-          Recommendations
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 animate-fade-in">
+      <div className="bg-white rounded-lg shadow-md border border-gray-100 overflow-hidden h-[400px] flex flex-col">
+        <div className="px-4 py-3 bg-adani-blue text-white font-medium flex items-center justify-between">
+          <div className="flex items-center">
+            <CheckCircle2 className="h-5 w-5 mr-2" />
+            Recommendations
+          </div>
+          <div className="text-xs opacity-80">{getCurrentDateTime()}</div>
         </div>
-        <ScrollArea className="h-[300px]">
+        <ScrollArea className="flex-1">
           <div className="p-4">
             {recommendations.length > 0 ? (
               <ul className="space-y-4">
@@ -80,12 +89,15 @@ const NotificationPanel: React.FC<NotificationPanelProps> = ({ notifications }) 
         </ScrollArea>
       </div>
       
-      <div className="bg-white rounded-lg shadow-md border border-gray-100 overflow-hidden">
-        <div className="px-4 py-3 bg-adani-navy text-white font-medium flex items-center">
-          <Bell className="h-5 w-5 mr-2" />
-          RCA & Alerts
+      <div className="bg-white rounded-lg shadow-md border border-gray-100 overflow-hidden h-[400px] flex flex-col">
+        <div className="px-4 py-3 bg-adani-navy text-white font-medium flex items-center justify-between">
+          <div className="flex items-center">
+            <Bell className="h-5 w-5 mr-2" />
+            RCA & Alerts
+          </div>
+          <div className="text-xs opacity-80">{getCurrentDateTime()}</div>
         </div>
-        <ScrollArea className="h-[300px]">
+        <ScrollArea className="flex-1">
           <div className="p-4">
             {alerts.length > 0 ? (
               <ul className="space-y-4">
