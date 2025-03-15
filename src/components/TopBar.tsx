@@ -15,14 +15,14 @@ const TopBar: React.FC<TopBarProps> = ({ ecoInletTemp, load, hdrPressure, feedWa
   const isPlantRunning = load.value > 0;
   
   return (
-    <div className="grid grid-cols-5 gap-4 mb-6">
+    <div className="grid grid-cols-1 md:grid-cols-5 gap-3 mb-5">
       <ParameterCard 
         title="Eco Inlet Temperature" 
         value={ecoInletTemp.value} 
         unit={ecoInletTemp.unit} 
         status={ecoInletTemp.status}
         icon={<Thermometer className="h-5 w-5 text-green-500" />}
-        valueClassName="text-blue-600"
+        valueClassName="text-blue-700"
       />
       <ParameterCard 
         title="Load" 
@@ -30,7 +30,7 @@ const TopBar: React.FC<TopBarProps> = ({ ecoInletTemp, load, hdrPressure, feedWa
         unit={load.unit} 
         status={load.status}
         icon={<Gauge className="h-5 w-5 text-blue-500" />}
-        valueClassName="text-blue-600"
+        valueClassName="text-blue-700"
       />
       <ParameterCard 
         title="HDR Pressure" 
@@ -38,7 +38,7 @@ const TopBar: React.FC<TopBarProps> = ({ ecoInletTemp, load, hdrPressure, feedWa
         unit={hdrPressure.unit} 
         status={hdrPressure.status}
         icon={<Wind className="h-5 w-5 text-green-500" />}
-        valueClassName="text-blue-600"
+        valueClassName="text-blue-700"
       />
       <ParameterCard 
         title="Feed Water Flow" 
@@ -46,10 +46,10 @@ const TopBar: React.FC<TopBarProps> = ({ ecoInletTemp, load, hdrPressure, feedWa
         unit={feedWaterFlow.unit} 
         status={feedWaterFlow.status}
         icon={<Droplet className="h-5 w-5 text-blue-500" />}
-        valueClassName="text-blue-600"
+        valueClassName="text-blue-700"
       />
-      <div className={`bg-white rounded-lg shadow-md p-4 border border-gray-100 flex flex-col items-center justify-center animate-fade-in ${isPlantRunning ? 'bg-green-50' : 'bg-red-50'}`}>
-        <div className="text-sm font-medium text-gray-500 mb-2">Plant Status</div>
+      <div className={`bg-white rounded-lg shadow-md p-3 border border-gray-100 flex flex-col items-center justify-center ${isPlantRunning ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'}`}>
+        <div className="text-sm font-medium text-gray-600 mb-1">Plant Status</div>
         <div className="flex items-center gap-2">
           {isPlantRunning ? (
             <>
