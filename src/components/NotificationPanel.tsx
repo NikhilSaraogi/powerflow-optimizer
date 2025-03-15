@@ -46,16 +46,18 @@ const NotificationPanel: React.FC<NotificationPanelProps> = ({ notifications }) 
       .replace(tempPattern, '<span class="font-semibold text-adani-green">$&</span>');
   };
   
-  // Get current date and time
+  // Get formatted current date and time
   const getCurrentDateTime = () => {
     const now = new Date();
-    return now.toLocaleDateString() + ' ' + now.toLocaleTimeString();
+    const date = now.toLocaleDateString();
+    const time = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+    return `${date} ${time}`;
   };
   
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 animate-fade-in">
       <div className="bg-white rounded-lg shadow-md border border-gray-100 overflow-hidden h-[400px] flex flex-col">
-        <div className="px-4 py-3 bg-adani-blue text-white font-medium flex items-center justify-between">
+        <div className="px-4 py-3 bg-adani-blue text-white font-medium flex items-center justify-between sticky top-0 z-10">
           <div className="flex items-center">
             <CheckCircle2 className="h-5 w-5 mr-2" />
             Recommendations
@@ -78,6 +80,7 @@ const NotificationPanel: React.FC<NotificationPanelProps> = ({ notifications }) 
                         className="text-sm text-gray-600" 
                         dangerouslySetInnerHTML={{ __html: highlightMessage(notification.message) }}
                       />
+                      <div className="text-xs text-gray-400 mt-1">{getCurrentDateTime()}</div>
                     </div>
                   </li>
                 ))}
@@ -90,7 +93,7 @@ const NotificationPanel: React.FC<NotificationPanelProps> = ({ notifications }) 
       </div>
       
       <div className="bg-white rounded-lg shadow-md border border-gray-100 overflow-hidden h-[400px] flex flex-col">
-        <div className="px-4 py-3 bg-adani-navy text-white font-medium flex items-center justify-between">
+        <div className="px-4 py-3 bg-adani-navy text-white font-medium flex items-center justify-between sticky top-0 z-10">
           <div className="flex items-center">
             <Bell className="h-5 w-5 mr-2" />
             RCA & Alerts
@@ -115,6 +118,7 @@ const NotificationPanel: React.FC<NotificationPanelProps> = ({ notifications }) 
                         <span className="text-xs text-gray-500">{notification.timestamp}</span>
                       </div>
                       <p className="text-sm text-gray-600">{notification.message}</p>
+                      <div className="text-xs text-gray-400 mt-1">{getCurrentDateTime()}</div>
                     </div>
                   </li>
                 ))}

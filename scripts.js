@@ -17,7 +17,15 @@ let dashboardData = {
       dca: { value: 4.5, unit: "°C", status: "healthy", change: 0.1 },
       tr: { value: 0.92, unit: "", status: "healthy", change: 0.0 },
       heaterLevel: { value: 52, unit: "%", status: "healthy" },
-      predictedEcoInlet: { value: 223.1, unit: "°C", status: "healthy" }
+      predictedEcoInlet: { value: 223.1, unit: "°C", status: "healthy" },
+      enthalpyTrip: { value: 3260, unit: "kJ/kg", status: "healthy" },
+      enthalpyFwInlet: { value: 983, unit: "kJ/kg", status: "healthy" },
+      enthalpyFwOutlet: { value: 1066, unit: "kJ/kg", status: "healthy" },
+      enthalpyExtraction: { value: 3140, unit: "kJ/kg", status: "healthy" },
+      fwTempInlet: { value: 192.5, unit: "°C", status: "healthy" },
+      fwTempOutlet: { value: 215.2, unit: "°C", status: "healthy" },
+      extractionTemp: { value: 342.8, unit: "°C", status: "healthy" },
+      extractionPressure: { value: 32.6, unit: "bar", status: "healthy" }
     },
     {
       id: 2,
@@ -28,7 +36,15 @@ let dashboardData = {
       dca: { value: 5.2, unit: "°C", status: "warning", change: 0.8 },
       tr: { value: 0.89, unit: "", status: "warning", change: -0.02 },
       heaterLevel: { value: 65, unit: "%", status: "warning" },
-      predictedEcoInlet: { value: 219.8, unit: "°C", status: "warning" }
+      predictedEcoInlet: { value: 219.8, unit: "°C", status: "warning" },
+      enthalpyTrip: { value: 3180, unit: "kJ/kg", status: "warning" },
+      enthalpyFwInlet: { value: 945, unit: "kJ/kg", status: "healthy" },
+      enthalpyFwOutlet: { value: 1045, unit: "kJ/kg", status: "warning" },
+      enthalpyExtraction: { value: 3050, unit: "kJ/kg", status: "warning" },
+      fwTempInlet: { value: 189.8, unit: "°C", status: "healthy" },
+      fwTempOutlet: { value: 210.4, unit: "°C", status: "warning" },
+      extractionTemp: { value: 338.2, unit: "°C", status: "warning" },
+      extractionPressure: { value: 30.8, unit: "bar", status: "warning" }
     },
     {
       id: 3,
@@ -39,7 +55,15 @@ let dashboardData = {
       dca: { value: 6.8, unit: "°C", status: "critical", change: 2.2 },
       tr: { value: 0.83, unit: "", status: "critical", change: -0.05 },
       heaterLevel: { value: 78, unit: "%", status: "critical" },
-      predictedEcoInlet: { value: 215.3, unit: "°C", status: "critical" }
+      predictedEcoInlet: { value: 215.3, unit: "°C", status: "critical" },
+      enthalpyTrip: { value: 3110, unit: "kJ/kg", status: "critical" },
+      enthalpyFwInlet: { value: 925, unit: "kJ/kg", status: "warning" },
+      enthalpyFwOutlet: { value: 1015, unit: "kJ/kg", status: "critical" },
+      enthalpyExtraction: { value: 2980, unit: "kJ/kg", status: "critical" },
+      fwTempInlet: { value: 186.3, unit: "°C", status: "warning" },
+      fwTempOutlet: { value: 204.8, unit: "°C", status: "critical" },
+      extractionTemp: { value: 332.5, unit: "°C", status: "critical" },
+      extractionPressure: { value: 28.4, unit: "bar", status: "critical" }
     }
   ],
   notificationData: [
@@ -192,64 +216,85 @@ function renderTopBar() {
   if (!container) return;
   
   const { ecoInletTemp, load, hdrPressure, feedWaterFlow } = dashboardData.topBarData;
+  const isPlantRunning = load.value > 0;
   
   container.innerHTML = `
-    <div class="bg-white rounded-lg shadow-md p-4 border border-gray-100 flex items-center animate-fade-in">
-      <div class="p-2 bg-blue-100 rounded-lg mr-3">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-adani-blue" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
-        </svg>
+    <div class="grid grid-cols-5 gap-4 w-full">
+      <div class="bg-white rounded-lg shadow-md p-4 border border-gray-100 flex items-center animate-fade-in">
+        <div class="p-2 bg-blue-100 rounded-lg mr-3">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-adani-blue" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+          </svg>
+        </div>
+        <div class="flex-1">
+          <h3 class="text-sm font-medium text-gray-500">Eco Inlet Temperature</h3>
+          <p class="text-xl font-semibold ${getStatusColorClass(ecoInletTemp.status)}">${ecoInletTemp.value} ${ecoInletTemp.unit}</p>
+        </div>
       </div>
-      <div class="flex-1">
-        <h3 class="text-sm font-medium text-gray-500">Eco Inlet Temperature</h3>
-        <p class="text-xl font-semibold ${getStatusColorClass(ecoInletTemp.status)}">${ecoInletTemp.value} ${ecoInletTemp.unit}</p>
+      
+      <div class="bg-white rounded-lg shadow-md p-4 border border-gray-100 flex items-center animate-fade-in">
+        <div class="p-2 bg-blue-100 rounded-lg mr-3">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-adani-blue" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+          </svg>
+        </div>
+        <div class="flex-1">
+          <h3 class="text-sm font-medium text-gray-500">Load</h3>
+          <p class="text-xl font-semibold ${getStatusColorClass(load.status)}">${load.value} ${load.unit}</p>
+        </div>
       </div>
-    </div>
-    
-    <div class="bg-white rounded-lg shadow-md p-4 border border-gray-100 flex items-center animate-fade-in">
-      <div class="p-2 bg-blue-100 rounded-lg mr-3">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-adani-blue" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-        </svg>
+      
+      <div class="bg-white rounded-lg shadow-md p-4 border border-gray-100 flex items-center animate-fade-in">
+        <div class="p-2 bg-blue-100 rounded-lg mr-3">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-adani-blue" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+          </svg>
+        </div>
+        <div class="flex-1">
+          <h3 class="text-sm font-medium text-gray-500">HDR Pressure</h3>
+          <p class="text-xl font-semibold ${getStatusColorClass(hdrPressure.status)}">${hdrPressure.value} ${hdrPressure.unit}</p>
+        </div>
       </div>
-      <div class="flex-1">
-        <h3 class="text-sm font-medium text-gray-500">Load</h3>
-        <p class="text-xl font-semibold ${getStatusColorClass(load.status)}">${load.value} ${load.unit}</p>
+      
+      <div class="bg-white rounded-lg shadow-md p-4 border border-gray-100 flex items-center animate-fade-in">
+        <div class="p-2 bg-blue-100 rounded-lg mr-3">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-adani-blue" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+          </svg>
+        </div>
+        <div class="flex-1">
+          <h3 class="text-sm font-medium text-gray-500">Feed Water Flow</h3>
+          <p class="text-xl font-semibold ${getStatusColorClass(feedWaterFlow.status)}">${feedWaterFlow.value} ${feedWaterFlow.unit}</p>
+        </div>
       </div>
-    </div>
-    
-    <div class="bg-white rounded-lg shadow-md p-4 border border-gray-100 flex items-center animate-fade-in">
-      <div class="p-2 bg-blue-100 rounded-lg mr-3">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-adani-blue" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-        </svg>
-      </div>
-      <div class="flex-1">
-        <h3 class="text-sm font-medium text-gray-500">HDR Pressure</h3>
-        <p class="text-xl font-semibold ${getStatusColorClass(hdrPressure.status)}">${hdrPressure.value} ${hdrPressure.unit}</p>
-      </div>
-    </div>
-    
-    <div class="bg-white rounded-lg shadow-md p-4 border border-gray-100 flex items-center animate-fade-in">
-      <div class="p-2 bg-blue-100 rounded-lg mr-3">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-adani-blue" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
-        </svg>
-      </div>
-      <div class="flex-1">
-        <h3 class="text-sm font-medium text-gray-500">Feed Water Flow</h3>
-        <p class="text-xl font-semibold ${getStatusColorClass(feedWaterFlow.status)}">${feedWaterFlow.value} ${feedWaterFlow.unit}</p>
+      
+      <div class="bg-white rounded-lg shadow-md p-4 border border-gray-100 flex flex-col items-center justify-center animate-fade-in">
+        <div class="text-sm font-medium text-gray-500 mb-2">Plant Status</div>
+        <div class="flex items-center gap-2">
+          ${isPlantRunning ? `
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+            <span class="text-green-500 font-semibold">Running</span>
+          ` : `
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+            </svg>
+            <span class="text-red-500 font-semibold">Shutdown</span>
+          `}
+        </div>
       </div>
     </div>
   `;
 }
 
-// Render Heater Cards
+// Render Heater Cards with all the new data fields
 function renderHeaterCards() {
   const container = document.getElementById('heater-cards-container');
   if (!container) return;
   
   container.innerHTML = '';
+  container.className = 'grid grid-cols-1 md:grid-cols-3 gap-4 mb-6';
   
   dashboardData.heaterData.forEach(heater => {
     const card = document.createElement('div');
@@ -296,7 +341,7 @@ function renderHeaterCards() {
           </div>
         </div>
         
-        <div class="grid grid-cols-2 gap-4">
+        <div class="grid grid-cols-2 gap-4 mb-4">
           <div>
             <h4 class="text-xs font-medium text-gray-500">TR</h4>
             <p class="text-lg font-semibold ${getStatusColorClass(heater.tr.status)}">
@@ -311,6 +356,68 @@ function renderHeaterCards() {
             </p>
           </div>
         </div>
+        
+        <div class="grid grid-cols-2 gap-4">
+          <div class="bg-gray-50 p-3 rounded-md">
+            <h3 class="text-sm font-medium text-gray-600 mb-2 border-b pb-1">Enthalpy Values</h3>
+            <ul class="space-y-2 text-sm">
+              <li class="flex justify-between">
+                <span class="text-gray-600">Trip:</span>
+                <span class="font-medium ${getStatusColorClass(heater.enthalpyTrip.status)}">
+                  ${heater.enthalpyTrip.value} ${heater.enthalpyTrip.unit}
+                </span>
+              </li>
+              <li class="flex justify-between">
+                <span class="text-gray-600">FW Inlet:</span>
+                <span class="font-medium ${getStatusColorClass(heater.enthalpyFwInlet.status)}">
+                  ${heater.enthalpyFwInlet.value} ${heater.enthalpyFwInlet.unit}
+                </span>
+              </li>
+              <li class="flex justify-between">
+                <span class="text-gray-600">FW Outlet:</span>
+                <span class="font-medium ${getStatusColorClass(heater.enthalpyFwOutlet.status)}">
+                  ${heater.enthalpyFwOutlet.value} ${heater.enthalpyFwOutlet.unit}
+                </span>
+              </li>
+              <li class="flex justify-between">
+                <span class="text-gray-600">Extraction:</span>
+                <span class="font-medium ${getStatusColorClass(heater.enthalpyExtraction.status)}">
+                  ${heater.enthalpyExtraction.value} ${heater.enthalpyExtraction.unit}
+                </span>
+              </li>
+            </ul>
+          </div>
+          
+          <div class="bg-gray-50 p-3 rounded-md">
+            <h3 class="text-sm font-medium text-gray-600 mb-2 border-b pb-1">Temperature & Pressure</h3>
+            <ul class="space-y-2 text-sm">
+              <li class="flex justify-between">
+                <span class="text-gray-600">FW Inlet:</span>
+                <span class="font-medium ${getStatusColorClass(heater.fwTempInlet.status)}">
+                  ${heater.fwTempInlet.value} ${heater.fwTempInlet.unit}
+                </span>
+              </li>
+              <li class="flex justify-between">
+                <span class="text-gray-600">FW Outlet:</span>
+                <span class="font-medium ${getStatusColorClass(heater.fwTempOutlet.status)}">
+                  ${heater.fwTempOutlet.value} ${heater.fwTempOutlet.unit}
+                </span>
+              </li>
+              <li class="flex justify-between">
+                <span class="text-gray-600">Ext Temp:</span>
+                <span class="font-medium ${getStatusColorClass(heater.extractionTemp.status)}">
+                  ${heater.extractionTemp.value} ${heater.extractionTemp.unit}
+                </span>
+              </li>
+              <li class="flex justify-between">
+                <span class="text-gray-600">Ext Press:</span>
+                <span class="font-medium ${getStatusColorClass(heater.extractionPressure.status)}">
+                  ${heater.extractionPressure.value} ${heater.extractionPressure.unit}
+                </span>
+              </li>
+            </ul>
+          </div>
+        </div>
       </div>
     `;
     
@@ -318,7 +425,7 @@ function renderHeaterCards() {
   });
 }
 
-// Render Notifications
+// Render Notifications with scrollbars and timestamps
 function renderNotifications() {
   const recommendationsContainer = document.getElementById('recommendations-container');
   const alertsContainer = document.getElementById('alerts-container');
@@ -336,6 +443,9 @@ function renderNotifications() {
         ? '<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-adani-green" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>'
         : '';
       
+      const now = new Date();
+      const currentDateTime = now.toLocaleDateString() + ' ' + now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+      
       recommendationsHTML += `
         <li class="flex gap-3 pb-3 border-b border-gray-100 last:border-0 last:pb-0">
           ${iconHTML}
@@ -345,6 +455,7 @@ function renderNotifications() {
               <span class="text-xs text-gray-500">${notification.timestamp}</span>
             </div>
             <p class="text-sm text-gray-600">${highlightMessage(notification.message)}</p>
+            <div class="text-xs text-gray-400 mt-1">${currentDateTime}</div>
           </div>
         </li>
       `;
@@ -367,6 +478,9 @@ function renderNotifications() {
         iconHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ${alertColor}" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>`;
       }
       
+      const now = new Date();
+      const currentDateTime = now.toLocaleDateString() + ' ' + now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+      
       alertsHTML += `
         <li class="flex gap-3 pb-3 border-b border-gray-100 last:border-0 last:pb-0">
           ${iconHTML}
@@ -379,6 +493,7 @@ function renderNotifications() {
               <span class="text-xs text-gray-500">${notification.timestamp}</span>
             </div>
             <p class="text-sm text-gray-600">${notification.message}</p>
+            <div class="text-xs text-gray-400 mt-1">${currentDateTime}</div>
           </div>
         </li>
       `;
