@@ -9,6 +9,7 @@ interface ParameterCardProps {
   change?: number;
   status?: 'healthy' | 'warning' | 'critical';
   icon?: React.ReactNode;
+  valueClassName?: string;
 }
 
 const ParameterCard: React.FC<ParameterCardProps> = ({ 
@@ -17,7 +18,8 @@ const ParameterCard: React.FC<ParameterCardProps> = ({
   unit, 
   change,
   status = 'healthy',
-  icon = <Thermometer className="h-5 w-5" />
+  icon = <Thermometer className="h-5 w-5" />,
+  valueClassName = ""
 }) => {
   const getStatusClass = () => {
     switch(status) {
@@ -30,12 +32,12 @@ const ParameterCard: React.FC<ParameterCardProps> = ({
   
   return (
     <div className="parameter-card group animate-fade-in">
-      <div className="flex justify-between items-start mb-2">
+      <div className="flex justify-between items-start mb-4">
         <div className="flex items-center gap-2">
           <div className={`p-1.5 rounded-full bg-gray-100 group-hover:bg-adani-gray transition-colors ${getStatusClass()}`}>
             {icon}
           </div>
-          <h3 className="text-sm font-medium text-gray-500">{title}</h3>
+          <h3 className="text-sm font-medium text-gray-600">{title}</h3>
         </div>
         
         {change !== undefined && (
@@ -47,8 +49,8 @@ const ParameterCard: React.FC<ParameterCardProps> = ({
       </div>
       
       <div className="flex items-baseline gap-1">
-        <span className="parameter-value">{value}</span>
-        <span className="text-xs text-gray-500">{unit}</span>
+        <span className={`text-2xl font-bold ${valueClassName}`}>{value}</span>
+        <span className="text-xs text-gray-500 ml-1">{unit}</span>
       </div>
     </div>
   );

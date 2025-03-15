@@ -1,7 +1,7 @@
 
 import React from 'react';
 import ParameterCard from './ParameterCard';
-import { Thermometer, Wind, Gauge, Droplet, Power, PowerOff } from 'lucide-react';
+import { Thermometer, Gauge, Wind, Droplet, Power, PowerOff } from 'lucide-react';
 
 interface TopBarProps {
   ecoInletTemp: { value: number; unit: string; status: 'healthy' | 'warning' | 'critical' };
@@ -21,41 +21,45 @@ const TopBar: React.FC<TopBarProps> = ({ ecoInletTemp, load, hdrPressure, feedWa
         value={ecoInletTemp.value} 
         unit={ecoInletTemp.unit} 
         status={ecoInletTemp.status}
-        icon={<Thermometer className="h-5 w-5" />}
+        icon={<Thermometer className="h-5 w-5 text-green-500" />}
+        valueClassName="text-blue-600"
       />
       <ParameterCard 
         title="Load" 
         value={load.value} 
         unit={load.unit} 
         status={load.status}
-        icon={<Gauge className="h-5 w-5" />}
+        icon={<Gauge className="h-5 w-5 text-blue-500" />}
+        valueClassName="text-blue-600"
       />
       <ParameterCard 
         title="HDR Pressure" 
         value={hdrPressure.value} 
         unit={hdrPressure.unit} 
         status={hdrPressure.status}
-        icon={<Wind className="h-5 w-5" />}
+        icon={<Wind className="h-5 w-5 text-green-500" />}
+        valueClassName="text-blue-600"
       />
       <ParameterCard 
         title="Feed Water Flow" 
         value={feedWaterFlow.value} 
         unit={feedWaterFlow.unit} 
         status={feedWaterFlow.status}
-        icon={<Droplet className="h-5 w-5" />}
+        icon={<Droplet className="h-5 w-5 text-blue-500" />}
+        valueClassName="text-blue-600"
       />
-      <div className="bg-white rounded-lg shadow-md p-4 border border-gray-100 flex flex-col items-center justify-center animate-fade-in">
+      <div className={`bg-white rounded-lg shadow-md p-4 border border-gray-100 flex flex-col items-center justify-center animate-fade-in ${isPlantRunning ? 'bg-green-50' : 'bg-red-50'}`}>
         <div className="text-sm font-medium text-gray-500 mb-2">Plant Status</div>
         <div className="flex items-center gap-2">
           {isPlantRunning ? (
             <>
               <Power className="h-6 w-6 text-green-500" />
-              <span className="text-green-500 font-semibold">Running</span>
+              <span className="text-green-600 font-semibold">Running</span>
             </>
           ) : (
             <>
               <PowerOff className="h-6 w-6 text-red-500" />
-              <span className="text-red-500 font-semibold">Shutdown</span>
+              <span className="text-red-600 font-semibold">Shutdown</span>
             </>
           )}
         </div>
