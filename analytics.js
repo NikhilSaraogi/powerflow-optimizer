@@ -86,23 +86,6 @@ const analyticsData = {
   }
 };
 
-// API Endpoints Configuration
-const apiConfig = {
-  baseUrl: "https://api.adani-power.com/v1", // Replace with your actual API base URL
-  endpoints: {
-    analytics: "/analytics",
-    heatLoad: "/analytics/heat-load",
-    temperature: "/analytics/temperature",
-    heaterLevel: "/analytics/heater-level",
-    enthalpy: "/analytics/enthalpy",
-    parameterComparison: "/analytics/parameter"
-  },
-  headers: {
-    "Content-Type": "application/json",
-    "Authorization": "Bearer YOUR_API_TOKEN" // Replace with actual token or authentication method
-  }
-};
-
 // Utility functions
 function updateDateTime() {
   const now = new Date();
@@ -129,12 +112,39 @@ function toggleSidebar() {
   }
 }
 
+// Tab functionality
+function setupTabs() {
+  const tabs = document.querySelectorAll('.tab');
+  tabs.forEach(tab => {
+    tab.addEventListener('click', function(e) {
+      e.preventDefault();
+      const target = this.getAttribute('data-tab');
+      
+      // Remove active class from all tabs and content
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
+      
+      // Add active class to clicked tab and show content
+      this.classList.add('active');
+      document.getElementById(`tab-${target}`).classList.remove('hidden');
+    });
+  });
+}
+
 // Initialize charts
 function initAnalytics() {
   updateDateTime();
   setInterval(updateDateTime, 1000);
   
-  // Initialize the default charts
+  // Set up sidebar
+  document.getElementById('sidebar').classList.add('w-64');
+  document.getElementById('main-content').classList.add('ml-64');
+  document.getElementById('sidebar-toggle').addEventListener('click', toggleSidebar);
+  
+  // Setup tabs
+  setupTabs();
+  
+  // Initialize the charts
   initHeatLoadChart();
   initHeaterLevelChart();
   initTemperatureChart();
@@ -150,16 +160,11 @@ function initAnalytics() {
   document.getElementById('end-date').valueAsDate = today;
   
   // Set up event listeners
-  document.getElementById('sidebar-toggle').addEventListener('click', toggleSidebar);
   document.getElementById('parameter-select').addEventListener('change', updateParameterComparisonChart);
   document.getElementById('start-date').addEventListener('change', updateParameterComparisonChart);
   document.getElementById('end-date').addEventListener('change', updateParameterComparisonChart);
   document.getElementById('date-range').addEventListener('change', updateAllCharts);
   document.getElementById('refresh-data').addEventListener('click', fetchAndRefreshData);
-  
-  // Initialize sidebar state
-  document.getElementById('sidebar').classList.add('w-64');
-  document.getElementById('main-content').classList.add('ml-64');
 }
 
 // Initialize Heat Load Chart
@@ -202,26 +207,47 @@ function initHeatLoadChart() {
       maintainAspectRatio: false,
       plugins: {
         legend: {
-          position: 'top'
+          position: 'top',
+          labels: {
+            boxWidth: 15,
+            padding: 15
+          }
         },
         tooltip: {
           mode: 'index',
-          intersect: false
+          intersect: false,
+          backgroundColor: 'rgba(255, 255, 255, 0.9)',
+          titleColor: '#333',
+          bodyColor: '#333',
+          borderColor: '#ddd',
+          borderWidth: 1
         }
       },
       scales: {
         x: {
           title: {
             display: true,
-            text: 'Date'
+            text: 'Date',
+            font: {
+              size: 12
+            }
+          },
+          grid: {
+            display: false
           }
         },
         y: {
           title: {
             display: true,
-            text: 'MW'
+            text: 'MW',
+            font: {
+              size: 12
+            }
           },
-          beginAtZero: false
+          beginAtZero: false,
+          grid: {
+            color: 'rgba(0, 0, 0, 0.05)'
+          }
         }
       }
     }
@@ -268,27 +294,48 @@ function initHeaterLevelChart() {
       maintainAspectRatio: false,
       plugins: {
         legend: {
-          position: 'top'
+          position: 'top',
+          labels: {
+            boxWidth: 15,
+            padding: 15
+          }
         },
         tooltip: {
           mode: 'index',
-          intersect: false
+          intersect: false,
+          backgroundColor: 'rgba(255, 255, 255, 0.9)',
+          titleColor: '#333',
+          bodyColor: '#333',
+          borderColor: '#ddd',
+          borderWidth: 1
         }
       },
       scales: {
         x: {
           title: {
             display: true,
-            text: 'Date'
+            text: 'Date',
+            font: {
+              size: 12
+            }
+          },
+          grid: {
+            display: false
           }
         },
         y: {
           title: {
             display: true,
-            text: '%'
+            text: '%',
+            font: {
+              size: 12
+            }
           },
           min: 40,
-          max: 85
+          max: 85,
+          grid: {
+            color: 'rgba(0, 0, 0, 0.05)'
+          }
         }
       }
     }
@@ -335,26 +382,47 @@ function initTemperatureChart() {
       maintainAspectRatio: false,
       plugins: {
         legend: {
-          position: 'top'
+          position: 'top',
+          labels: {
+            boxWidth: 15,
+            padding: 15
+          }
         },
         tooltip: {
           mode: 'index',
-          intersect: false
+          intersect: false,
+          backgroundColor: 'rgba(255, 255, 255, 0.9)',
+          titleColor: '#333',
+          bodyColor: '#333',
+          borderColor: '#ddd',
+          borderWidth: 1
         }
       },
       scales: {
         x: {
           title: {
             display: true,
-            text: 'Date'
+            text: 'Date',
+            font: {
+              size: 12
+            }
+          },
+          grid: {
+            display: false
           }
         },
         y: {
           title: {
             display: true,
-            text: '°C'
+            text: '°C',
+            font: {
+              size: 12
+            }
           },
-          beginAtZero: false
+          beginAtZero: false,
+          grid: {
+            color: 'rgba(0, 0, 0, 0.05)'
+          }
         }
       }
     }
@@ -401,26 +469,47 @@ function initEnthalpyChart() {
       maintainAspectRatio: false,
       plugins: {
         legend: {
-          position: 'top'
+          position: 'top',
+          labels: {
+            boxWidth: 15,
+            padding: 15
+          }
         },
         tooltip: {
           mode: 'index',
-          intersect: false
+          intersect: false,
+          backgroundColor: 'rgba(255, 255, 255, 0.9)',
+          titleColor: '#333',
+          bodyColor: '#333',
+          borderColor: '#ddd',
+          borderWidth: 1
         }
       },
       scales: {
         x: {
           title: {
             display: true,
-            text: 'Date'
+            text: 'Date',
+            font: {
+              size: 12
+            }
+          },
+          grid: {
+            display: false
           }
         },
         y: {
           title: {
             display: true,
-            text: 'kJ/kg'
+            text: 'kJ/kg',
+            font: {
+              size: 12
+            }
           },
-          beginAtZero: false
+          beginAtZero: false,
+          grid: {
+            color: 'rgba(0, 0, 0, 0.05)'
+          }
         }
       }
     }
@@ -433,7 +522,7 @@ function initParameterComparisonChart() {
   const parameter = document.getElementById('parameter-select').value;
   const parameterData = analyticsData.parameterData[parameter];
   
-  const parameterChart = new Chart(ctx, {
+  window.parameterChart = new Chart(ctx, {
     type: 'line',
     data: {
       labels: parameterData.map(item => item.date),
@@ -469,32 +558,51 @@ function initParameterComparisonChart() {
       maintainAspectRatio: false,
       plugins: {
         legend: {
-          position: 'top'
+          position: 'top',
+          labels: {
+            boxWidth: 15,
+            padding: 15
+          }
         },
         tooltip: {
           mode: 'index',
-          intersect: false
+          intersect: false,
+          backgroundColor: 'rgba(255, 255, 255, 0.9)',
+          titleColor: '#333',
+          bodyColor: '#333',
+          borderColor: '#ddd',
+          borderWidth: 1
         }
       },
       scales: {
         x: {
           title: {
             display: true,
-            text: 'Date'
+            text: 'Date',
+            font: {
+              size: 12
+            }
+          },
+          grid: {
+            display: false
           }
         },
         y: {
           title: {
             display: true,
-            text: getParameterUnit(parameter)
+            text: getParameterUnit(parameter),
+            font: {
+              size: 12
+            }
           },
-          beginAtZero: false
+          beginAtZero: false,
+          grid: {
+            color: 'rgba(0, 0, 0, 0.05)'
+          }
         }
       }
     }
   });
-  
-  window.parameterChart = parameterChart;
 }
 
 // Get appropriate unit for the selected parameter
@@ -534,38 +642,34 @@ function updateParameterComparisonChart() {
 // Update all charts based on selected date range
 function updateAllCharts() {
   // In a real implementation, this would fetch new data based on the selected range
-  // For demo purposes, we're just refreshing with the same data
-  fetchAndRefreshData();
+  // For demo purposes, we're just showing an alert
+  alert("Data would be fetched for the selected date range");
 }
 
 // Fetch data from API and refresh charts
-async function fetchAndRefreshData() {
-  try {
-    // In a real implementation, you would fetch data from your API endpoints
-    // For example:
-    /*
-    const dateRange = document.getElementById('date-range').value;
-    const startDate = document.getElementById('start-date').value;
-    const endDate = document.getElementById('end-date').value;
-    
-    const analyticsResponse = await fetch(`${apiConfig.baseUrl}${apiConfig.endpoints.analytics}?range=${dateRange}&start=${startDate}&end=${endDate}`, {
-      method: 'GET',
-      headers: apiConfig.headers
-    });
-    
-    const data = await analyticsResponse.json();
-    analyticsData = data;
-    */
-    
-    // For now, just update the charts with the existing data
-    // This would be replaced with actual API calls in a production environment
+function fetchAndRefreshData() {
+  // Show a loading indicator
+  document.getElementById('refresh-data').innerHTML = `
+    <svg class="animate-spin h-4 w-4 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+    </svg>
+    Refreshing...
+  `;
+  
+  // Simulate API call
+  setTimeout(function() {
+    // In a real implementation, this would update with actual fetched data
+    document.getElementById('refresh-data').innerHTML = `
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+      </svg>
+      Refresh Data
+    `;
     
     // Show a success message
     alert("Data refreshed successfully!");
-  } catch (error) {
-    console.error('Error fetching analytics data:', error);
-    alert("Error refreshing data. Please try again.");
-  }
+  }, 1500);
 }
 
 // Initialize the analytics when the page loads
