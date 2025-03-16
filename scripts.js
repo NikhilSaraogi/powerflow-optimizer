@@ -49,7 +49,9 @@ let dashboardData = {
       title: "Optimize HP Heater 1 Level",
       message: "Maintain heater level at 52% to achieve eco inlet temperature of 223.1°C for optimal performance.",
       timestamp: "10:32 AM",
-      priority: "medium"
+      priority: "medium",
+      status: null,
+      comment: null
     },
     {
       id: "n2",
@@ -57,7 +59,9 @@ let dashboardData = {
       title: "Adjust HP Heater 2 Level",
       message: "Reduce heater level to 55% to improve heat transfer efficiency and increase eco inlet temperature to 219.8°C.",
       timestamp: "10:15 AM",
-      priority: "high"
+      priority: "high",
+      status: null,
+      comment: null
     },
     {
       id: "n3",
@@ -65,7 +69,9 @@ let dashboardData = {
       title: "HP Heater 3 Level Correction",
       message: "Urgent: Decrease heater level from 78% to 60% to recover performance and achieve predicted eco inlet of 215.3°C.",
       timestamp: "09:45 AM",
-      priority: "high"
+      priority: "high",
+      status: null,
+      comment: null
     },
     {
       id: "n4",
@@ -73,7 +79,9 @@ let dashboardData = {
       title: "HP Heater 3 Performance Degradation",
       message: "Root cause analysis indicates possible tube fouling. Schedule inspection during next outage.",
       timestamp: "10:05 AM",
-      priority: "medium"
+      priority: "medium",
+      status: null,
+      comment: null
     },
     {
       id: "n5",
@@ -81,7 +89,9 @@ let dashboardData = {
       title: "HP Heater 3 High Level",
       message: "Heater level exceeding optimal range. Check drain valve operation and control system.",
       timestamp: "10:22 AM",
-      priority: "high"
+      priority: "high",
+      status: null,
+      comment: null
     }
   ]
 };
@@ -91,6 +101,13 @@ let sidebarCollapsed = false;
 const sidebar = document.getElementById('sidebar');
 const mainContent = document.getElementById('main-content');
 const sidebarToggle = document.getElementById('sidebar-toggle');
+
+// Comment modal elements
+let commentModal;
+let closeCommentModal;
+let commentText;
+let saveCommentBtn;
+let currentNotificationId = null;
 
 function toggleSidebar() {
   sidebarCollapsed = !sidebarCollapsed;
@@ -173,6 +190,7 @@ function initDashboard() {
   renderTopBar();
   renderHeaterCards();
   renderNotifications();
+  initNotificationActions();
   
   // Set up sidebar toggle
   if (sidebarToggle) {
@@ -184,6 +202,37 @@ function initDashboard() {
     sidebar.classList.add('w-64', 'sidebar-expanded');
     mainContent.classList.add('ml-64');
   }
+}
+
+// Initialize notification action handlers
+function initNotificationActions() {
+  // Get modal elements
+  commentModal = document.getElementById('comment-modal');
+  closeCommentModal = document.getElementById('close-comment-modal');
+  commentText = document.getElementById('comment-text');
+  saveCommentBtn = document.getElementById('save-comment');
+  
+  // Set up modal close event
+  closeCommentModal.addEventListener('click', function() {
+    commentModal.style.display = 'none';
+    currentNotificationId = null;
+  });
+  
+  // Close modal when clicking outside
+  window.addEventListener('click', function(event) {
+    if (event.target === commentModal) {
+      commentModal.style.display = 'none';
+      currentNotificationId = null;
+    }
+  });
+  
+  // Set up save comment button
+  saveCommentBtn.addEventListener('click', function() {
+    if (currentNotificationId && commentText.value.trim() !== '') {
+      updateNotificationComment(currentNotificationId, commentText.value.trim());
+      commentModal.style.display = 'none';
+    }
+  });
 }
 
 // Render Top Bar
@@ -336,15 +385,32 @@ function renderNotifications() {
         ? '<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-adani-green" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>'
         : '';
       
+      // Add status badge if available
+      const statusBadge = notification.status 
+        ? `<span class="status-badge status-${notification.status}">${notification.status}</span>` 
+        : '';
+      
+      // Add comment indicator if available
+      const commentIndicator = notification.comment 
+        ? `<span class="comment-indicator" title="${notification.comment}" onclick="showCommentTooltip(event, '${notification.id}')">💬</span>` 
+        : '';
+      
       recommendationsHTML += `
-        <li class="flex gap-3 pb-3 border-b border-gray-100 last:border-0 last:pb-0">
+        <li class="notification-item flex gap-3 pb-3 border-b border-gray-100 last:border-0 last:pb-0" data-id="${notification.id}">
           ${iconHTML}
           <div class="flex-1">
             <div class="flex justify-between items-start mb-1">
-              <h4 class="font-medium text-adani-navy">${notification.title}</h4>
+              <h4 class="font-medium text-adani-navy">${notification.title} ${commentIndicator}</h4>
               <span class="text-xs text-gray-500">${notification.timestamp}</span>
             </div>
-            <p class="text-sm text-gray-600">${highlightMessage(notification.message)}</p>
+            <p class="text-sm text-gray-600" 
+               dangerouslySetInnerHTML={{ __html: highlightMessage(notification.message) }}></p>
+            <div class="notification-actions">
+              <button class="btn-action btn-accept" onclick="updateNotificationStatus('${notification.id}', 'accepted')">Accept</button>
+              <button class="btn-action btn-reject" onclick="updateNotificationStatus('${notification.id}', 'rejected')">Reject</button>
+              <button class="btn-action btn-comment" onclick="openCommentModal('${notification.id}')">Comment</button>
+            </div>
+            ${statusBadge}
           </div>
         </li>
       `;
@@ -367,18 +433,34 @@ function renderNotifications() {
         iconHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ${alertColor}" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>`;
       }
       
+      // Add status badge if available
+      const statusBadge = notification.status 
+        ? `<span class="status-badge status-${notification.status}">${notification.status}</span>` 
+        : '';
+      
+      // Add comment indicator if available
+      const commentIndicator = notification.comment 
+        ? `<span class="comment-indicator" title="${notification.comment}" onclick="showCommentTooltip(event, '${notification.id}')">💬</span>` 
+        : '';
+      
       alertsHTML += `
-        <li class="flex gap-3 pb-3 border-b border-gray-100 last:border-0 last:pb-0">
+        <li class="notification-item flex gap-3 pb-3 border-b border-gray-100 last:border-0 last:pb-0" data-id="${notification.id}">
           ${iconHTML}
           <div class="flex-1">
             <div class="flex justify-between items-start mb-1">
               <h4 class="font-medium text-adani-navy flex items-center">
-                ${notification.title}
+                ${notification.title} ${commentIndicator}
                 ${notification.priority === 'high' ? '<span class="ml-2 px-2 py-0.5 bg-red-100 text-red-800 rounded-full text-xs">Critical</span>' : ''}
               </h4>
               <span class="text-xs text-gray-500">${notification.timestamp}</span>
             </div>
             <p class="text-sm text-gray-600">${notification.message}</p>
+            <div class="notification-actions">
+              <button class="btn-action btn-accept" onclick="updateNotificationStatus('${notification.id}', 'accepted')">Accept</button>
+              <button class="btn-action btn-reject" onclick="updateNotificationStatus('${notification.id}', 'rejected')">Reject</button>
+              <button class="btn-action btn-comment" onclick="openCommentModal('${notification.id}')">Comment</button>
+            </div>
+            ${statusBadge}
           </div>
         </li>
       `;
@@ -387,6 +469,128 @@ function renderNotifications() {
     alertsContainer.innerHTML = alertsHTML;
   } else {
     alertsContainer.innerHTML = '<p class="text-center text-gray-500 py-4">No alerts at this time</p>';
+  }
+}
+
+// Update notification status (accept/reject)
+function updateNotificationStatus(notificationId, status) {
+  // Find the notification in our data
+  const notification = dashboardData.notificationData.find(n => n.id === notificationId);
+  
+  if (notification) {
+    notification.status = status;
+    
+    // Re-render notifications to show the updated status
+    renderNotifications();
+    
+    // This function would send the updated status to the backend
+    saveNotificationStatus(notificationId, status);
+  }
+}
+
+// Open comment modal
+function openCommentModal(notificationId) {
+  // Find the notification in our data
+  const notification = dashboardData.notificationData.find(n => n.id === notificationId);
+  
+  if (notification) {
+    // Set current notification id
+    currentNotificationId = notificationId;
+    
+    // Set modal content
+    document.getElementById('modal-notification-title').textContent = notification.title;
+    document.getElementById('modal-notification-message').textContent = notification.message;
+    
+    // Set existing comment if any
+    commentText.value = notification.comment || '';
+    
+    // Show modal
+    commentModal.style.display = 'block';
+  }
+}
+
+// Update notification comment
+function updateNotificationComment(notificationId, comment) {
+  // Find the notification in our data
+  const notification = dashboardData.notificationData.find(n => n.id === notificationId);
+  
+  if (notification) {
+    notification.comment = comment;
+    
+    // Re-render notifications to show the comment indicator
+    renderNotifications();
+    
+    // This function would send the updated comment to the backend
+    saveNotificationComment(notificationId, comment);
+  }
+}
+
+// Save notification status to backend (placeholder function)
+function saveNotificationStatus(notificationId, status) {
+  console.log(`Saving notification ${notificationId} with status: ${status}`);
+  
+  // Here you would make an AJAX request to your backend
+  // Example:
+  /*
+  fetch('/api/notifications/status', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      id: notificationId,
+      status: status
+    })
+  })
+  .then(response => response.json())
+  .then(data => {
+    console.log('Success:', data);
+  })
+  .catch((error) => {
+    console.error('Error:', error);
+  });
+  */
+  
+  // Expose this function globally so it can be accessed from server-side code
+  window.updateNotificationStatus = updateNotificationStatus;
+}
+
+// Save notification comment to backend (placeholder function)
+function saveNotificationComment(notificationId, comment) {
+  console.log(`Saving comment for notification ${notificationId}: ${comment}`);
+  
+  // Here you would make an AJAX request to your backend
+  // Example:
+  /*
+  fetch('/api/notifications/comment', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      id: notificationId,
+      comment: comment
+    })
+  })
+  .then(response => response.json())
+  .then(data => {
+    console.log('Success:', data);
+  })
+  .catch((error) => {
+    console.error('Error:', error);
+  });
+  */
+  
+  // Expose this function globally so it can be accessed from server-side code
+  window.saveNotificationComment = saveNotificationComment;
+}
+
+// Show comment tooltip
+function showCommentTooltip(event, notificationId) {
+  const notification = dashboardData.notificationData.find(n => n.id === notificationId);
+  
+  if (notification && notification.comment) {
+    alert(`Comment: ${notification.comment}`);
   }
 }
 
@@ -424,3 +628,10 @@ document.addEventListener('DOMContentLoaded', function() {
   // Set up refresh interval - adjust as needed
   setInterval(fetchDataFromAPI, 60000); // Refresh every minute
 });
+
+// Expose necessary functions to window object for global access
+window.updateNotificationStatus = updateNotificationStatus;
+window.openCommentModal = openCommentModal;
+window.saveNotificationComment = saveNotificationComment;
+window.showCommentTooltip = showCommentTooltip;
+
