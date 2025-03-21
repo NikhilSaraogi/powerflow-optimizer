@@ -1,3 +1,4 @@
+
 // Sample data for analytics charts
 const analyticsData = {
   heaterLoadData: [
@@ -169,11 +170,11 @@ function setupTabs() {
       
       // Remove active class from all tabs and content
       document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
       
       // Add active class to clicked tab and show content
       this.classList.add('active');
-      document.getElementById(`tab-${target}`).classList.add('active');
+      document.getElementById(`tab-${target}`).classList.remove('hidden');
     });
   });
 }
@@ -198,7 +199,13 @@ function initAnalytics() {
   initTRChart();
   initHeaterLevelChart();
   initSteamFlowChart();
-  initEnthalpyCharts();
+  
+  // Initialize enthalpy charts
+  initExtractionSteamEnthalpyChart();
+  initDripEnthalpyChart();
+  initFWInletEnthalpyChart();
+  initFWOutletEnthalpyChart();
+  
   initParameterComparisonChart();
   
   // Set up date inputs for parameter comparison
@@ -320,7 +327,7 @@ function initHeatLoadChart() {
 
 // Initialize Steam Flow Chart
 function initSteamFlowChart() {
-  const ctx = document.getElementById('ttd-dca-chart').getContext('2d');
+  const ctx = document.getElementById('steam-flow-chart').getContext('2d');
   
   const steamFlowChart = new Chart(ctx, {
     type: 'line',
@@ -333,7 +340,6 @@ function initSteamFlowChart() {
           borderColor: '#0046AD',
           backgroundColor: 'rgba(0, 70, 173, 0.1)',
           tension: 0.4,
-          yAxisID: 'y',
           fill: true
         },
         {
@@ -342,7 +348,6 @@ function initSteamFlowChart() {
           borderColor: '#00A650',
           backgroundColor: 'rgba(0, 166, 80, 0.1)',
           tension: 0.4,
-          yAxisID: 'y',
           fill: true
         },
         {
@@ -351,7 +356,6 @@ function initSteamFlowChart() {
           borderColor: '#FF3A3A',
           backgroundColor: 'rgba(255, 58, 58, 0.1)',
           tension: 0.4,
-          yAxisID: 'y',
           fill: true
         }
       ]
@@ -360,13 +364,6 @@ function initSteamFlowChart() {
       responsive: true,
       maintainAspectRatio: false,
       plugins: {
-        title: {
-          display: true,
-          text: 'Steam Flow Trend (t/h)',
-          font: {
-            size: 16
-          }
-        },
         legend: {
           position: 'top',
           labels: {
@@ -398,9 +395,6 @@ function initSteamFlowChart() {
           }
         },
         y: {
-          type: 'linear',
-          display: true,
-          position: 'left',
           title: {
             display: true,
             text: 't/h',
@@ -408,6 +402,7 @@ function initSteamFlowChart() {
               size: 12
             }
           },
+          beginAtZero: false,
           grid: {
             color: 'rgba(0, 0, 0, 0.05)'
           }
@@ -592,23 +587,736 @@ function initTemperatureChart() {
   });
 }
 
-// Initialize Enthalpy Charts for all enthalpy types
-function initEnthalpyCharts() {
-  const ctx = document.getElementById('enthalpy-chart').getContext('2d');
+// Initialize TTD & DCA Chart
+function initTTDDCAChart() {
+  const ctx = document.getElementById('ttd-dca-chart').getContext('2d');
   
-  // Create dataset for extraction steam enthalpy
-  const extractionDatasets = [
-    {
-      label: 'HP Heater 1 - Extraction',
-      data: analyticsData.enthalpyData.extractionSteam.map(item => item.heater1),
-      borderColor: '#0046AD',
-      backgroundColor: 'rgba(0, 70, 173, 0.1)',
-      tension: 0.4,
-      borderWidth: 2,
-      borderDash: []
+  const ttdDcaChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: analyticsData.parameterData.ttd.map(item => item.date),
+      datasets: [
+        {
+          label: 'TTD - HP Heater 1',
+          data: analyticsData.parameterData.ttd.map(item => item.heater1),
+          borderColor: '#0046AD',
+          borderWidth: 2,
+          tension: 0.4,
+          fill: false
+        },
+        {
+          label: 'TTD - HP Heater 2',
+          data: analyticsData.parameterData.ttd.map(item => item.heater2),
+          borderColor: '#00A650',
+          borderWidth: 2,
+          tension: 0.4,
+          fill: false
+        },
+        {
+          label: 'TTD - HP Heater 3',
+          data: analyticsData.parameterData.ttd.map(item => item.heater3),
+          borderColor: '#FF3A3A',
+          borderWidth: 2,
+          tension: 0.4,
+          fill: false
+        },
+        {
+          label: 'DCA - HP Heater 1',
+          data: analyticsData.parameterData.dca.map(item => item.heater1),
+          borderColor: '#0046AD',
+          borderDash: [5, 5],
+          borderWidth: 2,
+          tension: 0.4,
+          fill: false
+        },
+        {
+          label: 'DCA - HP Heater 2',
+          data: analyticsData.parameterData.dca.map(item => item.heater2),
+          borderColor: '#00A650',
+          borderDash: [5, 5],
+          borderWidth: 2,
+          tension: 0.4,
+          fill: false
+        },
+        {
+          label: 'DCA - HP Heater 3',
+          data: analyticsData.parameterData.dca.map(item => item.heater3),
+          borderColor: '#FF3A3A',
+          borderDash: [5, 5],
+          borderWidth: 2,
+          tension: 0.4,
+          fill: false
+        }
+      ]
     },
-    {
-      label: 'HP Heater 2 - Extraction',
-      data: analyticsData.enthalpyData.extractionSteam.map(item => item.heater2),
-      borderColor: '#00A650',
-      backgroundColor: 'rgba
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          position: 'top',
+          labels: {
+            boxWidth: 15,
+            padding: 15
+          }
+        },
+        tooltip: {
+          mode: 'index',
+          intersect: false,
+          backgroundColor: 'rgba(255, 255, 255, 0.9)',
+          titleColor: '#333',
+          bodyColor: '#333',
+          borderColor: '#ddd',
+          borderWidth: 1
+        }
+      },
+      scales: {
+        x: {
+          title: {
+            display: true,
+            text: 'Date',
+            font: {
+              size: 12
+            }
+          },
+          grid: {
+            display: false
+          }
+        },
+        y: {
+          title: {
+            display: true,
+            text: '°C',
+            font: {
+              size: 12
+            }
+          },
+          beginAtZero: false,
+          grid: {
+            color: 'rgba(0, 0, 0, 0.05)'
+          }
+        }
+      }
+    }
+  });
+}
+
+// Initialize TR Chart
+function initTRChart() {
+  const ctx = document.getElementById('tr-chart').getContext('2d');
+  
+  const trChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: analyticsData.parameterData.tr.map(item => item.date),
+      datasets: [
+        {
+          label: 'HP Heater 1',
+          data: analyticsData.parameterData.tr.map(item => item.heater1),
+          borderColor: '#0046AD',
+          backgroundColor: 'rgba(0, 70, 173, 0.1)',
+          tension: 0.4,
+          fill: true
+        },
+        {
+          label: 'HP Heater 2',
+          data: analyticsData.parameterData.tr.map(item => item.heater2),
+          borderColor: '#00A650',
+          backgroundColor: 'rgba(0, 166, 80, 0.1)',
+          tension: 0.4,
+          fill: true
+        },
+        {
+          label: 'HP Heater 3',
+          data: analyticsData.parameterData.tr.map(item => item.heater3),
+          borderColor: '#FF3A3A',
+          backgroundColor: 'rgba(255, 58, 58, 0.1)',
+          tension: 0.4,
+          fill: true
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          position: 'top',
+          labels: {
+            boxWidth: 15,
+            padding: 15
+          }
+        },
+        tooltip: {
+          mode: 'index',
+          intersect: false,
+          backgroundColor: 'rgba(255, 255, 255, 0.9)',
+          titleColor: '#333',
+          bodyColor: '#333',
+          borderColor: '#ddd',
+          borderWidth: 1
+        }
+      },
+      scales: {
+        x: {
+          title: {
+            display: true,
+            text: 'Date',
+            font: {
+              size: 12
+            }
+          },
+          grid: {
+            display: false
+          }
+        },
+        y: {
+          title: {
+            display: true,
+            text: 'Terminal Ratio',
+            font: {
+              size: 12
+            }
+          },
+          min: 0.8,
+          max: 1.0,
+          grid: {
+            color: 'rgba(0, 0, 0, 0.05)'
+          }
+        }
+      }
+    }
+  });
+}
+
+// Initialize Extraction Steam Enthalpy Chart
+function initExtractionSteamEnthalpyChart() {
+  const ctx = document.getElementById('extraction-steam-enthalpy-chart').getContext('2d');
+  
+  const extractionSteamEnthalpyChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: analyticsData.enthalpyData.extractionSteam.map(item => item.date),
+      datasets: [
+        {
+          label: 'HP Heater 1',
+          data: analyticsData.enthalpyData.extractionSteam.map(item => item.heater1),
+          borderColor: '#0046AD',
+          backgroundColor: 'rgba(0, 70, 173, 0.1)',
+          tension: 0.4,
+          fill: true
+        },
+        {
+          label: 'HP Heater 2',
+          data: analyticsData.enthalpyData.extractionSteam.map(item => item.heater2),
+          borderColor: '#00A650',
+          backgroundColor: 'rgba(0, 166, 80, 0.1)',
+          tension: 0.4,
+          fill: true
+        },
+        {
+          label: 'HP Heater 3',
+          data: analyticsData.enthalpyData.extractionSteam.map(item => item.heater3),
+          borderColor: '#FF3A3A',
+          backgroundColor: 'rgba(255, 58, 58, 0.1)',
+          tension: 0.4,
+          fill: true
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          position: 'top',
+          labels: {
+            boxWidth: 15,
+            padding: 15
+          }
+        },
+        tooltip: {
+          mode: 'index',
+          intersect: false,
+          backgroundColor: 'rgba(255, 255, 255, 0.9)',
+          titleColor: '#333',
+          bodyColor: '#333',
+          borderColor: '#ddd',
+          borderWidth: 1
+        }
+      },
+      scales: {
+        x: {
+          title: {
+            display: true,
+            text: 'Date',
+            font: {
+              size: 12
+            }
+          },
+          grid: {
+            display: false
+          }
+        },
+        y: {
+          title: {
+            display: true,
+            text: 'kJ/kg',
+            font: {
+              size: 12
+            }
+          },
+          beginAtZero: false,
+          grid: {
+            color: 'rgba(0, 0, 0, 0.05)'
+          }
+        }
+      }
+    }
+  });
+}
+
+// Initialize Drip Enthalpy Chart
+function initDripEnthalpyChart() {
+  const ctx = document.getElementById('drip-enthalpy-chart').getContext('2d');
+  
+  const dripEnthalpyChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: analyticsData.enthalpyData.drip.map(item => item.date),
+      datasets: [
+        {
+          label: 'HP Heater 1',
+          data: analyticsData.enthalpyData.drip.map(item => item.heater1),
+          borderColor: '#0046AD',
+          backgroundColor: 'rgba(0, 70, 173, 0.1)',
+          tension: 0.4,
+          fill: true
+        },
+        {
+          label: 'HP Heater 2',
+          data: analyticsData.enthalpyData.drip.map(item => item.heater2),
+          borderColor: '#00A650',
+          backgroundColor: 'rgba(0, 166, 80, 0.1)',
+          tension: 0.4,
+          fill: true
+        },
+        {
+          label: 'HP Heater 3',
+          data: analyticsData.enthalpyData.drip.map(item => item.heater3),
+          borderColor: '#FF3A3A',
+          backgroundColor: 'rgba(255, 58, 58, 0.1)',
+          tension: 0.4,
+          fill: true
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          position: 'top',
+          labels: {
+            boxWidth: 15,
+            padding: 15
+          }
+        },
+        tooltip: {
+          mode: 'index',
+          intersect: false,
+          backgroundColor: 'rgba(255, 255, 255, 0.9)',
+          titleColor: '#333',
+          bodyColor: '#333',
+          borderColor: '#ddd',
+          borderWidth: 1
+        }
+      },
+      scales: {
+        x: {
+          title: {
+            display: true,
+            text: 'Date',
+            font: {
+              size: 12
+            }
+          },
+          grid: {
+            display: false
+          }
+        },
+        y: {
+          title: {
+            display: true,
+            text: 'kJ/kg',
+            font: {
+              size: 12
+            }
+          },
+          beginAtZero: false,
+          grid: {
+            color: 'rgba(0, 0, 0, 0.05)'
+          }
+        }
+      }
+    }
+  });
+}
+
+// Initialize FW Inlet Enthalpy Chart
+function initFWInletEnthalpyChart() {
+  const ctx = document.getElementById('fw-inlet-enthalpy-chart').getContext('2d');
+  
+  const fwInletEnthalpyChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: analyticsData.enthalpyData.fwInlet.map(item => item.date),
+      datasets: [
+        {
+          label: 'HP Heater 1',
+          data: analyticsData.enthalpyData.fwInlet.map(item => item.heater1),
+          borderColor: '#0046AD',
+          backgroundColor: 'rgba(0, 70, 173, 0.1)',
+          tension: 0.4,
+          fill: true
+        },
+        {
+          label: 'HP Heater 2',
+          data: analyticsData.enthalpyData.fwInlet.map(item => item.heater2),
+          borderColor: '#00A650',
+          backgroundColor: 'rgba(0, 166, 80, 0.1)',
+          tension: 0.4,
+          fill: true
+        },
+        {
+          label: 'HP Heater 3',
+          data: analyticsData.enthalpyData.fwInlet.map(item => item.heater3),
+          borderColor: '#FF3A3A',
+          backgroundColor: 'rgba(255, 58, 58, 0.1)',
+          tension: 0.4,
+          fill: true
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          position: 'top',
+          labels: {
+            boxWidth: 15,
+            padding: 15
+          }
+        },
+        tooltip: {
+          mode: 'index',
+          intersect: false,
+          backgroundColor: 'rgba(255, 255, 255, 0.9)',
+          titleColor: '#333',
+          bodyColor: '#333',
+          borderColor: '#ddd',
+          borderWidth: 1
+        }
+      },
+      scales: {
+        x: {
+          title: {
+            display: true,
+            text: 'Date',
+            font: {
+              size: 12
+            }
+          },
+          grid: {
+            display: false
+          }
+        },
+        y: {
+          title: {
+            display: true,
+            text: 'kJ/kg',
+            font: {
+              size: 12
+            }
+          },
+          beginAtZero: false,
+          grid: {
+            color: 'rgba(0, 0, 0, 0.05)'
+          }
+        }
+      }
+    }
+  });
+}
+
+// Initialize FW Outlet Enthalpy Chart
+function initFWOutletEnthalpyChart() {
+  const ctx = document.getElementById('fw-outlet-enthalpy-chart').getContext('2d');
+  
+  const fwOutletEnthalpyChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: analyticsData.enthalpyData.fwOutlet.map(item => item.date),
+      datasets: [
+        {
+          label: 'HP Heater 1',
+          data: analyticsData.enthalpyData.fwOutlet.map(item => item.heater1),
+          borderColor: '#0046AD',
+          backgroundColor: 'rgba(0, 70, 173, 0.1)',
+          tension: 0.4,
+          fill: true
+        },
+        {
+          label: 'HP Heater 2',
+          data: analyticsData.enthalpyData.fwOutlet.map(item => item.heater2),
+          borderColor: '#00A650',
+          backgroundColor: 'rgba(0, 166, 80, 0.1)',
+          tension: 0.4,
+          fill: true
+        },
+        {
+          label: 'HP Heater 3',
+          data: analyticsData.enthalpyData.fwOutlet.map(item => item.heater3),
+          borderColor: '#FF3A3A',
+          backgroundColor: 'rgba(255, 58, 58, 0.1)',
+          tension: 0.4,
+          fill: true
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          position: 'top',
+          labels: {
+            boxWidth: 15,
+            padding: 15
+          }
+        },
+        tooltip: {
+          mode: 'index',
+          intersect: false,
+          backgroundColor: 'rgba(255, 255, 255, 0.9)',
+          titleColor: '#333',
+          bodyColor: '#333',
+          borderColor: '#ddd',
+          borderWidth: 1
+        }
+      },
+      scales: {
+        x: {
+          title: {
+            display: true,
+            text: 'Date',
+            font: {
+              size: 12
+            }
+          },
+          grid: {
+            display: false
+          }
+        },
+        y: {
+          title: {
+            display: true,
+            text: 'kJ/kg',
+            font: {
+              size: 12
+            }
+          },
+          beginAtZero: false,
+          grid: {
+            color: 'rgba(0, 0, 0, 0.05)'
+          }
+        }
+      }
+    }
+  });
+}
+
+// Initialize Parameter Comparison Chart
+function initParameterComparisonChart() {
+  const parameter = document.getElementById('parameter-select').value;
+  const ctx = document.getElementById('parameter-comparison-chart').getContext('2d');
+  
+  let data = [];
+  let title = '';
+  let unit = '';
+  
+  switch (parameter) {
+    case 'heatLoad':
+      data = analyticsData.parameterData.heatLoad;
+      title = 'Heat Load Comparison';
+      unit = 'MW';
+      break;
+    case 'ttd':
+      data = analyticsData.parameterData.ttd;
+      title = 'TTD Comparison';
+      unit = '°C';
+      break;
+    case 'dca':
+      data = analyticsData.parameterData.dca;
+      title = 'DCA Comparison';
+      unit = '°C';
+      break;
+    case 'tr':
+      data = analyticsData.parameterData.tr;
+      title = 'Terminal Ratio Comparison';
+      unit = '';
+      break;
+    case 'enthalpyExtractionSteam':
+      data = analyticsData.enthalpyData.extractionSteam;
+      title = 'Extraction Steam Enthalpy Comparison';
+      unit = 'kJ/kg';
+      break;
+    case 'enthalpyDrip':
+      data = analyticsData.enthalpyData.drip;
+      title = 'Drip Enthalpy Comparison';
+      unit = 'kJ/kg';
+      break;
+    case 'enthalpyFWInlet':
+      data = analyticsData.enthalpyData.fwInlet;
+      title = 'FW Inlet Enthalpy Comparison';
+      unit = 'kJ/kg';
+      break;
+    case 'enthalpyFWOutlet':
+      data = analyticsData.enthalpyData.fwOutlet;
+      title = 'FW Outlet Enthalpy Comparison';
+      unit = 'kJ/kg';
+      break;
+  }
+  
+  const parameterComparisonChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: data.map(item => item.date),
+      datasets: [
+        {
+          label: 'HP Heater 1',
+          data: data.map(item => item.heater1),
+          borderColor: '#0046AD',
+          backgroundColor: 'rgba(0, 70, 173, 0.1)',
+          tension: 0.4,
+          fill: true
+        },
+        {
+          label: 'HP Heater 2',
+          data: data.map(item => item.heater2),
+          borderColor: '#00A650',
+          backgroundColor: 'rgba(0, 166, 80, 0.1)',
+          tension: 0.4,
+          fill: true
+        },
+        {
+          label: 'HP Heater 3',
+          data: data.map(item => item.heater3),
+          borderColor: '#FF3A3A',
+          backgroundColor: 'rgba(255, 58, 58, 0.1)',
+          tension: 0.4,
+          fill: true
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        title: {
+          display: true,
+          text: title,
+          font: {
+            size: 16
+          }
+        },
+        legend: {
+          position: 'top',
+          labels: {
+            boxWidth: 15,
+            padding: 15
+          }
+        },
+        tooltip: {
+          mode: 'index',
+          intersect: false,
+          backgroundColor: 'rgba(255, 255, 255, 0.9)',
+          titleColor: '#333',
+          bodyColor: '#333',
+          borderColor: '#ddd',
+          borderWidth: 1
+        }
+      },
+      scales: {
+        x: {
+          title: {
+            display: true,
+            text: 'Date',
+            font: {
+              size: 12
+            }
+          },
+          grid: {
+            display: false
+          }
+        },
+        y: {
+          title: {
+            display: true,
+            text: unit,
+            font: {
+              size: 12
+            }
+          },
+          grid: {
+            color: 'rgba(0, 0, 0, 0.05)'
+          }
+        }
+      }
+    }
+  });
+}
+
+function updateParameterComparisonChart() {
+  const chartElement = document.getElementById('parameter-comparison-chart');
+  if (chartElement) {
+    // Destroy existing chart if it exists
+    Chart.getChart(chartElement)?.destroy();
+  }
+  
+  // Create a new chart with updated parameters
+  initParameterComparisonChart();
+}
+
+function fetchAndRefreshData() {
+  console.log('Refreshing data...');
+  // In a real application, this would fetch fresh data from the server
+  // For this example, we'll just add some random variations to our existing data
+  
+  // Refresh each dataset with random variations
+  analyticsData.heaterLoadData.forEach((item, index) => {
+    const date = new Date();
+    date.setDate(date.getDate() - (7 - index));
+    item.date = date.toISOString().split('T')[0];
+    item.heater1 = (52 + (Math.random() * 2 - 1)).toFixed(1);
+    item.heater2 = (49 + (Math.random() * 2 - 1)).toFixed(1);
+    item.heater3 = (45 + (Math.random() * 2 - 1)).toFixed(1);
+  });
+  
+  // Reinitialize all charts
+  initHeatLoadChart();
+  initTemperatureChart();
+  initTTDDCAChart();
+  initTRChart();
+  initHeaterLevelChart();
+  initSteamFlowChart();
+  initExtractionSteamEnthalpyChart();
+  initDripEnthalpyChart();
+  initFWInletEnthalpyChart();
+  initFWOutletEnthalpyChart();
+  updateParameterComparisonChart();
+}
+
+// Initialize the page when DOM is loaded
+document.addEventListener('DOMContentLoaded', initAnalytics);

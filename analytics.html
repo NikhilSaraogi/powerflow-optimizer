@@ -4,11 +4,112 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Adani Power - Analytics</title>
-  <link rel="stylesheet" href="styles.css">
+  <title>Adani Power - HP Heater Analytics</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
+  <style>
+    /* Custom colors */
+    .status-healthy { color: #00A650; }
+    .status-warning { color: #FFC107; }
+    .status-critical { color: #FF3A3A; }
+    .bg-adani-blue { background-color: #0046AD; }
+    .bg-adani-navy { background-color: #00296B; }
+    .text-adani-blue { color: #0046AD; }
+    .text-adani-navy { color: #00296B; }
+    .text-adani-green { color: #00A650; }
+    .text-adani-red { color: #FF3A3A; }
+    .text-adani-yellow { color: #FFC107; }
+    .healthy { color: #00A650; }
+    .warning { color: #FFC107; }
+    .critical { color: #FF3A3A; }
+    
+    /* Layout */
+    .sidebar {
+      transition: width 0.3s ease;
+    }
+    
+    .sidebar-icon {
+      min-width: 20px;
+    }
+    
+    .sidebar-collapsed .sidebar-text {
+      width: 0;
+      opacity: 0;
+      overflow: hidden;
+    }
+    
+    .sidebar-expanded .sidebar-text {
+      width: auto;
+      opacity: 1;
+    }
+    
+    /* Tabs */
+    .tabs {
+      display: flex;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    
+    .tab {
+      padding: 0.75rem 1.25rem;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
+      font-weight: 500;
+      color: #4a5568;
+      cursor: pointer;
+    }
+    
+    .tab.active {
+      color: #0046AD;
+      border-bottom-color: #0046AD;
+    }
+    
+    .tab-content {
+      margin-top: 1rem;
+    }
+    
+    /* Chart containers */
+    .chart-container {
+      height: 400px;
+      margin-bottom: 1.5rem;
+    }
+    
+    /* Heater cards */
+    .heater-card {
+      background: white;
+      border-radius: 0.5rem;
+      padding: 1rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      margin-bottom: 1rem;
+    }
+    
+    .heater-card h3 {
+      font-size: 1.125rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    
+    .parameter-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 0.75rem;
+    }
+    
+    .parameter-name {
+      display: block;
+      font-size: 0.75rem;
+      color: #4a5568;
+    }
+    
+    .parameter-value {
+      font-weight: 600;
+      font-size: 0.875rem;
+    }
+  </style>
 </head>
-<body class="bg-gray-50 min-h-screen overflow-x-hidden">
+<body class="bg-gray-50 min-h-screen">
   <!-- Header -->
   <header class="bg-adani-blue text-white p-4 flex justify-between items-center shadow-md fixed top-0 left-0 right-0 z-20">
     <div class="flex items-center">
@@ -19,7 +120,7 @@
       </button>
       <img src="https://www.adanipower.com/-/media/Project/Power/Header-Footer/logo.png" alt="Adani Power Logo" class="h-8 mr-3">
       <div>
-        <h1 class="text-xl font-bold">HP Heater Optimization - Analytics</h1>
+        <h1 class="text-xl font-bold">HP Heater Analytics</h1>
         <div class="text-sm opacity-80" id="current-time"></div>
       </div>
     </div>
@@ -81,22 +182,85 @@
 
     <!-- Main Content -->
     <main id="main-content" class="flex-1 p-6 transition-all duration-300 min-h-screen">
-      <!-- Chart Controls -->
-      <div class="bg-white rounded-lg shadow-md p-4 border border-gray-100 mb-6">
-        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4">
-          <h3 class="text-lg font-semibold text-adani-navy mb-3 md:mb-0">Analytics Dashboard</h3>
-          <div class="flex flex-col md:flex-row items-start md:items-center gap-4">
-            <div class="flex items-center">
-              <label class="text-sm text-gray-500 mr-2">Date Range:</label>
-              <select id="date-range" class="border border-gray-200 rounded p-2 text-sm">
-                <option value="day">Today</option>
-                <option value="week" selected>Last Week</option>
-                <option value="month">Last Month</option>
-                <option value="year">Last Year</option>
-              </select>
-            </div>
-            <button id="refresh-data" class="bg-adani-blue text-white px-4 py-2 rounded-lg flex items-center gap-2">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <!-- Top Stats -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <div class="bg-white rounded-lg shadow-md p-4 flex items-center">
+          <div class="p-2 bg-blue-100 rounded-lg mr-3">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-adani-blue" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+            </svg>
+          </div>
+          <div>
+            <h3 class="text-sm font-medium text-gray-500">Eco Inlet Temperature</h3>
+            <p class="text-xl font-semibold text-adani-blue"><span id="eco-inlet-temp">295.7</span> °C</p>
+          </div>
+        </div>
+        
+        <div class="bg-white rounded-lg shadow-md p-4 flex items-center">
+          <div class="p-2 bg-blue-100 rounded-lg mr-3">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-adani-blue" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+          </div>
+          <div>
+            <h3 class="text-sm font-medium text-gray-500">Load</h3>
+            <p class="text-xl font-semibold text-adani-blue"><span id="load-value">660</span> MW</p>
+          </div>
+        </div>
+        
+        <div class="bg-white rounded-lg shadow-md p-4 flex items-center">
+          <div class="p-2 bg-blue-100 rounded-lg mr-3">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-adani-blue" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+            </svg>
+          </div>
+          <div>
+            <h3 class="text-sm font-medium text-gray-500">HDR Pressure</h3>
+            <p class="text-xl font-semibold text-adani-blue"><span id="header-pressure">168.5</span> bar</p>
+          </div>
+        </div>
+        
+        <div class="bg-white rounded-lg shadow-md p-4 flex items-center">
+          <div class="p-2 bg-blue-100 rounded-lg mr-3">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-adani-blue" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+            </svg>
+          </div>
+          <div>
+            <h3 class="text-sm font-medium text-gray-500">Feed Water Flow</h3>
+            <p class="text-xl font-semibold text-adani-blue"><span id="feedwater-flow">1842.3</span> t/h</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Controls -->
+      <div class="bg-white rounded-lg shadow-md p-4 mb-6">
+        <h2 class="text-lg font-medium text-adani-navy mb-4">Analytics Controls</h2>
+        <div class="flex flex-wrap gap-4">
+          <div class="w-full md:w-auto">
+            <label for="date-range" class="block text-sm font-medium text-gray-700 mb-1">Date Range</label>
+            <select id="date-range" class="border border-gray-300 rounded-md px-3 py-2 w-full md:w-48">
+              <option value="1d">Last 24 Hours</option>
+              <option value="7d" selected>Last 7 Days</option>
+              <option value="30d">Last 30 Days</option>
+              <option value="90d">Last 90 Days</option>
+              <option value="custom">Custom Range</option>
+            </select>
+          </div>
+          
+          <div id="custom-date-container" class="w-full md:w-auto" style="display: none;">
+            <label for="compare-start-date" class="block text-sm font-medium text-gray-700 mb-1">Start Date</label>
+            <input type="date" id="compare-start-date" class="border border-gray-300 rounded-md px-3 py-2 w-full md:w-48">
+          </div>
+          
+          <div id="custom-date-end-container" class="w-full md:w-auto" style="display: none;">
+            <label for="compare-end-date" class="block text-sm font-medium text-gray-700 mb-1">End Date</label>
+            <input type="date" id="compare-end-date" class="border border-gray-300 rounded-md px-3 py-2 w-full md:w-48">
+          </div>
+          
+          <div class="w-full md:w-auto flex items-end">
+            <button id="refresh-data" class="bg-adani-blue text-white rounded-md px-4 py-2 flex items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
               </svg>
               Refresh Data
@@ -105,216 +269,130 @@
         </div>
       </div>
       
-      <!-- Tabs -->
-      <div class="mb-6">
-        <div class="border-b border-gray-200">
-          <ul class="flex flex-wrap -mb-px" id="analytics-tabs">
-            <li class="mr-2">
-              <a href="#tab-heat-load" class="tab active" data-tab="heat-load">Heat Load & Temperature</a>
-            </li>
-            <li class="mr-2">
-              <a href="#tab-level" class="tab" data-tab="level">Heater Level</a>
-            </li>
-            <li class="mr-2">
-              <a href="#tab-enthalpy" class="tab" data-tab="enthalpy">Enthalpy</a>
-            </li>
-            <li class="mr-2">
-              <a href="#tab-parameters" class="tab" data-tab="parameters">Parameters Comparison</a>
-            </li>
-          </ul>
-        </div>
-      </div>
-      
-      <!-- Tab Content -->
-      <div id="tab-content-container">
-        <!-- Heat Load Tab -->
-        <div id="tab-heat-load" class="tab-content active">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-            <div class="bg-white rounded-lg shadow-md p-4 border border-gray-100">
-              <h3 class="text-lg font-semibold text-adani-navy mb-4">Heat Load Trend (MW)</h3>
-              <div class="h-[300px]">
-                <canvas id="heat-load-chart"></canvas>
-              </div>
-            </div>
-            <div class="bg-white rounded-lg shadow-md p-4 border border-gray-100">
-              <h3 class="text-lg font-semibold text-adani-navy mb-4">Temperature Trend (°C)</h3>
-              <div class="h-[300px]">
-                <canvas id="temperature-chart"></canvas>
-              </div>
-            </div>
-          </div>
+      <!-- Tab Navigation -->
+      <div class="bg-white rounded-lg shadow-md overflow-hidden mb-6">
+        <div class="tabs">
+          <div class="tab active" data-tab="heaters">Heater Summary</div>
+          <div class="tab" data-tab="trend">Trend Analysis</div>
+          <div class="tab" data-tab="enthalpy">Enthalpy Analysis</div>
+          <div class="tab" data-tab="comparison">Parameter Comparison</div>
         </div>
         
-        <!-- Heater Level Tab -->
-        <div id="tab-level" class="tab-content hidden">
-          <div class="mb-6">
-            <div class="bg-white rounded-lg shadow-md p-4 border border-gray-100">
-              <h3 class="text-lg font-semibold text-adani-navy mb-4">Heater Level Trend (%)</h3>
-              <div class="h-[300px]">
-                <canvas id="heater-level-chart"></canvas>
+        <!-- Tab Content -->
+        <div class="p-4">
+          <!-- Heater Summary Tab -->
+          <div id="tab-heaters" class="tab-content">
+            <div id="heater-loading" class="text-center p-6">
+              <div class="animate-spin w-12 h-12 mx-auto mb-2 border-4 border-adani-blue border-t-transparent rounded-full"></div>
+              <p class="text-gray-500">Loading heater data...</p>
+            </div>
+            <div id="heater-cards-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+          </div>
+          
+          <!-- Trend Analysis Tab -->
+          <div id="tab-trend" class="tab-content hidden">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="bg-white rounded-lg shadow-md p-4">
+                <h3 class="text-lg font-medium text-adani-navy mb-2">Heat Load Trend</h3>
+                <div class="chart-container">
+                  <canvas id="heat-load-chart"></canvas>
+                </div>
+              </div>
+              <div class="bg-white rounded-lg shadow-md p-4">
+                <h3 class="text-lg font-medium text-adani-navy mb-2">Temperature Trend</h3>
+                <div class="chart-container">
+                  <canvas id="temperature-chart"></canvas>
+                </div>
+              </div>
+              <div class="bg-white rounded-lg shadow-md p-4">
+                <h3 class="text-lg font-medium text-adani-navy mb-2">TTD & DCA Trend</h3>
+                <div class="chart-container">
+                  <canvas id="ttd-dca-chart"></canvas>
+                </div>
+              </div>
+              <div class="bg-white rounded-lg shadow-md p-4">
+                <h3 class="text-lg font-medium text-adani-navy mb-2">Terminal Ratio Trend</h3>
+                <div class="chart-container">
+                  <canvas id="tr-chart"></canvas>
+                </div>
+              </div>
+              <div class="bg-white rounded-lg shadow-md p-4">
+                <h3 class="text-lg font-medium text-adani-navy mb-2">Heater Level Trend</h3>
+                <div class="chart-container">
+                  <canvas id="heater-level-chart"></canvas>
+                </div>
+              </div>
+              <div class="bg-white rounded-lg shadow-md p-4">
+                <h3 class="text-lg font-medium text-adani-navy mb-2">Steam Flow Trend</h3>
+                <div class="chart-container">
+                  <canvas id="steam-flow-chart"></canvas>
+                </div>
               </div>
             </div>
           </div>
           
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="bg-white rounded-lg shadow-md p-4 border border-gray-100">
-              <h3 class="text-lg font-semibold text-adani-navy mb-3">HP Heater 1 - Level Analysis</h3>
-              <div class="space-y-2">
-                <div class="flex justify-between">
-                  <span class="text-gray-600">Current Level:</span>
-                  <span class="font-medium text-adani-blue">52.0%</span>
+          <!-- Enthalpy Analysis Tab -->
+          <div id="tab-enthalpy" class="tab-content hidden">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+              <div class="bg-white rounded-lg shadow-md p-4">
+                <h3 class="text-lg font-medium text-adani-navy mb-2">Extraction Steam Enthalpy</h3>
+                <div class="chart-container">
+                  <canvas id="extraction-steam-enthalpy-chart"></canvas>
                 </div>
-                <div class="flex justify-between">
-                  <span class="text-gray-600">Recommended Level:</span>
-                  <span class="font-medium text-adani-green">52.0%</span>
+              </div>
+              <div class="bg-white rounded-lg shadow-md p-4">
+                <h3 class="text-lg font-medium text-adani-navy mb-2">Drip Enthalpy</h3>
+                <div class="chart-container">
+                  <canvas id="drip-enthalpy-chart"></canvas>
                 </div>
-                <div class="flex justify-between">
-                  <span class="text-gray-600">Level Deviation:</span>
-                  <span class="font-medium text-adani-green">0.0%</span>
+              </div>
+              <div class="bg-white rounded-lg shadow-md p-4">
+                <h3 class="text-lg font-medium text-adani-navy mb-2">Feedwater Inlet Enthalpy</h3>
+                <div class="chart-container">
+                  <canvas id="fw-inlet-enthalpy-chart"></canvas>
+                </div>
+              </div>
+              <div class="bg-white rounded-lg shadow-md p-4">
+                <h3 class="text-lg font-medium text-adani-navy mb-2">Feedwater Outlet Enthalpy</h3>
+                <div class="chart-container">
+                  <canvas id="fw-outlet-enthalpy-chart"></canvas>
                 </div>
               </div>
             </div>
-            <div class="bg-white rounded-lg shadow-md p-4 border border-gray-100">
-              <h3 class="text-lg font-semibold text-adani-navy mb-3">HP Heater 2 - Level Analysis</h3>
-              <div class="space-y-2">
-                <div class="flex justify-between">
-                  <span class="text-gray-600">Current Level:</span>
-                  <span class="font-medium text-adani-yellow">64.5%</span>
-                </div>
-                <div class="flex justify-between">
-                  <span class="text-gray-600">Recommended Level:</span>
-                  <span class="font-medium text-adani-green">55.0%</span>
-                </div>
-                <div class="flex justify-between">
-                  <span class="text-gray-600">Level Deviation:</span>
-                  <span class="font-medium text-adani-yellow">9.5%</span>
-                </div>
-              </div>
-            </div>
-            <div class="bg-white rounded-lg shadow-md p-4 border border-gray-100">
-              <h3 class="text-lg font-semibold text-adani-navy mb-3">HP Heater 3 - Level Analysis</h3>
-              <div class="space-y-2">
-                <div class="flex justify-between">
-                  <span class="text-gray-600">Current Level:</span>
-                  <span class="font-medium text-adani-red">77.5%</span>
-                </div>
-                <div class="flex justify-between">
-                  <span class="text-gray-600">Recommended Level:</span>
-                  <span class="font-medium text-adani-green">60.0%</span>
-                </div>
-                <div class="flex justify-between">
-                  <span class="text-gray-600">Level Deviation:</span>
-                  <span class="font-medium text-adani-red">17.5%</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <!-- Enthalpy Tab -->
-        <div id="tab-enthalpy" class="tab-content hidden">
-          <div class="mb-6">
-            <div class="bg-white rounded-lg shadow-md p-4 border border-gray-100">
-              <h3 class="text-lg font-semibold text-adani-navy mb-4">Enthalpy Trend (kJ/kg)</h3>
-              <div class="h-[300px]">
-                <canvas id="enthalpy-chart"></canvas>
-              </div>
+            
+            <div id="heater-enthalpy-analysis-container" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <!-- Enthalpy analysis cards will be populated here -->
             </div>
           </div>
           
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="bg-white rounded-lg shadow-md p-4 border border-gray-100">
-              <h3 class="text-lg font-semibold text-adani-navy mb-3">HP Heater 1 - Enthalpy Values</h3>
-              <ul class="space-y-3">
-                <li class="flex justify-between border-b pb-2">
-                  <span class="text-gray-600">Trip Enthalpy:</span>
-                  <span class="font-medium text-adani-blue">3263 kJ/kg</span>
-                </li>
-                <li class="flex justify-between border-b pb-2">
-                  <span class="text-gray-600">FW Inlet Enthalpy:</span>
-                  <span class="font-medium text-adani-blue">823 kJ/kg</span>
-                </li>
-                <li class="flex justify-between border-b pb-2">
-                  <span class="text-gray-600">FW Outlet Enthalpy:</span>
-                  <span class="font-medium text-adani-blue">922 kJ/kg</span>
-                </li>
-                <li class="flex justify-between">
-                  <span class="text-gray-600">Extraction Enthalpy:</span>
-                  <span class="font-medium text-adani-blue">3450 kJ/kg</span>
-                </li>
-              </ul>
-            </div>
-            <div class="bg-white rounded-lg shadow-md p-4 border border-gray-100">
-              <h3 class="text-lg font-semibold text-adani-navy mb-3">HP Heater 2 - Enthalpy Values</h3>
-              <ul class="space-y-3">
-                <li class="flex justify-between border-b pb-2">
-                  <span class="text-gray-600">Trip Enthalpy:</span>
-                  <span class="font-medium text-adani-yellow">3182 kJ/kg</span>
-                </li>
-                <li class="flex justify-between border-b pb-2">
-                  <span class="text-gray-600">FW Inlet Enthalpy:</span>
-                  <span class="font-medium text-adani-blue">922 kJ/kg</span>
-                </li>
-                <li class="flex justify-between border-b pb-2">
-                  <span class="text-gray-600">FW Outlet Enthalpy:</span>
-                  <span class="font-medium text-adani-blue">1002 kJ/kg</span>
-                </li>
-                <li class="flex justify-between">
-                  <span class="text-gray-600">Extraction Enthalpy:</span>
-                  <span class="font-medium text-adani-blue">3350 kJ/kg</span>
-                </li>
-              </ul>
-            </div>
-            <div class="bg-white rounded-lg shadow-md p-4 border border-gray-100">
-              <h3 class="text-lg font-semibold text-adani-navy mb-3">HP Heater 3 - Enthalpy Values</h3>
-              <ul class="space-y-3">
-                <li class="flex justify-between border-b pb-2">
-                  <span class="text-gray-600">Trip Enthalpy:</span>
-                  <span class="font-medium text-adani-red">3022 kJ/kg</span>
-                </li>
-                <li class="flex justify-between border-b pb-2">
-                  <span class="text-gray-600">FW Inlet Enthalpy:</span>
-                  <span class="font-medium text-adani-blue">1002 kJ/kg</span>
-                </li>
-                <li class="flex justify-between border-b pb-2">
-                  <span class="text-gray-600">FW Outlet Enthalpy:</span>
-                  <span class="font-medium text-adani-blue">1072 kJ/kg</span>
-                </li>
-                <li class="flex justify-between">
-                  <span class="text-gray-600">Extraction Enthalpy:</span>
-                  <span class="font-medium text-adani-blue">3250 kJ/kg</span>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-        
-        <!-- Parameters Comparison Tab -->
-        <div id="tab-parameters" class="tab-content hidden">
-          <div class="bg-white rounded-lg shadow-md p-4 border border-gray-100 mb-6">
-            <h3 class="text-lg font-semibold text-adani-navy mb-4">Parameter Comparison</h3>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-              <div>
-                <label class="text-sm text-gray-500">Select Parameter:</label>
-                <select id="parameter-select" class="border border-gray-200 rounded p-2 text-sm w-full mt-1">
-                  <option value="heatLoad">Heat Load (MW)</option>
-                  <option value="ttd">Terminal Temperature Difference (°C)</option>
-                  <option value="dca">Drain Cooler Approach (°C)</option>
-                  <option value="tr">Temperature Ratio</option>
-                  <option value="enthalpy">Enthalpy (kJ/kg)</option>
-                </select>
+          <!-- Parameter Comparison Tab -->
+          <div id="tab-comparison" class="tab-content hidden">
+            <div class="mb-6">
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                <div>
+                  <label for="parameter-select" class="block text-sm font-medium text-gray-700 mb-1">Select Parameter</label>
+                  <select id="parameter-select" class="border border-gray-300 rounded-md px-3 py-2 w-full">
+                    <option value="heatLoad">Heat Load (MW)</option>
+                    <option value="ttd">TTD (°C)</option>
+                    <option value="dca">DCA (°C)</option>
+                    <option value="tr">Terminal Ratio</option>
+                    <option value="enthalpyExtractionSteam">Extraction Steam Enthalpy (kJ/kg)</option>
+                    <option value="enthalpyDrip">Drip Enthalpy (kJ/kg)</option>
+                    <option value="enthalpyFWInlet">FW Inlet Enthalpy (kJ/kg)</option>
+                    <option value="enthalpyFWOutlet">FW Outlet Enthalpy (kJ/kg)</option>
+                  </select>
+                </div>
               </div>
-              <div>
-                <label class="text-sm text-gray-500">Start Date:</label>
-                <input type="date" id="start-date" class="border border-gray-200 rounded p-2 text-sm w-full mt-1">
-              </div>
-              <div>
-                <label class="text-sm text-gray-500">End Date:</label>
-                <input type="date" id="end-date" class="border border-gray-200 rounded p-2 text-sm w-full mt-1">
+              
+              <div class="bg-white rounded-lg shadow-md p-4">
+                <div class="chart-container">
+                  <canvas id="parameter-comparison-chart"></canvas>
+                </div>
               </div>
             </div>
-            <div class="h-[350px]">
-              <canvas id="parameter-comparison-chart"></canvas>
+            
+            <div id="heater-level-analysis-container" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <!-- Level analysis cards will be populated here -->
             </div>
           </div>
         </div>
