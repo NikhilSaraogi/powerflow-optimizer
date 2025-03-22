@@ -1,4 +1,3 @@
-
 // Sample data for analytics charts
 const analyticsData = {
   heaterLoadData: [
@@ -131,6 +130,28 @@ const analyticsData = {
       { date: "2023-09-06", heater1: 3262, heater2: 3181, heater3: 3021 },
       { date: "2023-09-07", heater1: 3263, heater2: 3182, heater3: 3022 }
     ]
+  },
+  
+  // Model data for prediction tab
+  modelData: {
+    lowLoad: [
+      { date: "2023-09-01", prediction: 192.5, actual: 190.8 },
+      { date: "2023-09-02", prediction: 193.1, actual: 191.5 },
+      { date: "2023-09-03", prediction: 193.4, actual: 192.2 },
+      { date: "2023-09-04", prediction: 193.8, actual: 192.5 },
+      { date: "2023-09-05", prediction: 194.0, actual: 193.1 },
+      { date: "2023-09-06", prediction: 194.2, actual: 193.5 },
+      { date: "2023-09-07", prediction: 194.5, actual: 193.8 }
+    ],
+    highLoad: [
+      { date: "2023-09-01", prediction: 201.5, actual: 203.2 },
+      { date: "2023-09-02", prediction: 202.3, actual: 204.1 },
+      { date: "2023-09-03", prediction: 202.8, actual: 204.5 },
+      { date: "2023-09-04", prediction: 203.2, actual: 205.0 },
+      { date: "2023-09-05", prediction: 203.5, actual: 205.2 },
+      { date: "2023-09-06", prediction: 203.8, actual: 205.6 },
+      { date: "2023-09-07", prediction: 204.2, actual: 206.0 }
+    ]
   }
 };
 
@@ -207,6 +228,9 @@ function initAnalytics() {
   initFWOutletEnthalpyChart();
   
   initParameterComparisonChart();
+  
+  // Initialize modelling charts
+  initModellingCharts();
   
   // Set up date inputs for parameter comparison
   const today = new Date();
@@ -1316,6 +1340,165 @@ function fetchAndRefreshData() {
   initFWInletEnthalpyChart();
   initFWOutletEnthalpyChart();
   updateParameterComparisonChart();
+}
+
+// Initialize Modelling Charts
+function initModellingCharts() {
+  // Low Load Model
+  const lowLoadCtx = document.getElementById('low-load-model-chart').getContext('2d');
+  
+  lowLoadModelChart = new Chart(lowLoadCtx, {
+    type: 'line',
+    data: {
+      labels: analyticsData.modelData.lowLoad.map(item => item.date),
+      datasets: [
+        {
+          label: 'Eco Inlet Prediction (Load < 600)',
+          data: analyticsData.modelData.lowLoad.map(item => item.prediction),
+          borderColor: '#2563eb',
+          backgroundColor: 'rgba(37, 99, 235, 0.1)',
+          borderWidth: 2,
+          tension: 0.4
+        },
+        {
+          label: 'Actual Raw Value',
+          data: analyticsData.modelData.lowLoad.map(item => item.actual),
+          borderColor: '#16a34a',
+          backgroundColor: 'rgba(22, 163, 74, 0.1)',
+          borderWidth: 2,
+          borderDash: [5, 5],
+          tension: 0.4
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          position: 'top',
+          labels: {
+            boxWidth: 15,
+            padding: 15
+          }
+        },
+        tooltip: {
+          mode: 'index',
+          intersect: false,
+          backgroundColor: 'rgba(255, 255, 255, 0.9)',
+          titleColor: '#333',
+          bodyColor: '#333',
+          borderColor: '#ddd',
+          borderWidth: 1
+        }
+      },
+      scales: {
+        x: {
+          title: {
+            display: true,
+            text: 'Date',
+            font: {
+              size: 12
+            }
+          },
+          grid: {
+            display: false
+          }
+        },
+        y: {
+          title: {
+            display: true,
+            text: '°C',
+            font: {
+              size: 12
+            }
+          },
+          beginAtZero: false,
+          grid: {
+            color: 'rgba(0, 0, 0, 0.05)'
+          }
+        }
+      }
+    }
+  });
+  
+  // High Load Model
+  const highLoadCtx = document.getElementById('high-load-model-chart').getContext('2d');
+  
+  highLoadModelChart = new Chart(highLoadCtx, {
+    type: 'line',
+    data: {
+      labels: analyticsData.modelData.highLoad.map(item => item.date),
+      datasets: [
+        {
+          label: 'Eco Inlet Prediction (Load > 650)',
+          data: analyticsData.modelData.highLoad.map(item => item.prediction),
+          borderColor: '#2563eb',
+          backgroundColor: 'rgba(37, 99, 235, 0.1)',
+          borderWidth: 2,
+          tension: 0.4
+        },
+        {
+          label: 'Actual Raw Value',
+          data: analyticsData.modelData.highLoad.map(item => item.actual),
+          borderColor: '#16a34a',
+          backgroundColor: 'rgba(22, 163, 74, 0.1)',
+          borderWidth: 2,
+          borderDash: [5, 5],
+          tension: 0.4
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          position: 'top',
+          labels: {
+            boxWidth: 15,
+            padding: 15
+          }
+        },
+        tooltip: {
+          mode: 'index',
+          intersect: false,
+          backgroundColor: 'rgba(255, 255, 255, 0.9)',
+          titleColor: '#333',
+          bodyColor: '#333',
+          borderColor: '#ddd',
+          borderWidth: 1
+        }
+      },
+      scales: {
+        x: {
+          title: {
+            display: true,
+            text: 'Date',
+            font: {
+              size: 12
+            }
+          },
+          grid: {
+            display: false
+          }
+        },
+        y: {
+          title: {
+            display: true,
+            text: '°C',
+            font: {
+              size: 12
+            }
+          },
+          beginAtZero: false,
+          grid: {
+            color: 'rgba(0, 0, 0, 0.05)'
+          }
+        }
+      }
+    }
+  });
 }
 
 // Initialize the page when DOM is loaded
