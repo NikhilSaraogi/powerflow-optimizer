@@ -52,8 +52,50 @@ let analyticsData = {
       { date: "2023-09-06", prediction: 203.8, actual: 205.6 },
       { date: "2023-09-07", prediction: 204.2, actual: 206.0 }
     ]
+  },
+  
+  trendData: {
+    ttd: generateTrendData(3.5, 24, 0.15),
+    dca: generateTrendData(5.5, 24, 0.12),
+    tr: generateTrendData(0.88, 24, 0.05),
+    heatLoad: generateTrendData(49.0, 24, 0.07),
+    flow: generateTrendData(622, 24, 0.03),
+    heaterLevel: generateTrendData(65, 24, 0.1)
   }
 };
+
+// Generate trend data for heater parameters
+function generateTrendData(baseValue, count, volatility = 0.1) {
+  const data = [];
+  let currentValue = baseValue;
+  
+  for (let i = 0; i < count; i++) {
+    // Random walk with slight trend
+    const change = (Math.random() - 0.5) * volatility * baseValue;
+    currentValue += change;
+    
+    // Determine status based on deviation from baseline
+    let status = 'healthy';
+    const deviation = Math.abs((currentValue - baseValue) / baseValue);
+    
+    if (deviation > 0.08) {
+      status = 'critical';
+    } else if (deviation > 0.04) {
+      status = 'warning';
+    }
+    
+    const timePoint = new Date();
+    timePoint.setHours(timePoint.getHours() - (count - i));
+    
+    data.push({
+      time: timePoint.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
+      value: +currentValue.toFixed(2),
+      status
+    });
+  }
+  
+  return data;
+}
 
 // Tab navigation
 document.addEventListener('DOMContentLoaded', function() {
@@ -108,6 +150,9 @@ document.addEventListener('DOMContentLoaded', function() {
   // Update time
   updateTime();
   setInterval(updateTime, 1000);
+  
+  // Initialize heater trends
+  initHeaterTrends();
 });
 
 // Initialize Heater Cards
@@ -176,6 +221,166 @@ function renderHeaterCards() {
       container.appendChild(card);
     });
   }
+}
+
+// Initialize Heater Trends
+function initHeaterTrends() {
+  const heaterTab = document.getElementById('tab-heaters');
+  if (!heaterTab) return;
+  
+  // Create container for trends if it doesn't exist
+  let trendsContainer = document.getElementById('heater-trends-container');
+  if (!trendsContainer) {
+    const heaterCardsContainer = document.getElementById('heater-cards-container');
+    if (heaterCardsContainer) {
+      // Add trends section header
+      const header = document.createElement('div');
+      header.className = 'w-full mt-8 mb-4';
+      header.innerHTML = `
+        <h3 class="text-xl font-bold text-adani-navy">HP Heater Performance Trends</h3>
+        <p class="text-gray-600 text-sm">
+          24-hour performance trends for key heater parameters. These charts help identify operational issues and predict maintenance needs.
+        </p>
+      `;
+      heaterTab.insertBefore(header, heaterCardsContainer.nextSibling);
+      
+      // Create trends container
+      trendsContainer = document.createElement('div');
+      trendsContainer.id = 'heater-trends-container';
+      trendsContainer.className = 'grid grid-cols-1 md:grid-cols-2 gap-6 mt-4';
+      heaterTab.insertBefore(trendsContainer, header.nextSibling);
+      
+      // Add trend charts
+      renderTrendCharts(trendsContainer);
+    }
+  }
+}
+
+// Render trend charts
+function renderTrendCharts(container) {
+  // Define parameters to display
+  const parameters = [
+    { 
+      id: 'ttd', 
+      name: 'TTD Trend', 
+      description: 'Terminal Temperature Difference indicates heat transfer efficiency',
+      unit: '°C',
+      color: '#1EAEDB' 
+    },
+    { 
+      id: 'dca', 
+      name: 'DCA Trend', 
+      description: 'Drain Cooler Approach shows subcooling of the drains',
+      unit: '°C',
+      color: '#F97316' 
+    },
+    { 
+      id: 'tr', 
+      name: 'TR Trend', 
+      description: 'Temperature Ratio is a measure of heat exchanger effectiveness',
+      unit: '',
+      color: '#8B5CF6' 
+    },
+    { 
+      id: 'heatLoad', 
+      name: 'Heat Load Trend', 
+      description: 'Total heat energy transferred to the feedwater',
+      unit: 'MW',
+      color: '#D946EF' 
+    }
+  ];
+  
+  // Create chart for each parameter
+  parameters.forEach(param => {
+    const chartCard = document.createElement('div');
+    chartCard.className = 'bg-white rounded-lg shadow-md p-4 border border-gray-100';
+    
+    chartCard.innerHTML = `
+      <div class="flex justify-between items-start mb-2">
+        <div>
+          <h4 class="font-medium text-adani-navy">${param.name}</h4>
+          <p class="text-xs text-gray-500">${param.description}</p>
+        </div>
+      </div>
+      <div class="h-[250px]">
+        <canvas id="trend-chart-${param.id}"></canvas>
+      </div>
+    `;
+    
+    container.appendChild(chartCard);
+    
+    // Initialize chart
+    const ctx = document.getElementById(`trend-chart-${param.id}`).getContext('2d');
+    createTrendChart(ctx, analyticsData.trendData[param.id], param);
+  });
+}
+
+// Create trend chart
+function createTrendChart(ctx, data, parameter) {
+  // Format data for Chart.js
+  const labels = data.map(point => point.time);
+  const values = data.map(point => point.value);
+  
+  // Create gradient for area below the line
+  const gradient = ctx.createLinearGradient(0, 0, 0, 300);
+  gradient.addColorStop(0, `${parameter.color}40`);  // 25% opacity
+  gradient.addColorStop(1, `${parameter.color}00`);  // 0% opacity
+  
+  // Create chart
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: parameter.unit ? `${parameter.name} (${parameter.unit})` : parameter.name,
+        data: values,
+        backgroundColor: gradient,
+        borderColor: parameter.color,
+        borderWidth: 2,
+        pointRadius: 2,
+        pointHoverRadius: 5,
+        tension: 0.4,
+        fill: true
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: false
+        },
+        tooltip: {
+          mode: 'index',
+          intersect: false,
+          callbacks: {
+            label: function(context) {
+              const value = context.raw;
+              return parameter.unit ? `${value} ${parameter.unit}` : value;
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: {
+            display: false
+          }
+        },
+        y: {
+          beginAtZero: false,
+          grid: {
+            color: 'rgba(0, 0, 0, 0.05)'
+          },
+          ticks: {
+            callback: function(value) {
+              return parameter.unit ? `${value} ${parameter.unit}` : value;
+            }
+          }
+        }
+      }
+    }
+  });
 }
 
 // Update time display
@@ -396,3 +601,4 @@ function initModelingCharts() {
 window.initModellingCharts = initModellingCharts;
 window.renderHeaterCards = renderHeaterCards;
 window.toggleSidebar = toggleSidebar;
+window.initHeaterTrends = initHeaterTrends;
