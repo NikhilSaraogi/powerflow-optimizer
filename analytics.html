@@ -262,52 +262,83 @@
         <div class="p-4">
           <!-- Heater Summary Tab -->
           <div id="tab-heaters" class="tab-content">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div id="heater-loading" class="text-center p-6">
+              <div class="animate-spin w-12 h-12 mx-auto mb-2 border-4 border-adani-blue border-t-transparent rounded-full"></div>
+              <p class="text-gray-500">Loading heater data...</p>
+            </div>
+            
+            <!-- Static default content that will always show -->
+            <div class="mb-4">
+              <h2 class="text-lg font-medium text-adani-navy mb-2">Heater Summary Overview</h2>
+              <p class="text-gray-600 mb-4">This section displays the current status and performance metrics for all HP heaters.</p>
+            </div>
+            
+            <!-- This container will be populated dynamically, but we'll add fallback content -->
+            <div id="heater-cards-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <!-- Default static heater cards -->
               <div class="bg-white rounded-lg shadow-md p-4 border border-gray-100">
-                <h3 class="text-lg font-semibold text-gray-800 mb-3">HP Heater 1</h3>
-                <div class="flex justify-between mb-2">
-                  <span class="text-gray-600">Heat Load:</span>
-                  <span class="font-medium text-adani-blue">52.4 MW</span>
-                </div>
-                <div class="flex justify-between mb-2">
-                  <span class="text-gray-600">Steam Flow:</span>
-                  <span class="font-medium text-adani-blue">42.5 t/h</span>
-                </div>
-                <div class="flex justify-between">
-                  <span class="text-gray-600">Heater Level:</span>
-                  <span class="font-medium text-adani-blue">52%</span>
+                <h3 class="text-lg font-medium text-adani-navy border-b pb-2 mb-3">HP Heater 1</h3>
+                <div class="grid grid-cols-2 gap-3">
+                  <div>
+                    <span class="text-sm text-gray-500">Heat Load:</span>
+                    <p class="font-medium text-adani-blue">52.4 MW</p>
+                  </div>
+                  <div>
+                    <span class="text-sm text-gray-500">Heater Level:</span>
+                    <p class="font-medium text-adani-blue">52%</p>
+                  </div>
+                  <div>
+                    <span class="text-sm text-gray-500">TTD:</span>
+                    <p class="font-medium text-adani-blue">2.8 °C</p>
+                  </div>
+                  <div>
+                    <span class="text-sm text-gray-500">DCA:</span>
+                    <p class="font-medium text-adani-blue">4.5 °C</p>
+                  </div>
                 </div>
               </div>
               
               <div class="bg-white rounded-lg shadow-md p-4 border border-gray-100">
-                <h3 class="text-lg font-semibold text-gray-800 mb-3">HP Heater 2</h3>
-                <div class="flex justify-between mb-2">
-                  <span class="text-gray-600">Heat Load:</span>
-                  <span class="font-medium text-adani-blue">48.7 MW</span>
-                </div>
-                <div class="flex justify-between mb-2">
-                  <span class="text-gray-600">Steam Flow:</span>
-                  <span class="font-medium text-adani-blue">38.7 t/h</span>
-                </div>
-                <div class="flex justify-between">
-                  <span class="text-gray-600">Heater Level:</span>
-                  <span class="font-medium text-adani-blue">65%</span>
+                <h3 class="text-lg font-medium text-adani-navy border-b pb-2 mb-3">HP Heater 2</h3>
+                <div class="grid grid-cols-2 gap-3">
+                  <div>
+                    <span class="text-sm text-gray-500">Heat Load:</span>
+                    <p class="font-medium text-adani-yellow">48.7 MW</p>
+                  </div>
+                  <div>
+                    <span class="text-sm text-gray-500">Heater Level:</span>
+                    <p class="font-medium text-adani-yellow">65%</p>
+                  </div>
+                  <div>
+                    <span class="text-sm text-gray-500">TTD:</span>
+                    <p class="font-medium text-adani-yellow">3.6 °C</p>
+                  </div>
+                  <div>
+                    <span class="text-sm text-gray-500">DCA:</span>
+                    <p class="font-medium text-adani-yellow">5.2 °C</p>
+                  </div>
                 </div>
               </div>
               
               <div class="bg-white rounded-lg shadow-md p-4 border border-gray-100">
-                <h3 class="text-lg font-semibold text-gray-800 mb-3">HP Heater 3</h3>
-                <div class="flex justify-between mb-2">
-                  <span class="text-gray-600">Heat Load:</span>
-                  <span class="font-medium text-adani-blue">45.1 MW</span>
-                </div>
-                <div class="flex justify-between mb-2">
-                  <span class="text-gray-600">Steam Flow:</span>
-                  <span class="font-medium text-adani-blue">35.2 t/h</span>
-                </div>
-                <div class="flex justify-between">
-                  <span class="text-gray-600">Heater Level:</span>
-                  <span class="font-medium text-adani-blue">78%</span>
+                <h3 class="text-lg font-medium text-adani-navy border-b pb-2 mb-3">HP Heater 3</h3>
+                <div class="grid grid-cols-2 gap-3">
+                  <div>
+                    <span class="text-sm text-gray-500">Heat Load:</span>
+                    <p class="font-medium text-adani-red">45.1 MW</p>
+                  </div>
+                  <div>
+                    <span class="text-sm text-gray-500">Heater Level:</span>
+                    <p class="font-medium text-adani-red">78%</p>
+                  </div>
+                  <div>
+                    <span class="text-sm text-gray-500">TTD:</span>
+                    <p class="font-medium text-adani-red">4.2 °C</p>
+                  </div>
+                  <div>
+                    <span class="text-sm text-gray-500">DCA:</span>
+                    <p class="font-medium text-adani-red">6.8 °C</p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -437,34 +468,4 @@
                 </div>
               </div>
               <div class="bg-white rounded-lg shadow-md p-4 border border-gray-100">
-                <h3 class="text-lg font-semibold text-gray-800 mb-4">High Load Model (&gt; 650 MW)</h3>
-                <div class="h-[300px]">
-                  <canvas id="high-load-model-chart"></canvas>
-                </div>
-                <div class="mt-4">
-                  <div class="bg-blue-50 p-3 rounded-lg">
-                    <h4 class="font-medium text-gray-800 mb-2">Model Performance</h4>
-                    <div class="grid grid-cols-2 gap-4">
-                      <div>
-                        <p class="text-sm text-gray-600">Mean Absolute Error:</p>
-                        <p class="font-medium text-adani-blue">1.85°C</p>
-                      </div>
-                      <div>
-                        <p class="text-sm text-gray-600">R² Score:</p>
-                        <p class="font-medium text-adani-blue">0.91</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            <div class="bg-white rounded-lg shadow-md p-4 border border-gray-100">
-              <h3 class="text-lg font-semibold text-gray-800 mb-4">Model Information</h3>
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <h4 class="font-medium text-gray-800 mb-2">Model Features</h4>
-                  <ul class="list-disc pl-5 space-y-1 text-gray-600">
-                    <li>Feedwater flow rate</li>
-                    <li>Steam extraction pressure</li>
-                    <li>Steam extraction temperature
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">High Load Model (&gt; 6
