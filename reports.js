@@ -484,6 +484,10 @@ function renderAdoptionDashboard(data) {
     rejected: 0
   };
   
+  // Count comments
+  let commentedCount = 0;
+  let uncommentedCount = 0;
+  
   // Process items
   adoptionItems.forEach(item => {
     // Count by type
@@ -500,11 +504,19 @@ function renderAdoptionDashboard(data) {
     if (statusCounts.hasOwnProperty(item.status)) {
       statusCounts[item.status]++;
     }
+    
+    // Count commented vs uncommented
+    if (item.comment && item.comment.trim() !== '') {
+      commentedCount++;
+    } else {
+      uncommentedCount++;
+    }
   });
   
   // Calculate totals
   const totalItems = adoptionItems.length;
   const acceptanceRate = totalItems > 0 ? Math.round((statusCounts.accepted / totalItems) * 100) : 0;
+  const commentRate = totalItems > 0 ? Math.round((commentedCount / totalItems) * 100) : 0;
   
   // Update summary metrics
   document.getElementById('recommendation-count').textContent = typeCounts.recommendation;
@@ -527,6 +539,12 @@ function renderAdoptionDashboard(data) {
   document.getElementById('rec-type-count').textContent = typeCounts.recommendation;
   document.getElementById('alert-type-count').textContent = typeCounts.alert;
   document.getElementById('rca-type-count').textContent = typeCounts.rca;
+  
+  // Update comment metrics
+  document.getElementById('commented-count').textContent = commentedCount;
+  document.getElementById('uncommented-count').textContent = uncommentedCount;
+  document.getElementById('comment-rate').textContent = `${commentRate}%`;
+  document.getElementById('comment-progress').style.width = `${commentRate}%`;
   
   // Set trends (for demo)
   const recommendationTrend = document.getElementById('recommendation-trend');
@@ -569,6 +587,9 @@ function renderAdoptionDashboard(data) {
   
   // Create timeline chart
   createTimelineChart(adoptionItems);
+  
+  // Create comments chart
+  createCommentsChart(commentedCount, uncommentedCount);
   
   // Populate adoption table
   populateAdoptionTable(adoptionItems);
@@ -621,6 +642,7 @@ function createPriorityChart(priorityCounts) {
     },
     options: {
       responsive: true,
+      maintainAspectRatio: true,
       plugins: {
         legend: {
           position: 'top',
@@ -668,6 +690,39 @@ function createStatusChart(statusCounts) {
     },
     options: {
       responsive: true,
+      maintainAspectRatio: true,
+      plugins: {
+        legend: {
+          position: 'bottom',
+        }
+      },
+      cutout: '60%'
+    }
+  });
+}
+
+// Create comments chart
+function createCommentsChart(commented, uncommented) {
+  const ctx = document.getElementById('comments-chart').getContext('2d');
+  
+  if (window.commentsChart) {
+    window.commentsChart.destroy();
+  }
+  
+  window.commentsChart = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: ['With Comments', 'No Comments'],
+      datasets: [{
+        data: [commented, uncommented],
+        backgroundColor: ['#0046AD', '#E5E7EB'],
+        borderColor: ['#fff', '#fff'],
+        borderWidth: 2
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
       plugins: {
         legend: {
           position: 'bottom',
@@ -749,6 +804,7 @@ function createTimelineChart(items) {
     },
     options: {
       responsive: true,
+      maintainAspectRatio: true,
       plugins: {
         legend: {
           position: 'top',
@@ -804,4 +860,83 @@ function populateAdoptionTable(items) {
     // Create priority badge
     const priorityClass = 
       item.priority === 'high' ? 'bg-red-100 text-red-800' : 
-      item.priority ===
+      item.priority === 'medium' ? 'bg-yellow-100 text-yellow-800' : 
+      'bg-gray-100 text-gray-800';
+    
+    // Create status badge
+    const statusClass = 
+      item.status === 'accepted' ? 'bg-green-100 text-green-800' : 
+      item.status === 'pending' ? 'bg-yellow-100 text-yellow-800' : 
+      'bg-red-100 text-red-800';
+    
+    row.innerHTML = `
+      <td class="px-4 py-2 whitespace-nowrap text-xs text-gray-500">${timestamp}</td>
+      <td class="px-4 py-2 whitespace-nowrap">
+        <span class="px-2 py-1 rounded-full text-xs font-medium ${typeClass}">
+          ${typeLabel}
+        </span>
+      </td>
+      <td class="px-4 py-2 whitespace-nowrap">
+        <span class="px-2 py-1 rounded-full text-xs font-medium ${priorityClass}">
+          ${item.priority}
+        </span>
+      </td>
+      <td class="px-4 py-2 whitespace-nowrap text-sm font-medium text-gray-900">${item.title}</td>
+      <td class="px-4 py-2 whitespace-nowrap">
+        <span class="px-2 py-1 rounded-full text-xs font-medium ${statusClass}">
+          ${item.status}
+        </span>
+      </td>
+      <td class="px-4 py-2 text-sm text-gray-600">${item.comment || '-'}</td>
+    `;
+    
+    tableBody.appendChild(row);
+  });
+}
+
+// Set up adoption filters
+function setupAdoptionFilters(items) {
+  const typeFilter = document.getElementById('type-filter');
+  const statusFilter = document.getElementById('status-filter');
+  
+  // Handle filter changes
+  typeFilter.addEventListener('change', () => filterAdoptionTable());
+  statusFilter.addEventListener('change', () => filterAdoptionTable());
+  
+  function filterAdoptionTable() {
+    const typeValue = typeFilter.value;
+    const statusValue = statusFilter.value;
+    
+    // Filter items
+    let filteredItems = [...items];
+    
+    if (typeValue !== 'all') {
+      filteredItems = filteredItems.filter(item => item.type === typeValue);
+    }
+    
+    if (statusValue !== 'all') {
+      filteredItems = filteredItems.filter(item => item.status === statusValue);
+    }
+    
+    // Repopulate table
+    populateAdoptionTable(filteredItems);
+  }
+}
+
+// Initialize page
+document.addEventListener('DOMContentLoaded', function() {
+  initializeDateInputs();
+  loadTopBarData();
+  populateDailyGainsTable();
+  initializeChart();
+  loadNotificationsData();
+  
+  // Set initial tab
+  document.getElementById('benefits-tab-btn').click();
+  
+  // Set up download button for adoption report
+  document.getElementById('download-adoption-report').addEventListener('click', function() {
+    alert('Adoption report download started!');
+    // In a real implementation, this would generate and download a PDF/Excel report
+  });
+});
