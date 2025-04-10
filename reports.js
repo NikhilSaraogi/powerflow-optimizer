@@ -1,4 +1,3 @@
-
 // Initialize sidebar state and handle toggle
 let sidebarCollapsed = false;
 const sidebar = document.getElementById('sidebar');
@@ -51,7 +50,6 @@ setInterval(updateCurrentTime, 1000);
 
 // Load top bar data
 function loadTopBarData() {
-  // In a real-world scenario, this data would come from an API
   const topBarData = {
     ecoInletTemp: {
       current: 295.7,
@@ -120,35 +118,58 @@ function loadTopBarData() {
 }
 
 // Tab switching functionality
+const benefitsTabBtn = document.getElementById('benefits-tab-btn');
+const rcaTabBtn = document.getElementById('rca-tab-btn');
+const adoptionTabBtn = document.getElementById('adoption-tab-btn');
 const benefitsTab = document.getElementById('benefits-tab');
 const rcaTab = document.getElementById('rca-tab');
-const tabButtons = document.querySelectorAll('.flex.border-b button');
+const adoptionTab = document.getElementById('adoption-tab');
 
-tabButtons.forEach((button, index) => {
-  button.addEventListener('click', () => {
-    // Reset all tabs and buttons
-    tabButtons.forEach(btn => {
-      btn.classList.remove('border-adani-blue', 'text-adani-blue');
-      btn.classList.add('border-transparent');
-    });
-    
-    // Set active button
-    button.classList.add('border-adani-blue', 'text-adani-blue');
-    button.classList.remove('border-transparent');
-    
-    // Show the correct tab
-    if (index === 0) {
-      benefitsTab.classList.remove('hidden');
-      benefitsTab.classList.add('block');
-      rcaTab.classList.add('hidden');
-      rcaTab.classList.remove('block');
-    } else {
-      benefitsTab.classList.add('hidden');
-      benefitsTab.classList.remove('block');
-      rcaTab.classList.remove('hidden');
-      rcaTab.classList.add('block');
-    }
-  });
+benefitsTabBtn.addEventListener('click', () => {
+  benefitsTabBtn.classList.add('border-adani-blue', 'text-adani-blue');
+  rcaTabBtn.classList.remove('border-adani-blue', 'text-adani-blue');
+  adoptionTabBtn.classList.remove('border-adani-blue', 'text-adani-blue');
+  rcaTabBtn.classList.add('border-transparent');
+  adoptionTabBtn.classList.add('border-transparent');
+  
+  benefitsTab.classList.remove('hidden');
+  benefitsTab.classList.add('block');
+  rcaTab.classList.add('hidden');
+  rcaTab.classList.remove('block');
+  adoptionTab.classList.add('hidden');
+  adoptionTab.classList.remove('block');
+});
+
+rcaTabBtn.addEventListener('click', () => {
+  rcaTabBtn.classList.add('border-adani-blue', 'text-adani-blue');
+  benefitsTabBtn.classList.remove('border-adani-blue', 'text-adani-blue');
+  adoptionTabBtn.classList.remove('border-adani-blue', 'text-adani-blue');
+  benefitsTabBtn.classList.add('border-transparent');
+  adoptionTabBtn.classList.add('border-transparent');
+  
+  rcaTab.classList.remove('hidden');
+  rcaTab.classList.add('block');
+  benefitsTab.classList.add('hidden');
+  benefitsTab.classList.remove('block');
+  adoptionTab.classList.add('hidden');
+  adoptionTab.classList.remove('block');
+});
+
+adoptionTabBtn.addEventListener('click', () => {
+  adoptionTabBtn.classList.add('border-adani-blue', 'text-adani-blue');
+  benefitsTabBtn.classList.remove('border-adani-blue', 'text-adani-blue');
+  rcaTabBtn.classList.remove('border-adani-blue', 'text-adani-blue');
+  benefitsTabBtn.classList.add('border-transparent');
+  rcaTabBtn.classList.add('border-transparent');
+  
+  adoptionTab.classList.remove('hidden');
+  adoptionTab.classList.add('block');
+  benefitsTab.classList.add('hidden');
+  benefitsTab.classList.remove('block');
+  rcaTab.classList.add('hidden');
+  rcaTab.classList.remove('block');
+  
+  initAdoptionCharts();
 });
 
 // Generate daily eco inlet temperature gains data
@@ -196,7 +217,6 @@ function populateDailyGainsTable() {
 
 // Load and populate notifications data
 function loadNotificationsData() {
-  // In a real-world scenario, this data would come from an API
   const notifications = [
     {
       id: 1,
@@ -335,6 +355,342 @@ function initializeDateInputs() {
   
   startDateInput.value = sevenDaysAgo.toISOString().split('T')[0];
   endDateInput.value = today.toISOString().split('T')[0];
+}
+
+// Generate adoption report data
+function generateAdoptionData() {
+  return {
+    comments: [
+      {
+        id: 1,
+        date: "2023-08-10",
+        component: "HP Heater 1",
+        user: "Operator A",
+        comment: "Implemented the recommended level adjustment to 52%, saw immediate improvement in efficiency.",
+        status: "Completed"
+      },
+      {
+        id: 2,
+        date: "2023-08-09",
+        component: "HP Heater 2",
+        user: "Engineer B",
+        comment: "Investigated the drainage issue, found valve partially blocked. Scheduled maintenance.",
+        status: "In Progress"
+      },
+      {
+        id: 3,
+        date: "2023-08-08",
+        component: "HP Heater 3",
+        user: "Manager C",
+        comment: "TTD values are consistently above normal range. Need detailed investigation.",
+        status: "Review"
+      },
+      {
+        id: 4,
+        date: "2023-08-07",
+        component: "HP Heater 1",
+        user: "Technician D",
+        comment: "Performed calibration on level sensors as recommended.",
+        status: "Completed"
+      },
+      {
+        id: 5,
+        date: "2023-08-06",
+        component: "Feed System",
+        user: "Engineer E",
+        comment: "Flow rate adjustments made to improve heater performance.",
+        status: "Monitoring"
+      },
+      {
+        id: 6,
+        date: "2023-08-05",
+        component: "HP Heater 2",
+        user: "Operator F",
+        comment: "Observed fluctuations in extraction pressure, logged for monitoring.",
+        status: "Open"
+      },
+      {
+        id: 7,
+        date: "2023-08-04",
+        component: "HP Heater 3",
+        user: "Manager G",
+        comment: "Drain valve operation reviewed, no issues found.",
+        status: "Completed"
+      }
+    ],
+    priorityData: {
+      high: { alerts: 10, rca: 7 },
+      medium: { alerts: 8, rca: 6 },
+      low: { alerts: 6, rca: 3 }
+    },
+    activityTrend: [
+      { week: 'Week 1', alerts: 4, rca: 3, comments: 5 },
+      { week: 'Week 2', alerts: 6, rca: 4, comments: 8 },
+      { week: 'Week 3', alerts: 5, rca: 3, comments: 10 },
+      { week: 'Week 4', alerts: 9, rca: 6, comments: 14 }
+    ],
+    componentIssues: {
+      'HP Heater 1': 8,
+      'HP Heater 2': 12,
+      'HP Heater 3': 15,
+      'Feed System': 6,
+      'Extraction System': 4,
+      'Drain System': 9,
+      'Control System': 7
+    }
+  };
+}
+
+// Initialize the adoption charts
+function initAdoptionCharts() {
+  const adoptionData = generateAdoptionData();
+  
+  populateCommentsTable(adoptionData.comments);
+  
+  createPriorityChart(adoptionData.priorityData);
+  
+  createActivityTrendChart(adoptionData.activityTrend);
+  
+  createComponentIssuesChart(adoptionData.componentIssues);
+  
+  document.getElementById('download-adoption-report').addEventListener('click', () => {
+    downloadAdoptionReport(adoptionData);
+  });
+  
+  document.getElementById('comment-filter').addEventListener('change', () => {
+    filterComments(adoptionData.comments);
+  });
+  
+  document.getElementById('sort-comments').addEventListener('change', () => {
+    filterComments(adoptionData.comments);
+  });
+}
+
+// Populate comments table with data
+function populateCommentsTable(comments) {
+  const tableBody = document.getElementById('comments-table');
+  tableBody.innerHTML = '';
+  
+  comments.forEach(comment => {
+    const statusClass = 
+      comment.status === 'Completed' ? 'bg-green-100 text-green-800' : 
+      comment.status === 'In Progress' || comment.status === 'Monitoring' ? 'bg-blue-100 text-blue-800' : 
+      comment.status === 'Review' ? 'bg-yellow-100 text-yellow-800' : 'bg-gray-100 text-gray-800';
+    
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500">${comment.date}</td>
+      <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-700">${comment.component}</td>
+      <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-700">${comment.user}</td>
+      <td class="px-4 py-2 text-sm text-gray-700 max-w-md">${comment.comment}</td>
+      <td class="px-4 py-2 whitespace-nowrap text-sm">
+        <span class="px-2 py-1 rounded-full text-xs font-medium ${statusClass}">
+          ${comment.status}
+        </span>
+      </td>
+    `;
+    tableBody.appendChild(row);
+  });
+}
+
+// Filter comments based on selected filters
+function filterComments(allComments) {
+  const componentFilter = document.getElementById('comment-filter').value;
+  const sortOrder = document.getElementById('sort-comments').value;
+  
+  let filteredComments = allComments;
+  if (componentFilter !== 'all') {
+    const componentMap = {
+      'heater1': 'HP Heater 1',
+      'heater2': 'HP Heater 2',
+      'heater3': 'HP Heater 3'
+    };
+    filteredComments = allComments.filter(comment => comment.component === componentMap[componentFilter]);
+  }
+  
+  filteredComments.sort((a, b) => {
+    const dateA = new Date(a.date);
+    const dateB = new Date(b.date);
+    return sortOrder === 'newest' ? dateB - dateA : dateA - dateB;
+  });
+  
+  populateCommentsTable(filteredComments);
+}
+
+// Create priority chart
+function createPriorityChart(priorityData) {
+  const ctx = document.getElementById('priority-chart').getContext('2d');
+  
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['High', 'Medium', 'Low'],
+      datasets: [
+        {
+          label: 'Alerts',
+          data: [priorityData.high.alerts, priorityData.medium.alerts, priorityData.low.alerts],
+          backgroundColor: '#FF3A3A',
+        },
+        {
+          label: 'RCA',
+          data: [priorityData.high.rca, priorityData.medium.rca, priorityData.low.rca],
+          backgroundColor: '#0046AD',
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          position: 'top',
+        },
+        title: {
+          display: false
+        }
+      },
+      scales: {
+        x: {
+          grid: {
+            display: false
+          }
+        },
+        y: {
+          beginAtZero: true,
+          title: {
+            display: true,
+            text: 'Count'
+          }
+        }
+      }
+    }
+  });
+}
+
+// Create activity trend chart
+function createActivityTrendChart(activityData) {
+  const ctx = document.getElementById('activity-trend-chart').getContext('2d');
+  
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: activityData.map(item => item.week),
+      datasets: [
+        {
+          label: 'Alerts',
+          data: activityData.map(item => item.alerts),
+          borderColor: '#FF3A3A',
+          backgroundColor: 'rgba(255, 58, 58, 0.1)',
+          borderWidth: 2,
+          tension: 0.4,
+          fill: true
+        },
+        {
+          label: 'RCA',
+          data: activityData.map(item => item.rca),
+          borderColor: '#0046AD',
+          backgroundColor: 'rgba(0, 70, 173, 0.1)',
+          borderWidth: 2,
+          tension: 0.4,
+          fill: true
+        },
+        {
+          label: 'Comments',
+          data: activityData.map(item => item.comments),
+          borderColor: '#00A650',
+          backgroundColor: 'rgba(0, 166, 80, 0.1)',
+          borderWidth: 2,
+          tension: 0.4,
+          fill: true
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          position: 'top',
+        },
+        tooltip: {
+          mode: 'index',
+          intersect: false
+        }
+      },
+      scales: {
+        x: {
+          grid: {
+            display: false
+          }
+        },
+        y: {
+          beginAtZero: true,
+          title: {
+            display: true,
+            text: 'Count'
+          }
+        }
+      }
+    }
+  });
+}
+
+// Create component issues chart
+function createComponentIssuesChart(componentData) {
+  const ctx = document.getElementById('component-issue-chart').getContext('2d');
+  
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: Object.keys(componentData),
+      datasets: [{
+        label: 'Number of Issues',
+        data: Object.values(componentData),
+        backgroundColor: [
+          'rgba(0, 70, 173, 0.7)',
+          'rgba(0, 166, 80, 0.7)',
+          'rgba(255, 58, 58, 0.7)',
+          'rgba(255, 193, 7, 0.7)',
+          'rgba(0, 41, 107, 0.7)',
+          'rgba(75, 192, 192, 0.7)',
+          'rgba(153, 102, 255, 0.7)'
+        ],
+        borderColor: [
+          'rgb(0, 70, 173)',
+          'rgb(0, 166, 80)',
+          'rgb(255, 58, 58)',
+          'rgb(255, 193, 7)',
+          'rgb(0, 41, 107)',
+          'rgb(75, 192, 192)',
+          'rgb(153, 102, 255)'
+        ],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      plugins: {
+        legend: {
+          display: false
+        }
+      },
+      scales: {
+        x: {
+          beginAtZero: true,
+          title: {
+            display: true,
+            text: 'Number of Issues'
+          }
+        }
+      }
+    }
+  });
+}
+
+// Generate and download the full adoption report
+function downloadAdoptionReport(adoptionData) {
+  alert('Adoption report download started. This would generate a PDF or Excel file in a real application.');
+  
+  console.log('Adoption data for report:', adoptionData);
 }
 
 // Initialize the page
