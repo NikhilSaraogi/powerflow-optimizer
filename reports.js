@@ -485,8 +485,10 @@ function renderAdoptionDashboard(data) {
   };
   
   // Count comments
-  let commentedCount = 0;
-  let uncommentedCount = 0;
+  const commentCounts = {
+    withComments: 0,
+    noComments: 0
+  };
   
   // Process items
   adoptionItems.forEach(item => {
@@ -505,24 +507,30 @@ function renderAdoptionDashboard(data) {
       statusCounts[item.status]++;
     }
     
-    // Count commented vs uncommented
+    // Count comments
     if (item.comment && item.comment.trim() !== '') {
-      commentedCount++;
+      commentCounts.withComments++;
     } else {
-      uncommentedCount++;
+      commentCounts.noComments++;
     }
   });
   
   // Calculate totals
   const totalItems = adoptionItems.length;
   const acceptanceRate = totalItems > 0 ? Math.round((statusCounts.accepted / totalItems) * 100) : 0;
-  const commentRate = totalItems > 0 ? Math.round((commentedCount / totalItems) * 100) : 0;
+  const commentRate = totalItems > 0 ? Math.round((commentCounts.withComments / totalItems) * 100) : 0;
   
   // Update summary metrics
   document.getElementById('recommendation-count').textContent = typeCounts.recommendation;
   document.getElementById('alert-count').textContent = typeCounts.alert;
   document.getElementById('rca-count').textContent = typeCounts.rca;
   document.getElementById('adoption-rate').textContent = `${acceptanceRate}%`;
+  
+  // Update comment metrics
+  document.getElementById('commented-count').textContent = commentCounts.withComments;
+  document.getElementById('uncommented-count').textContent = commentCounts.noComments;
+  document.getElementById('comment-rate').textContent = `${commentRate}%`;
+  document.getElementById('comment-progress').style.width = `${commentRate}%`;
   
   // Update adoption summary metrics
   document.getElementById('acceptance-rate').textContent = `${acceptanceRate}%`;
@@ -539,12 +547,6 @@ function renderAdoptionDashboard(data) {
   document.getElementById('rec-type-count').textContent = typeCounts.recommendation;
   document.getElementById('alert-type-count').textContent = typeCounts.alert;
   document.getElementById('rca-type-count').textContent = typeCounts.rca;
-  
-  // Update comment metrics
-  document.getElementById('commented-count').textContent = commentedCount;
-  document.getElementById('uncommented-count').textContent = uncommentedCount;
-  document.getElementById('comment-rate').textContent = `${commentRate}%`;
-  document.getElementById('comment-progress').style.width = `${commentRate}%`;
   
   // Set trends (for demo)
   const recommendationTrend = document.getElementById('recommendation-trend');
@@ -579,17 +581,11 @@ function renderAdoptionDashboard(data) {
     <span class="text-green-600">5% from last period</span>
   `;
   
-  // Create priority chart
+  // Create charts
   createPriorityChart(priorityCounts);
-  
-  // Create status chart
   createStatusChart(statusCounts);
-  
-  // Create timeline chart
+  createCommentsChart(commentCounts);
   createTimelineChart(adoptionItems);
-  
-  // Create comments chart
-  createCommentsChart(commentedCount, uncommentedCount);
   
   // Populate adoption table
   populateAdoptionTable(adoptionItems);
@@ -642,10 +638,16 @@ function createPriorityChart(priorityCounts) {
     },
     options: {
       responsive: true,
-      maintainAspectRatio: true,
+      maintainAspectRatio: false,
       plugins: {
         legend: {
           position: 'top',
+          labels: {
+            boxWidth: 12,
+            font: {
+              size: 11
+            }
+          }
         },
         title: {
           display: false
@@ -661,7 +663,15 @@ function createPriorityChart(priorityCounts) {
           beginAtZero: true,
           title: {
             display: true,
-            text: 'Count'
+            text: 'Count',
+            font: {
+              size: 11
+            }
+          },
+          ticks: {
+            font: {
+              size: 10
+            }
           }
         }
       }
@@ -690,10 +700,16 @@ function createStatusChart(statusCounts) {
     },
     options: {
       responsive: true,
-      maintainAspectRatio: true,
+      maintainAspectRatio: false,
       plugins: {
         legend: {
           position: 'bottom',
+          labels: {
+            boxWidth: 12,
+            font: {
+              size: 10
+            }
+          }
         }
       },
       cutout: '60%'
@@ -702,7 +718,7 @@ function createStatusChart(statusCounts) {
 }
 
 // Create comments chart
-function createCommentsChart(commented, uncommented) {
+function createCommentsChart(commentData) {
   const ctx = document.getElementById('comments-chart').getContext('2d');
   
   if (window.commentsChart) {
@@ -714,7 +730,7 @@ function createCommentsChart(commented, uncommented) {
     data: {
       labels: ['With Comments', 'No Comments'],
       datasets: [{
-        data: [commented, uncommented],
+        data: [commentData.withComments, commentData.noComments],
         backgroundColor: ['#0046AD', '#E5E7EB'],
         borderColor: ['#fff', '#fff'],
         borderWidth: 2
@@ -722,10 +738,16 @@ function createCommentsChart(commented, uncommented) {
     },
     options: {
       responsive: true,
-      maintainAspectRatio: true,
+      maintainAspectRatio: false,
       plugins: {
         legend: {
           position: 'bottom',
+          labels: {
+            boxWidth: 12,
+            font: {
+              size: 10
+            }
+          }
         }
       },
       cutout: '60%'
@@ -804,10 +826,16 @@ function createTimelineChart(items) {
     },
     options: {
       responsive: true,
-      maintainAspectRatio: true,
+      maintainAspectRatio: false,
       plugins: {
         legend: {
           position: 'top',
+          labels: {
+            boxWidth: 12,
+            font: {
+              size: 11
+            }
+          }
         }
       },
       scales: {
@@ -815,14 +843,27 @@ function createTimelineChart(items) {
           grid: {
             display: false
           },
-          stacked: true
+          stacked: true,
+          ticks: {
+            font: {
+              size: 10
+            }
+          }
         },
         y: {
           stacked: true,
           beginAtZero: true,
           title: {
             display: true,
-            text: 'Count'
+            text: 'Count',
+            font: {
+              size: 11
+            }
+          },
+          ticks: {
+            font: {
+              size: 10
+            }
           }
         }
       }
@@ -923,13 +964,17 @@ function setupAdoptionFilters(items) {
   }
 }
 
-// Initialize page
+// Initialize the page
 document.addEventListener('DOMContentLoaded', function() {
-  initializeDateInputs();
   loadTopBarData();
-  populateDailyGainsTable();
+  initializeDateInputs();
   initializeChart();
+  populateDailyGainsTable();
   loadNotificationsData();
+  
+  // Update current time
+  updateCurrentTime();
+  setInterval(updateCurrentTime, 1000);
   
   // Set initial tab
   document.getElementById('benefits-tab-btn').click();
