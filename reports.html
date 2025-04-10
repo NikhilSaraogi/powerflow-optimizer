@@ -69,7 +69,7 @@
           <li>
             <a href="#" class="block p-2 rounded hover:bg-white hover:bg-opacity-10 flex items-center">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 sidebar-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37.996.608 2.296.07 2.572-1.065z" />
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
               </svg>
               <span class="sidebar-text">Settings</span>
@@ -272,137 +272,124 @@
                 <div class="bg-white p-3 rounded-lg border flex flex-col">
                   <div class="flex items-start justify-between">
                     <div>
-                      <p class="text-sm text-gray-500">Total Alerts</p>
-                      <h4 class="text-2xl font-bold text-adani-red">24</h4>
-                    </div>
-                    <div class="p-2 bg-red-50 rounded-lg">
-                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-adani-red" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 0l7-7m0 0l7 7m-7-7v18" />
-                      </svg>
-                    </div>
-                  </div>
-                  <div class="mt-2 flex items-center text-xs">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-green-500 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
-                    </svg>
-                    <span class="text-green-600">18% increase from last period</span>
-                  </div>
-                </div>
-                
-                <div class="bg-white p-3 rounded-lg border flex flex-col">
-                  <div class="flex items-start justify-between">
-                    <div>
-                      <p class="text-sm text-gray-500">RCA Reports</p>
-                      <h4 class="text-2xl font-bold text-adani-blue">16</h4>
+                      <p class="text-sm text-gray-500">Recommendations</p>
+                      <h4 class="text-2xl font-bold text-adani-blue" id="recommendation-count">0</h4>
                     </div>
                     <div class="p-2 bg-blue-50 rounded-lg">
                       <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-adani-blue" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v8a2 2 0 01-2 2h-2M9 5a2 2 0 012 2h2a2 2 0 012-2M9 5a2 2 0 002-2h2a2 2 0 002 2" />
-                      </svg>
-                    </div>
-                  </div>
-                  <div class="mt-2 flex items-center text-xs">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-green-500 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
-                    </svg>
-                    <span class="text-green-600">12% increase from last period</span>
-                  </div>
-                </div>
-                
-                <div class="bg-white p-3 rounded-lg border flex flex-col">
-                  <div class="flex items-start justify-between">
-                    <div>
-                      <p class="text-sm text-gray-500">Comments</p>
-                      <h4 class="text-2xl font-bold text-adani-green">37</h4>
-                    </div>
-                    <div class="p-2 bg-green-50 rounded-lg">
-                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-adani-green" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
-                      </svg>
-                    </div>
-                  </div>
-                  <div class="mt-2 flex items-center text-xs">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-green-500 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
-                    </svg>
-                    <span class="text-green-600">25% increase from last period</span>
-                  </div>
-                </div>
-                
-                <div class="bg-white p-3 rounded-lg border flex flex-col">
-                  <div class="flex items-start justify-between">
-                    <div>
-                      <p class="text-sm text-gray-500">Implementation Rate</p>
-                      <h4 class="text-2xl font-bold text-adani-navy">86%</h4>
-                    </div>
-                    <div class="p-2 bg-blue-100 rounded-lg">
-                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-adani-navy" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                       </svg>
                     </div>
                   </div>
                   <div class="mt-2 flex items-center text-xs">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-green-500 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
-                    </svg>
-                    <span class="text-green-600">8% increase from last period</span>
+                    <div id="recommendation-trend"></div>
+                  </div>
+                </div>
+                
+                <div class="bg-white p-3 rounded-lg border flex flex-col">
+                  <div class="flex items-start justify-between">
+                    <div>
+                      <p class="text-sm text-gray-500">Alerts</p>
+                      <h4 class="text-2xl font-bold text-adani-red" id="alert-count">0</h4>
+                    </div>
+                    <div class="p-2 bg-red-50 rounded-lg">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-adani-red" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                      </svg>
+                    </div>
+                  </div>
+                  <div class="mt-2 flex items-center text-xs">
+                    <div id="alert-trend"></div>
+                  </div>
+                </div>
+                
+                <div class="bg-white p-3 rounded-lg border flex flex-col">
+                  <div class="flex items-start justify-between">
+                    <div>
+                      <p class="text-sm text-gray-500">RCA</p>
+                      <h4 class="text-2xl font-bold text-adani-navy" id="rca-count">0</h4>
+                    </div>
+                    <div class="p-2 bg-blue-100 rounded-lg">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-adani-navy" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                      </svg>
+                    </div>
+                  </div>
+                  <div class="mt-2 flex items-center text-xs">
+                    <div id="rca-trend"></div>
+                  </div>
+                </div>
+                
+                <div class="bg-white p-3 rounded-lg border flex flex-col">
+                  <div class="flex items-start justify-between">
+                    <div>
+                      <p class="text-sm text-gray-500">Adoption Rate</p>
+                      <h4 class="text-2xl font-bold text-adani-green" id="adoption-rate">0%</h4>
+                    </div>
+                    <div class="p-2 bg-green-50 rounded-lg">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-adani-green" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                    </div>
+                  </div>
+                  <div class="mt-2 flex items-center text-xs">
+                    <div id="adoption-rate-trend"></div>
                   </div>
                 </div>
               </div>
               
               <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                 <div class="bg-white p-4 rounded-lg border">
-                  <h4 class="text-md font-medium text-gray-600 mb-4">Alerts & RCA by Priority</h4>
+                  <h4 class="text-md font-medium text-gray-600 mb-4">Alerts & Recommendations by Priority</h4>
                   <div class="h-[300px]">
                     <canvas id="priority-chart"></canvas>
                   </div>
                 </div>
                 
                 <div class="bg-white p-4 rounded-lg border">
-                  <h4 class="text-md font-medium text-gray-600 mb-4">Weekly Activity Trends</h4>
+                  <h4 class="text-md font-medium text-gray-600 mb-4">Status Distribution</h4>
                   <div class="h-[300px]">
-                    <canvas id="activity-trend-chart"></canvas>
-                  </div>
-                </div>
-              </div>
-              
-              <div class="grid grid-cols-1 gap-6 mb-6">
-                <div class="bg-white p-4 rounded-lg border">
-                  <h4 class="text-md font-medium text-gray-600 mb-4">Component-wise Issue Distribution</h4>
-                  <div class="h-[300px]">
-                    <canvas id="component-issue-chart"></canvas>
+                    <canvas id="status-chart"></canvas>
                   </div>
                 </div>
               </div>
               
               <div class="bg-white p-4 rounded-lg border">
                 <div class="flex justify-between items-center mb-4">
-                  <h4 class="text-md font-medium text-gray-600">Recent Comments & Feedback</h4>
+                  <h4 class="text-md font-medium text-gray-600">Timeline of Actions</h4>
                   <div class="flex items-center">
-                    <select id="comment-filter" class="border rounded px-2 py-1 text-sm mr-2">
-                      <option value="all">All Components</option>
-                      <option value="heater1">HP Heater 1</option>
-                      <option value="heater2">HP Heater 2</option>
-                      <option value="heater3">HP Heater 3</option>
+                    <select id="type-filter" class="border rounded px-2 py-1 text-sm mr-2">
+                      <option value="all">All Types</option>
+                      <option value="recommendation">Recommendations</option>
+                      <option value="alert">Alerts</option>
+                      <option value="rca">RCA</option>
                     </select>
-                    <select id="sort-comments" class="border rounded px-2 py-1 text-sm">
-                      <option value="newest">Newest First</option>
-                      <option value="oldest">Oldest First</option>
+                    <select id="status-filter" class="border rounded px-2 py-1 text-sm mr-2">
+                      <option value="all">All Statuses</option>
+                      <option value="accepted">Accepted</option>
+                      <option value="pending">Pending</option>
+                      <option value="rejected">Rejected</option>
                     </select>
                   </div>
                 </div>
+                <div class="h-[300px] mb-6">
+                  <canvas id="timeline-chart"></canvas>
+                </div>
+                
+                <h4 class="text-md font-medium text-gray-600 mt-6 mb-4">Action Details</h4>
                 <div class="border rounded overflow-auto max-h-[400px]">
                   <table class="min-w-full">
                     <thead>
                       <tr>
-                        <th class="px-4 py-2 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
-                        <th class="px-4 py-2 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase">Component</th>
-                        <th class="px-4 py-2 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase">User</th>
-                        <th class="px-4 py-2 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase">Comment</th>
+                        <th class="px-4 py-2 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase">Date & Time</th>
+                        <th class="px-4 py-2 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase">Type</th>
+                        <th class="px-4 py-2 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase">Priority</th>
+                        <th class="px-4 py-2 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase">Title</th>
                         <th class="px-4 py-2 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                        <th class="px-4 py-2 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase">Comment</th>
                       </tr>
                     </thead>
-                    <tbody id="comments-table" class="bg-white divide-y divide-gray-200">
+                    <tbody id="adoption-table" class="bg-white divide-y divide-gray-200">
                       <!-- Will be populated by JavaScript -->
                     </tbody>
                   </table>
@@ -410,81 +397,61 @@
               </div>
               
               <div class="mt-6">
-                <h4 class="text-md font-medium text-gray-600 mb-4">Adoption Metrics Summary</h4>
+                <h4 class="text-md font-medium text-gray-600 mb-4">Adoption Summary</h4>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                   <div class="bg-blue-50 p-3 rounded-lg">
-                    <h5 class="font-medium text-adani-navy mb-2">Engagement Score</h5>
+                    <h5 class="font-medium text-adani-navy mb-2">Acceptance Rate</h5>
                     <div class="flex items-end justify-between">
-                      <div class="text-2xl font-bold text-adani-blue">82%</div>
-                      <div class="text-sm text-green-600 flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                        </svg>
-                        15%
-                      </div>
+                      <div class="text-2xl font-bold text-adani-blue" id="acceptance-rate">0%</div>
                     </div>
                     <div class="progress-bar mt-2">
-                      <div class="progress-value" style="width: 82%; background-color: #0046AD;"></div>
+                      <div class="progress-value" id="acceptance-progress" style="width: 0%; background-color: #0046AD;"></div>
                     </div>
                   </div>
                   
                   <div class="bg-blue-50 p-3 rounded-lg">
-                    <h5 class="font-medium text-adani-navy mb-2">Response Time</h5>
+                    <h5 class="font-medium text-adani-navy mb-2">Average Response Time</h5>
                     <div class="flex items-end justify-between">
-                      <div class="text-2xl font-bold text-adani-blue">3.2 hrs</div>
-                      <div class="text-sm text-green-600 flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                        </svg>
-                        12%
-                      </div>
+                      <div class="text-2xl font-bold text-adani-blue" id="avg-response-time">0 hrs</div>
                     </div>
-                    <p class="text-xs text-gray-600 mt-1">Average response to alerts</p>
+                    <p class="text-xs text-gray-600 mt-1">Time from alert to action</p>
                   </div>
                   
                   <div class="bg-blue-50 p-3 rounded-lg">
-                    <h5 class="font-medium text-adani-navy mb-2">Resolution Rate</h5>
-                    <div class="flex items-end justify-between">
-                      <div class="text-2xl font-bold text-adani-blue">78%</div>
-                      <div class="text-sm text-green-600 flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                        </svg>
-                        5%
-                      </div>
+                    <h5 class="font-medium text-adani-navy mb-2">Priority Distribution</h5>
+                    <div class="flex items-center space-x-2 mt-3">
+                      <span class="inline-block w-3 h-3 bg-red-500 rounded-full"></span>
+                      <span class="text-xs">High: </span>
+                      <span class="text-xs font-semibold" id="high-priority-count">0</span>
                     </div>
-                    <div class="progress-bar mt-2">
-                      <div class="progress-value" style="width: 78%; background-color: #0046AD;"></div>
+                    <div class="flex items-center space-x-2 mt-1">
+                      <span class="inline-block w-3 h-3 bg-yellow-500 rounded-full"></span>
+                      <span class="text-xs">Medium: </span>
+                      <span class="text-xs font-semibold" id="medium-priority-count">0</span>
+                    </div>
+                    <div class="flex items-center space-x-2 mt-1">
+                      <span class="inline-block w-3 h-3 bg-gray-500 rounded-full"></span>
+                      <span class="text-xs">Low: </span>
+                      <span class="text-xs font-semibold" id="low-priority-count">0</span>
                     </div>
                   </div>
                   
                   <div class="bg-blue-50 p-3 rounded-lg">
-                    <h5 class="font-medium text-adani-navy mb-2">User Feedback Score</h5>
-                    <div class="flex items-end justify-between">
-                      <div class="text-2xl font-bold text-adani-blue">4.6/5</div>
-                      <div class="text-sm text-green-600 flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="currentColor" viewBox="0 0 24 24">
-                          <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-                        </svg>
-                        0.3
-                      </div>
+                    <h5 class="font-medium text-adani-navy mb-2">Actions by Type</h5>
+                    <div class="flex items-center space-x-2 mt-3">
+                      <span class="inline-block w-3 h-3 bg-blue-500 rounded-full"></span>
+                      <span class="text-xs">Recommendations: </span>
+                      <span class="text-xs font-semibold" id="rec-type-count">0</span>
                     </div>
-                    <div class="flex mt-1">
-                      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-yellow-500" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-                      </svg>
-                      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-yellow-500" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-                      </svg>
-                      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-yellow-500" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-                      </svg>
-                      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-yellow-500" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-                      </svg>
-                      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-300" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-                      </svg>
+                    <div class="flex items-center space-x-2 mt-1">
+                      <span class="inline-block w-3 h-3 bg-red-500 rounded-full"></span>
+                      <span class="text-xs">Alerts: </span>
+                      <span class="text-xs font-semibold" id="alert-type-count">0</span>
+                    </div>
+                    <div class="flex items-center space-x-2 mt-1">
+                      <span class="inline-block w-3 h-3 bg-green-500 rounded-full"></span>
+                      <span class="text-xs">RCA: </span>
+                      <span class="text-xs font-semibold" id="rca-type-count">0</span>
                     </div>
                   </div>
                 </div>
