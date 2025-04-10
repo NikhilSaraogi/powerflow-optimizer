@@ -147,9 +147,10 @@ const Reports = () => {
           </div>
           
           <Tabs defaultValue="benefits" className="w-full">
-            <TabsList className="grid grid-cols-2 w-[400px] mb-4">
+            <TabsList className="grid grid-cols-3 w-[600px] mb-4">
               <TabsTrigger value="benefits">Benefits Report</TabsTrigger>
               <TabsTrigger value="recommendations">RCA & Recommendations</TabsTrigger>
+              <TabsTrigger value="adoption">Adoption Report</TabsTrigger>
             </TabsList>
             
             <TabsContent value="benefits">
@@ -312,6 +313,242 @@ const Reports = () => {
                           ))}
                         </tbody>
                       </table>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </TabsContent>
+            
+            <TabsContent value="adoption">
+              <div className="grid grid-cols-1 gap-6">
+                <Card>
+                  <CardHeader className="flex flex-row items-center justify-between">
+                    <div>
+                      <CardTitle>Adoption Overview</CardTitle>
+                      <CardDescription>Overall performance metrics for the selected period</CardDescription>
+                    </div>
+                    <Button variant="outline" size="sm">
+                      <Download className="h-4 w-4 mr-2" />
+                      Download Full Report
+                    </Button>
+                  </CardHeader>
+                  <CardContent>
+                    {/* Adoption Stats Cards */}
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                      <Card>
+                        <CardContent className="pt-6">
+                          <div className="flex items-start justify-between">
+                            <div>
+                              <p className="text-sm text-gray-500">Recommendations</p>
+                              <h4 className="text-2xl font-bold text-adani-blue" id="recommendation-count">4</h4>
+                            </div>
+                            <div className="p-2 bg-blue-50 rounded-lg">
+                              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-adani-blue" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                              </svg>
+                            </div>
+                          </div>
+                          <div className="mt-2 flex items-center text-xs">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-green-500 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 10l7-7m0 0l7 7m-7-7v18" />
+                            </svg>
+                            <span className="text-green-600">24% from last period</span>
+                          </div>
+                        </CardContent>
+                      </Card>
+                      
+                      <Card>
+                        <CardContent className="pt-6">
+                          <div className="flex items-start justify-between">
+                            <div>
+                              <p className="text-sm text-gray-500">Alerts</p>
+                              <h4 className="text-2xl font-bold text-adani-red" id="alert-count">3</h4>
+                            </div>
+                            <div className="p-2 bg-red-50 rounded-lg">
+                              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-adani-red" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                              </svg>
+                            </div>
+                          </div>
+                          <div className="mt-2 flex items-center text-xs">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-red-500 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                            </svg>
+                            <span className="text-red-600">8% from last period</span>
+                          </div>
+                        </CardContent>
+                      </Card>
+                      
+                      <Card>
+                        <CardContent className="pt-6">
+                          <div className="flex items-start justify-between">
+                            <div>
+                              <p className="text-sm text-gray-500">RCA</p>
+                              <h4 className="text-2xl font-bold text-adani-navy" id="rca-count">3</h4>
+                            </div>
+                            <div className="p-2 bg-blue-100 rounded-lg">
+                              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-adani-navy" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                              </svg>
+                            </div>
+                          </div>
+                          <div className="mt-2 flex items-center text-xs">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-green-500 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 10l7-7m0 0l7 7m-7-7v18" />
+                            </svg>
+                            <span className="text-green-600">15% from last period</span>
+                          </div>
+                        </CardContent>
+                      </Card>
+                      
+                      <Card>
+                        <CardContent className="pt-6">
+                          <div className="flex items-start justify-between">
+                            <div>
+                              <p className="text-sm text-gray-500">Adoption Rate</p>
+                              <h4 className="text-2xl font-bold text-adani-green" id="adoption-rate">70%</h4>
+                            </div>
+                            <div className="p-2 bg-green-50 rounded-lg">
+                              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-adani-green" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                              </svg>
+                            </div>
+                          </div>
+                          <div className="mt-2 flex items-center text-xs">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-green-500 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 10l7-7m0 0l7 7m-7-7v18" />
+                            </svg>
+                            <span className="text-green-600">5% from last period</span>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </div>
+                    
+                    <div className="mt-6">
+                      <h4 className="text-md font-medium text-gray-600 mb-4">Adoption Summary</h4>
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div className="bg-blue-50 p-3 rounded-lg">
+                          <h5 className="font-medium text-adani-navy mb-2">Acceptance Rate</h5>
+                          <div className="flex items-end justify-between">
+                            <div className="text-2xl font-bold text-adani-blue">70%</div>
+                          </div>
+                          <div className="mt-2 bg-blue-100 rounded-full h-2">
+                            <div className="bg-adani-blue h-2 rounded-full" style={{width: '70%'}}></div>
+                          </div>
+                        </div>
+                        
+                        <div className="bg-blue-50 p-3 rounded-lg">
+                          <h5 className="font-medium text-adani-navy mb-2">Average Response Time</h5>
+                          <div className="flex items-end justify-between">
+                            <div className="text-2xl font-bold text-adani-blue">4.2 hrs</div>
+                          </div>
+                          <p className="text-xs text-gray-600 mt-1">Time from alert to action</p>
+                        </div>
+                        
+                        <div className="bg-blue-50 p-3 rounded-lg">
+                          <h5 className="font-medium text-adani-navy mb-2">Priority Distribution</h5>
+                          <div className="flex items-center space-x-2 mt-3">
+                            <span className="inline-block w-3 h-3 bg-red-500 rounded-full"></span>
+                            <span className="text-xs">High: </span>
+                            <span className="text-xs font-semibold">2</span>
+                          </div>
+                          <div className="flex items-center space-x-2 mt-1">
+                            <span className="inline-block w-3 h-3 bg-yellow-500 rounded-full"></span>
+                            <span className="text-xs">Medium: </span>
+                            <span className="text-xs font-semibold">6</span>
+                          </div>
+                          <div className="flex items-center space-x-2 mt-1">
+                            <span className="inline-block w-3 h-3 bg-gray-500 rounded-full"></span>
+                            <span className="text-xs">Low: </span>
+                            <span className="text-xs font-semibold">2</span>
+                          </div>
+                        </div>
+                        
+                        <div className="bg-blue-50 p-3 rounded-lg">
+                          <h5 className="font-medium text-adani-navy mb-2">Actions by Type</h5>
+                          <div className="flex items-center space-x-2 mt-3">
+                            <span className="inline-block w-3 h-3 bg-blue-500 rounded-full"></span>
+                            <span className="text-xs">Recommendations: </span>
+                            <span className="text-xs font-semibold">4</span>
+                          </div>
+                          <div className="flex items-center space-x-2 mt-1">
+                            <span className="inline-block w-3 h-3 bg-red-500 rounded-full"></span>
+                            <span className="text-xs">Alerts: </span>
+                            <span className="text-xs font-semibold">3</span>
+                          </div>
+                          <div className="flex items-center space-x-2 mt-1">
+                            <span className="inline-block w-3 h-3 bg-green-500 rounded-full"></span>
+                            <span className="text-xs">RCA: </span>
+                            <span className="text-xs font-semibold">3</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="mt-6">
+                      <h4 className="text-md font-medium text-gray-600 mb-4">Action Details</h4>
+                      <div className="border rounded-md">
+                        <table className="min-w-full divide-y divide-gray-200">
+                          <thead>
+                            <tr>
+                              <th className="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date & Time</th>
+                              <th className="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+                              <th className="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
+                              <th className="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                              <th className="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Comment</th>
+                            </tr>
+                          </thead>
+                          <tbody className="bg-white divide-y divide-gray-200">
+                            <tr>
+                              <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">27 Feb 2025 23:30</td>
+                              <td className="px-4 py-3 whitespace-nowrap">
+                                <span className="px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                  Recommendation
+                                </span>
+                              </td>
+                              <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">Optimize HP Heater Levels</td>
+                              <td className="px-4 py-3 whitespace-nowrap">
+                                <span className="px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                  Accepted
+                                </span>
+                              </td>
+                              <td className="px-4 py-3 text-sm text-gray-500">action taken</td>
+                            </tr>
+                            
+                            <tr>
+                              <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">27 Feb 2025 20:15</td>
+                              <td className="px-4 py-3 whitespace-nowrap">
+                                <span className="px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                  Alert
+                                </span>
+                              </td>
+                              <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">High Hph-1 Drain Cooler Approach</td>
+                              <td className="px-4 py-3 whitespace-nowrap">
+                                <span className="px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                  Accepted
+                                </span>
+                              </td>
+                              <td className="px-4 py-3 text-sm text-gray-500">noticed</td>
+                            </tr>
+                            
+                            <tr>
+                              <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">27 Feb 2025 16:45</td>
+                              <td className="px-4 py-3 whitespace-nowrap">
+                                <span className="px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                  RCA
+                                </span>
+                              </td>
+                              <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">HP Heater 2 Maintenance</td>
+                              <td className="px-4 py-3 whitespace-nowrap">
+                                <span className="px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                                  Pending
+                                </span>
+                              </td>
+                              <td className="px-4 py-3 text-sm text-gray-500">pending review</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
