@@ -225,6 +225,18 @@ function processAdoptionData(adoption) {
   let withComments = 0;
   let withoutComments = 0;
   
+  // Count by type and priority combination
+  const typeByPriorityCount = {
+    recommendation: { low: 0, medium: 0, high: 0 },
+    alert: { low: 0, medium: 0, high: 0 },
+    rca: { low: 0, medium: 0, high: 0 }
+  };
+  
+  // Response times (for recommendations and alerts)
+  const responseTimes = [];
+  let lastAlertTime = null;
+  let lastResponseTime = null;
+  
   // Process each item
   data.forEach(item => {
     // Count by type
@@ -240,6 +252,11 @@ function processAdoptionData(adoption) {
     // Count by priority
     if (priorityCount.hasOwnProperty(item.priority)) {
       priorityCount[item.priority]++;
+    }
+    
+    // Count by type and priority combination
+    if (typeByPriorityCount[item.type] && typeByPriorityCount[item.type][item.priority]) {
+      typeByPriorityCount[item.type][item.priority]++;
     }
     
     // Count comments
@@ -261,6 +278,12 @@ function processAdoptionData(adoption) {
   // Calculate average message length
   const avgWordsPerMessage = calculateAverageMessageLength(data);
 
+  // Calculate response efficiency metrics
+  const alertResponseRate = calculateAlertResponseRate(data);
+  
+  // Calculate impact metrics
+  const impactMetrics = calculateImpactMetrics(data);
+
   // Return processed data
   return {
     typeCount,
@@ -272,7 +295,10 @@ function processAdoptionData(adoption) {
     acceptanceRate,
     commentRate,
     dailyActivity,
-    avgWordsPerMessage
+    avgWordsPerMessage,
+    typeByPriorityCount,
+    alertResponseRate,
+    impactMetrics
   };
 }
 
@@ -286,6 +312,43 @@ function calculateAverageMessageLength(data) {
   });
   
   return Math.round(totalWords / data.length);
+}
+
+function calculateAlertResponseRate(data) {
+  // Find alerts and count how many have comments/responses
+  const alerts = data.filter(item => item.type === 'alert');
+  const respondedAlerts = alerts.filter(item => item.comment && item.comment.trim() !== "");
+  
+  return {
+    total: alerts.length,
+    responded: respondedAlerts.length,
+    rate: alerts.length > 0 ? Math.round((respondedAlerts.length / alerts.length) * 100) : 0
+  };
+}
+
+function calculateImpactMetrics(data) {
+  // Extract temperature improvement mentions from recommendations
+  let tempImprovements = [];
+  
+  data.forEach(item => {
+    if (item.type === 'recommendation' && item.status === 'accepted') {
+      // Look for temperature improvement mentions in the message
+      const tempMatch = item.message.match(/improve.*temperature by approximately ([0-9.]+)°C/i);
+      if (tempMatch && tempMatch[1]) {
+        tempImprovements.push(parseFloat(tempMatch[1]));
+      }
+    }
+  });
+  
+  const avgTempImprovement = tempImprovements.length > 0 
+    ? tempImprovements.reduce((sum, val) => sum + val, 0) / tempImprovements.length
+    : 0;
+  
+  return {
+    avgTempImprovement: avgTempImprovement.toFixed(1),
+    recommendationsImplemented: data.filter(item => 
+      item.type === 'recommendation' && item.status === 'accepted').length
+  };
 }
 
 function generateDailyActivityData(data) {
@@ -327,7 +390,10 @@ function renderAdoptionData(processedData) {
     acceptanceRate,
     commentRate,
     dailyActivity,
-    avgWordsPerMessage
+    avgWordsPerMessage,
+    typeByPriorityCount,
+    alertResponseRate,
+    impactMetrics
   } = processedData;
 
   // Update KPI metrics
@@ -345,6 +411,14 @@ function renderAdoptionData(processedData) {
   // Acceptance statistics
   document.getElementById('acceptance-rate').textContent = acceptanceRate + '%';
   document.getElementById('acceptance-progress').style.width = acceptanceRate + '%';
+  
+  // Alert response rate
+  document.getElementById('alert-response-rate').textContent = alertResponseRate.rate + '%';
+  document.getElementById('alert-response-progress').style.width = alertResponseRate.rate + '%';
+  
+  // Impact metrics
+  document.getElementById('avg-temp-improvement').textContent = impactMetrics.avgTempImprovement + '°C';
+  document.getElementById('recommendations-implemented').textContent = impactMetrics.recommendationsImplemented;
   
   // Priority counts
   document.getElementById('high-priority-count').textContent = priorityCount.high;
@@ -375,6 +449,8 @@ function renderAdoptionData(processedData) {
   renderPriorityChart(priorityCount);
   renderStatusChart(statusCount);
   renderCommentsChart(withComments, withoutComments);
+  renderTypeByPriorityChart(typeByPriorityCount);
+  renderImpactMetricsChart(impactMetrics);
   
   // Render the data table
   renderAdoptionTable(adoptionData.data);
@@ -449,6 +525,143 @@ function renderDailyActivityChart(dailyActivity) {
       }
     }
   });
+}
+
+function renderTypeByPriorityChart(typeByPriorityData) {
+  const canvas = document.getElementById('type-by-priority-chart');
+  if (!canvas) return;
+  
+  if (charts.typeByPriorityChart) {
+    charts.typeByPriorityChart.destroy();
+  }
+  
+  // Prepare data for the chart
+  const labels = ['Recommendations', 'Alerts', 'RCAs'];
+  const lowPriorityData = [
+    typeByPriorityData.recommendation.low,
+    typeByPriorityData.alert.low,
+    typeByPriorityData.rca.low
+  ];
+  
+  const mediumPriorityData = [
+    typeByPriorityData.recommendation.medium,
+    typeByPriorityData.alert.medium,
+    typeByPriorityData.rca.medium
+  ];
+  
+  const highPriorityData = [
+    typeByPriorityData.recommendation.high,
+    typeByPriorityData.alert.high,
+    typeByPriorityData.rca.high
+  ];
+  
+  charts.typeByPriorityChart = new Chart(canvas, {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [
+        {
+          label: 'High Priority',
+          data: highPriorityData,
+          backgroundColor: colors.high,
+          barPercentage: 0.7,
+          categoryPercentage: 0.8
+        },
+        {
+          label: 'Medium Priority',
+          data: mediumPriorityData,
+          backgroundColor: colors.medium,
+          barPercentage: 0.7,
+          categoryPercentage: 0.8
+        },
+        {
+          label: 'Low Priority',
+          data: lowPriorityData,
+          backgroundColor: colors.low,
+          barPercentage: 0.7,
+          categoryPercentage: 0.8
+        }
+      ]
+    },
+    options: {
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          position: 'top',
+          labels: {
+            boxWidth: 12,
+            padding: 15
+          }
+        },
+        title: {
+          display: false
+        }
+      },
+      scales: {
+        x: {
+          grid: {
+            display: false
+          }
+        },
+        y: {
+          beginAtZero: true,
+          stacked: true,
+          ticks: {
+            stepSize: 1
+          }
+        }
+      }
+    }
+  });
+}
+
+function renderImpactMetricsChart(impactMetrics) {
+  const canvas = document.getElementById('impact-metrics-chart');
+  if (!canvas) return;
+  
+  if (charts.impactMetricsChart) {
+    charts.impactMetricsChart.destroy();
+  }
+  
+  // Create a very simple gauge chart to represent temperature improvement
+  charts.impactMetricsChart = new Chart(canvas, {
+    type: 'doughnut',
+    data: {
+      labels: ['Temperature Gain'],
+      datasets: [{
+        data: [parseFloat(impactMetrics.avgTempImprovement), 3 - parseFloat(impactMetrics.avgTempImprovement)],
+        backgroundColor: [
+          '#00A650', // adani-green for the value
+          '#E5E7EB'  // light gray for the remaining
+        ],
+        borderWidth: 0,
+        circumference: 180,
+        rotation: 270
+      }]
+    },
+    options: {
+      maintainAspectRatio: false,
+      cutout: '70%',
+      plugins: {
+        legend: {
+          display: false
+        },
+        tooltip: {
+          enabled: false
+        }
+      }
+    }
+  });
+  
+  // Add temperature value in the center
+  const ctx = canvas.getContext('2d');
+  ctx.font = '16px Arial';
+  ctx.fillStyle = '#00A650';
+  ctx.textAlign = 'center';
+  ctx.fillText(`${impactMetrics.avgTempImprovement}°C`, canvas.width / 2, canvas.height - 30);
+  ctx.font = '12px Arial';
+  ctx.fillStyle = '#71717A';
+  ctx.fillText('Avg Temp Gain', canvas.width / 2, canvas.height - 10);
 }
 
 function renderPriorityChart(priorityData) {
@@ -647,6 +860,7 @@ document.addEventListener('DOMContentLoaded', function() {
   // Add filter handlers
   document.getElementById('type-filter')?.addEventListener('change', filterAdoptionTable);
   document.getElementById('status-filter')?.addEventListener('change', filterAdoptionTable);
+  document.getElementById('priority-filter')?.addEventListener('change', filterAdoptionTable);
   
   // Add download handler
   document.getElementById('download-adoption-report')?.addEventListener('click', function() {
@@ -657,6 +871,7 @@ document.addEventListener('DOMContentLoaded', function() {
 function filterAdoptionTable() {
   const typeFilter = document.getElementById('type-filter')?.value || 'all';
   const statusFilter = document.getElementById('status-filter')?.value || 'all';
+  const priorityFilter = document.getElementById('priority-filter')?.value || 'all';
   
   let filteredData = [...adoptionData.data];
   
@@ -666,6 +881,10 @@ function filterAdoptionTable() {
   
   if (statusFilter !== 'all') {
     filteredData = filteredData.filter(item => item.status === statusFilter);
+  }
+  
+  if (priorityFilter !== 'all') {
+    filteredData = filteredData.filter(item => item.priority === priorityFilter);
   }
   
   renderAdoptionTable(filteredData);

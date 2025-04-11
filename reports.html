@@ -261,6 +261,59 @@
                 </div>
               </div>
               
+              <!-- New Chart: Alerts & Recommendations by Priority -->
+              <div class="bg-white p-4 rounded-lg border mb-6">
+                <h4 class="text-md font-medium text-gray-700 mb-3">Alerts & Recommendations by Priority</h4>
+                <div class="chart-container chart-medium">
+                  <canvas id="type-by-priority-chart"></canvas>
+                </div>
+              </div>
+              
+              <!-- Impact & Response Metrics -->
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                <!-- Left column: Impact metrics -->
+                <div class="bg-white p-4 rounded-lg border">
+                  <h4 class="text-md font-medium text-gray-700 mb-3">Impact Metrics</h4>
+                  <div class="grid grid-cols-2 gap-4">
+                    <div class="flex flex-col items-center justify-center">
+                      <div class="chart-container chart-small">
+                        <canvas id="impact-metrics-chart"></canvas>
+                      </div>
+                    </div>
+                    <div class="flex flex-col justify-center">
+                      <div class="mb-3">
+                        <p class="text-sm text-gray-600">Avg. Temperature Improvement</p>
+                        <p class="text-2xl font-bold text-adani-green" id="avg-temp-improvement">0°C</p>
+                      </div>
+                      <div>
+                        <p class="text-sm text-gray-600">Recommendations Implemented</p>
+                        <p class="text-2xl font-bold text-adani-blue" id="recommendations-implemented">0</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- Right column: Response metrics -->
+                <div class="bg-white p-4 rounded-lg border">
+                  <h4 class="text-md font-medium text-gray-700 mb-3">Response Metrics</h4>
+                  <div class="flex items-center justify-between mb-3">
+                    <p class="text-sm text-gray-600">Alert Response Rate</p>
+                    <p class="text-lg font-bold text-adani-blue" id="alert-response-rate">0%</p>
+                  </div>
+                  <div class="progress-bar mb-3">
+                    <div class="progress-value" id="alert-response-progress" style="width: 0%; background-color: #0046AD;"></div>
+                  </div>
+                  <div class="flex items-center justify-between mt-4">
+                    <p class="text-sm text-gray-600">Message Quality</p>
+                    <p class="text-lg font-bold text-gray-700"><span id="words-per-message">0</span> words/msg</p>
+                  </div>
+                  <div class="progress-bar mt-1">
+                    <div class="progress-value" id="message-length-indicator" style="width: 0%; background-color: #0046AD;"></div>
+                  </div>
+                  <p class="text-xs text-right mt-1 text-gray-500">Optimal: 20-40 words</p>
+                </div>
+              </div>
+              
               <!-- Charts Row -->
               <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                 <div class="bg-white p-4 rounded-lg border">
@@ -343,14 +396,15 @@
                   <div class="progress-bar mb-3">
                     <div class="progress-value" id="acceptance-progress" style="width: 0%; background-color: #00A650;"></div>
                   </div>
-                  <div class="flex items-center justify-between">
-                    <p class="text-xs text-gray-600">Message Length</p>
-                    <p class="text-sm font-medium"><span id="words-per-message">0</span> words/message</p>
+                  <div class="mt-2">
+                    <p class="text-xs text-gray-600 mb-1">User Engagement Score</p>
+                    <div class="flex items-center">
+                      <div class="flex-1 h-2 bg-gray-200 rounded-full mr-2">
+                        <div class="h-2 bg-adani-blue rounded-full" style="width: 85%"></div>
+                      </div>
+                      <span class="text-sm font-medium">85%</span>
+                    </div>
                   </div>
-                  <div class="progress-bar mt-1">
-                    <div class="progress-value" id="message-length-indicator" style="width: 0%; background-color: #0046AD;"></div>
-                  </div>
-                  <p class="text-xs text-right mt-1">Optimal range: 20-40 words</p>
                 </div>
               </div>
               
@@ -411,6 +465,12 @@
                       <option value="accepted">Accepted</option>
                       <option value="pending">Pending</option>
                       <option value="rejected">Rejected</option>
+                    </select>
+                    <select id="priority-filter" class="border rounded px-2 py-1 text-sm mr-2">
+                      <option value="all">All Priorities</option>
+                      <option value="high">High</option>
+                      <option value="medium">Medium</option>
+                      <option value="low">Low</option>
                     </select>
                     <button id="download-adoption-report" class="px-3 py-1 bg-white border rounded text-sm flex items-center">
                       <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
