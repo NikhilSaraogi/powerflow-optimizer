@@ -1,97 +1,99 @@
 
 // Sample data - Replace with your API calls
-const adoptionData = [
-  {
-    comment: "action taken",
-    message: "Change HP Heater 1 from -21.38mm to -32.97mm, HP Heater 2 from -22.78mm to -13.47mm, and HP Heater 3 from -25.88mm to -37.77mm. The current eco inlet temperature is 277.6°C, and this adjustment will help achieve the predicted eco inlet temperature of 278.0°C.",
-    priority: "medium",
-    status: "accepted",
-    timestamp: "Thu, 27 Feb 2025 23:30:00 GMT",
-    title: "Optimize HP Heater Levels",
-    type: "recommendation"
-  },
-  {
-    comment: "scheduled for next shift",
-    message: "Adjust HP Heater 1 level to 55%. This will improve heat transfer and increase eco inlet temperature by approximately 1.2°C.",
-    priority: "medium",
-    status: "accepted",
-    timestamp: "Wed, 26 Feb 2025 14:15:00 GMT",
-    title: "Adjust HP Heater 1 Level",
-    type: "recommendation"
-  },
-  {
-    comment: "not feasible during current load conditions",
-    message: "Decrease HP Heater 3 level from 78% to 60% to recover performance and achieve predicted eco inlet of 215.3°C.",
-    priority: "high",
-    status: "rejected",
-    timestamp: "Tue, 25 Feb 2025 09:45:00 GMT",
-    title: "HP Heater 3 Level Correction",
-    type: "recommendation"
-  },
-  {
-    comment: "investigating",
-    message: "HP Heater 3 performance degradation detected. Root cause analysis indicates possible tube fouling.",
-    priority: "medium",
-    status: "pending",
-    timestamp: "Tue, 25 Feb 2025 10:05:00 GMT",
-    title: "HP Heater 3 Performance Degradation",
-    type: "rca"
-  },
-  {
-    comment: "",
-    message: "HP Heater 3 level exceeding optimal range. Check drain valve operation and control system.",
-    priority: "high",
-    status: "pending",
-    timestamp: "Tue, 25 Feb 2025 10:22:00 GMT",
-    title: "HP Heater 3 High Level",
-    type: "alert"
-  },
-  {
-    comment: "maintenance scheduled",
-    message: "HP Heater 2 drain valve sticking. Recommend checking valve operation during next outage.",
-    priority: "low",
-    status: "accepted",
-    timestamp: "Mon, 24 Feb 2025 16:40:00 GMT",
-    title: "HP Heater 2 Drain Valve Issue",
-    type: "rca"
-  },
-  {
-    comment: "implemented as recommended",
-    message: "Maintain heater level at 52% to achieve eco inlet temperature of 223.1°C for optimal performance.",
-    priority: "medium",
-    status: "accepted",
-    timestamp: "Mon, 24 Feb 2025 10:32:00 GMT",
-    title: "Optimize HP Heater 1 Level",
-    type: "recommendation"
-  },
-  {
-    comment: "",
-    message: "HP Heater 1 outlet temperature dropped 2.3°C below expected value. Check extraction line for issues.",
-    priority: "medium",
-    status: "pending",
-    timestamp: "Sun, 23 Feb 2025 20:15:00 GMT",
-    title: "HP Heater 1 Temperature Drop",
-    type: "alert"
-  },
-  {
-    comment: "will implement during next shift change",
-    message: "Reduce heater level to 55% to improve heat transfer efficiency and increase eco inlet temperature to 219.8°C.",
-    priority: "high",
-    status: "accepted",
-    timestamp: "Sun, 23 Feb 2025 13:20:00 GMT",
-    title: "Adjust HP Heater 2 Level",
-    type: "recommendation"
-  },
-  {
-    comment: "recalibration completed",
-    message: "HP Heater 2 level sensor showing inconsistent readings. Recommend recalibration.",
-    priority: "low",
-    status: "accepted", 
-    timestamp: "Sat, 22 Feb 2025 08:45:00 GMT",
-    title: "HP Heater 2 Level Sensor Issue",
-    type: "rca"
-  }
-];
+const adoptionData = {
+  data: [
+    {
+      comment: "action taken",
+      message: "Change HP Heater 1 from -21.38mm to -32.97mm, HP Heater 2 from -22.78mm to -13.47mm, and HP Heater 3 from -25.88mm to -37.77mm. The current eco inlet temperature is 277.6°C, and this adjustment will help achieve the predicted eco inlet temperature of 278.0°C.",
+      priority: "medium",
+      status: "accepted",
+      timestamp: "Thu, 27 Feb 2025 23:30:00 GMT",
+      title: "Optimize HP Heater Levels",
+      type: "recommendation"
+    },
+    {
+      comment: "noticed",
+      message: "The sensor with ID TIRODA_U2_HPH_1_DCA has detected an issue. The observed value is 8.0 °C, which is outside the expected range of 4.03 - 5.87 °C. The current load is 622.36 MW. Please take appropriate action.",
+      priority: "high",
+      status: "accepted",
+      timestamp: "Thu, 27 Feb 2025 20:15:00 GMT",
+      title: "High Hph-1 Drain Cooler Approach",
+      type: "alert"
+    },
+    {
+      comment: "pending review",
+      message: "HP Heater 2 is showing signs of suboptimal performance. Historical analysis suggests the drain valve may require servicing. Consider scheduling maintenance during the next planned outage.",
+      priority: "medium",
+      status: "pending",
+      timestamp: "Thu, 27 Feb 2025 16:45:00 GMT",
+      title: "HP Heater 2 Maintenance",
+      type: "rca"
+    },
+    {
+      comment: "implemented",
+      message: "Change HP Heater 1 level setpoint from 45% to 52% to optimize heat transfer. This change is expected to improve eco inlet temperature by approximately 1.2°C.",
+      priority: "medium",
+      status: "accepted",
+      timestamp: "Wed, 26 Feb 2025 14:20:00 GMT",
+      title: "HP Heater 1 Level Optimization",
+      type: "recommendation"
+    },
+    {
+      comment: "reviewing",
+      message: "HP Heater 3 is showing decreasing TTD (Terminal Temperature Difference) values, which could indicate tube fouling. Analysis of the past 30 days showed a gradual decline in efficiency.",
+      priority: "low",
+      status: "pending",
+      timestamp: "Wed, 26 Feb 2025 09:10:00 GMT",
+      title: "HP Heater 3 Efficiency Analysis",
+      type: "rca"
+    },
+    {
+      comment: "addressed",
+      message: "Feedwater flow imbalance detected in HP Heater system. Current deviation is 2.8% which exceeds the 2% threshold. Please inspect control valve operation.",
+      priority: "high",
+      status: "accepted",
+      timestamp: "Tue, 25 Feb 2025 22:05:00 GMT",
+      title: "Feedwater Flow Imbalance",
+      type: "alert"
+    },
+    {
+      comment: "",
+      message: "Adjust extraction pressure setpoint from 24.5 bar to 25.2 bar to improve heater performance based on current unit load.",
+      priority: "low",
+      status: "rejected",
+      timestamp: "Tue, 25 Feb 2025 13:40:00 GMT",
+      title: "Extraction Pressure Adjustment",
+      type: "recommendation"
+    },
+    {
+      comment: "acknowledged",
+      message: "HP Heater 1 level is trending high at 64%, approaching the high-level alarm setpoint of 68%. Consider adjusting the drain valve position.",
+      priority: "medium",
+      status: "accepted",
+      timestamp: "Mon, 24 Feb 2025 18:30:00 GMT",
+      title: "HP Heater 1 High Level Warning",
+      type: "alert"
+    },
+    {
+      comment: "will implement during next shift",
+      message: "Current feed water distribution to HP heaters is suboptimal. Adjust HP Heater 1 flow by +2%, HP Heater 2 by -1.5%, and HP Heater 3 remains unchanged to balance heat transfer.",
+      priority: "medium",
+      status: "pending",
+      timestamp: "Mon, 24 Feb 2025 10:15:00 GMT",
+      title: "Feed Water Distribution Optimization",
+      type: "recommendation"
+    },
+    {
+      comment: "maintenance scheduled",
+      message: "Analysis indicates potential wear in HP Heater 2 drain valve. Historical data shows increasing oscillation in level control over the past 45 days.",
+      priority: "medium",
+      status: "accepted",
+      timestamp: "Sun, 23 Feb 2025 14:50:00 GMT",
+      title: "HP Heater 2 Drain Valve Analysis",
+      type: "rca"
+    }
+  ]
+};
 
 // Helper functions and variables
 let charts = {};
@@ -195,7 +197,9 @@ function initDatePickers() {
 }
 
 // Process adoption data
-function processAdoptionData(data) {
+function processAdoptionData(adoption) {
+  const data = adoption.data || adoption;
+  
   // Count by type
   const typeCount = {
     recommendation: 0,
@@ -251,36 +255,8 @@ function processAdoptionData(data) {
   const acceptanceRate = total > 0 ? Math.round((statusCount.accepted / total) * 100) : 0;
   const commentRate = total > 0 ? Math.round((withComments / total) * 100) : 0;
   
-  // Extract temperature and level changes from messages for impact analysis
-  const tempChanges = [];
-  const levelChanges = {
-    heater1: [],
-    heater2: [],
-    heater3: []
-  };
-
-  data.forEach(item => {
-    // Extract temperature changes
-    const tempMatch = item.message.match(/increase eco inlet temperature by approximately (\d+\.\d+)°C/);
-    if (tempMatch) {
-      tempChanges.push({
-        type: item.type,
-        change: parseFloat(tempMatch[1])
-      });
-    }
-    
-    // Extract heater level changes
-    const heater1Match = item.message.match(/HP Heater 1 from -?\d+\.\d+mm to -?\d+\.\d+mm/);
-    const heater2Match = item.message.match(/HP Heater 2 from -?\d+\.\d+mm to -?\d+\.\d+mm/);
-    const heater3Match = item.message.match(/HP Heater 3 from -?\d+\.\d+mm to -?\d+\.\d+mm/);
-    
-    if (heater1Match) levelChanges.heater1.push(item.type);
-    if (heater2Match) levelChanges.heater2.push(item.type);
-    if (heater3Match) levelChanges.heater3.push(item.type);
-  });
-
-  // Generate weekly activity data for heatmap
-  const weeklyActivity = generateWeeklyActivityData(data);
+  // Generate daily activity data
+  const dailyActivity = generateDailyActivityData(data);
   
   // Calculate average message length
   const avgWordsPerMessage = calculateAverageMessageLength(data);
@@ -295,9 +271,7 @@ function processAdoptionData(data) {
     total,
     acceptanceRate,
     commentRate,
-    tempChanges,
-    levelChanges,
-    weeklyActivity,
+    dailyActivity,
     avgWordsPerMessage
   };
 }
@@ -314,78 +288,31 @@ function calculateAverageMessageLength(data) {
   return Math.round(totalWords / data.length);
 }
 
-function generateWeeklyActivityData(data) {
-  // Create an array for 7 days x 12 weeks (84 cells)
-  const cells = Array(84).fill(0);
+function generateDailyActivityData(data) {
+  // Group items by day and by type
+  const dailyMap = {};
   
-  // Group items by day
   data.forEach(item => {
     const date = new Date(item.timestamp);
-    const dayOfWeek = date.getDay(); // 0-6 (Sunday-Saturday)
+    const dateKey = date.toISOString().split('T')[0];
     
-    // Calculate weeks ago (0-11)
-    const today = new Date();
-    const millisecondsPerDay = 24 * 60 * 60 * 1000;
-    const daysAgo = Math.floor((today - date) / millisecondsPerDay);
-    const weeksAgo = Math.floor(daysAgo / 7);
-    
-    if (weeksAgo >= 0 && weeksAgo < 12) {
-      // Calculate cell index
-      const cellIndex = (weeksAgo * 7) + dayOfWeek;
-      if (cellIndex < cells.length) {
-        cells[cellIndex]++;
-      }
+    if (!dailyMap[dateKey]) {
+      dailyMap[dateKey] = {
+        date: dateKey,
+        displayDate: date.toLocaleDateString('en-US', { day: 'numeric', month: 'short' }),
+        recommendation: 0,
+        alert: 0,
+        rca: 0,
+        total: 0
+      };
     }
+    
+    dailyMap[dateKey][item.type]++;
+    dailyMap[dateKey].total++;
   });
   
-  return cells;
-}
-
-// Get color for heatmap based on value
-function getHeatmapColor(value) {
-  if (value === 0) return '#ebedf0';
-  if (value <= 2) return '#9be9a8';
-  if (value <= 4) return '#40c463';
-  if (value <= 6) return '#30a14e';
-  return '#216e39';
-}
-
-// Populate time distribution data
-function generateResponseTimeData() {
-  return {
-    labels: ['< 1 hour', '1-3 hours', '3-6 hours', '6-12 hours', '12-24 hours', '> 24 hours'],
-    datasets: [{
-      data: [15, 25, 30, 20, 8, 2],
-      backgroundColor: [
-        'rgba(0, 70, 173, 0.8)', // Blue
-        'rgba(0, 70, 173, 0.65)',
-        'rgba(0, 70, 173, 0.5)',
-        'rgba(255, 193, 7, 0.5)', // Yellow
-        'rgba(255, 58, 58, 0.5)', // Red
-        'rgba(255, 58, 58, 0.7)'
-      ]
-    }]
-  };
-}
-
-// Create the adoption heatmap
-function renderAdoptionHeatmap(weeklyActivity) {
-  const heatmapContainer = document.getElementById('adoption-heatmap');
-  if (!heatmapContainer) return;
-  
-  heatmapContainer.innerHTML = '';
-  
-  // Create 7 columns x 12 rows grid
-  for (let i = 0; i < 84; i++) {
-    const cell = document.createElement('div');
-    cell.className = 'heatmap-cell';
-    cell.style.backgroundColor = getHeatmapColor(weeklyActivity[i]);
-    
-    // Add tooltip with value
-    cell.title = `${weeklyActivity[i]} actions`;
-    
-    heatmapContainer.appendChild(cell);
-  }
+  // Convert to array and sort by date
+  return Object.values(dailyMap).sort((a, b) => new Date(a.date) - new Date(b.date));
 }
 
 // Render all adoption report charts and stats
@@ -399,7 +326,7 @@ function renderAdoptionData(processedData) {
     total,
     acceptanceRate,
     commentRate,
-    weeklyActivity,
+    dailyActivity,
     avgWordsPerMessage
   } = processedData;
 
@@ -408,23 +335,6 @@ function renderAdoptionData(processedData) {
   document.getElementById('alert-count').textContent = typeCount.alert;
   document.getElementById('rca-count').textContent = typeCount.rca;
   document.getElementById('adoption-rate').textContent = acceptanceRate + '%';
-  
-  // Update adoption trends (hardcoded for demo)
-  document.getElementById('recommendation-trend').innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-green-500 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">' +
-    '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />' +
-    '</svg><span class="text-green-600">24% from last period</span>';
-    
-  document.getElementById('alert-trend').innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-red-500 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">' +
-    '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />' +
-    '</svg><span class="text-red-600">8% from last period</span>';
-    
-  document.getElementById('rca-trend').innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-green-500 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">' +
-    '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />' +
-    '</svg><span class="text-green-600">15% from last period</span>';
-    
-  document.getElementById('adoption-rate-trend').innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-green-500 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">' +
-    '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />' +
-    '</svg><span class="text-green-600">5% from last period</span>';
   
   // Comment statistics
   document.getElementById('commented-count').textContent = withComments;
@@ -435,7 +345,6 @@ function renderAdoptionData(processedData) {
   // Acceptance statistics
   document.getElementById('acceptance-rate').textContent = acceptanceRate + '%';
   document.getElementById('acceptance-progress').style.width = acceptanceRate + '%';
-  document.getElementById('avg-response-time').textContent = '4.2 hrs';
   
   // Priority counts
   document.getElementById('high-priority-count').textContent = priorityCount.high;
@@ -447,55 +356,65 @@ function renderAdoptionData(processedData) {
   document.getElementById('alert-type-count').textContent = typeCount.alert;
   document.getElementById('rca-type-count').textContent = typeCount.rca;
   
+  // Status counts
+  document.getElementById('accepted-count').textContent = statusCount.accepted;
+  document.getElementById('pending-count').textContent = statusCount.pending;
+  document.getElementById('rejected-count').textContent = statusCount.rejected;
+  
   // Average words per message
   document.getElementById('words-per-message').textContent = avgWordsPerMessage;
   
-  // Set message length indicator (assuming optimal range is 20-30 words)
-  const messageEfficiency = avgWordsPerMessage >= 20 && avgWordsPerMessage <= 30 ? 100 : 
+  // Set message length indicator (assuming optimal range is 20-40 words)
+  const messageEfficiency = avgWordsPerMessage >= 20 && avgWordsPerMessage <= 40 ? 100 : 
                            avgWordsPerMessage < 20 ? (avgWordsPerMessage / 20) * 100 : 
-                           (40 - avgWordsPerMessage) / 10 * 100;
+                           (60 - avgWordsPerMessage) / 20 * 100;
   document.getElementById('message-length-indicator').style.width = Math.max(0, Math.min(100, messageEfficiency)) + '%';
   
-  // Render heatmap
-  renderAdoptionHeatmap(weeklyActivity);
-  
   // Render charts
+  renderDailyActivityChart(dailyActivity);
   renderPriorityChart(priorityCount);
   renderStatusChart(statusCount);
   renderCommentsChart(withComments, withoutComments);
-  renderTimelineChart(adoptionData);
-  renderResponseTimeChart();
-  renderImpactChart();
-  renderLevelChangesChart();
   
   // Render the data table
-  renderAdoptionTable(adoptionData);
+  renderAdoptionTable(adoptionData.data);
 }
 
-function renderPriorityChart(priorityData) {
-  const canvas = document.getElementById('priority-chart');
+function renderDailyActivityChart(dailyActivity) {
+  const canvas = document.getElementById('daily-activity-chart');
   if (!canvas) return;
   
-  if (charts.priorityChart) {
-    charts.priorityChart.destroy();
+  if (charts.dailyActivityChart) {
+    charts.dailyActivityChart.destroy();
   }
   
-  charts.priorityChart = new Chart(canvas, {
+  const labels = dailyActivity.map(day => day.displayDate);
+  
+  charts.dailyActivityChart = new Chart(canvas, {
     type: 'bar',
     data: {
-      labels: ['High', 'Medium', 'Low'],
+      labels: labels,
       datasets: [
         {
           label: 'Recommendations',
-          data: [2, 4, 1],
+          data: dailyActivity.map(day => day.recommendation),
           backgroundColor: colors.recommendation,
           barPercentage: 0.6,
+          categoryPercentage: 0.8
         },
         {
           label: 'Alerts',
-          data: [1, 2, 0],
+          data: dailyActivity.map(day => day.alert),
           backgroundColor: colors.alert,
           barPercentage: 0.6,
+          categoryPercentage: 0.8
+        },
+        {
+          label: 'RCAs',
+          data: dailyActivity.map(day => day.rca),
+          backgroundColor: colors.rca,
+          barPercentage: 0.6,
+          categoryPercentage: 0.8
         }
       ]
     },
@@ -517,13 +436,53 @@ function renderPriorityChart(priorityData) {
         x: {
           grid: {
             display: false
-          }
+          },
+          stacked: true
         },
         y: {
           beginAtZero: true,
-          max: 5,
+          stacked: true,
           ticks: {
             stepSize: 1
+          }
+        }
+      }
+    }
+  });
+}
+
+function renderPriorityChart(priorityData) {
+  const canvas = document.getElementById('priority-chart');
+  if (!canvas) return;
+  
+  if (charts.priorityChart) {
+    charts.priorityChart.destroy();
+  }
+  
+  charts.priorityChart = new Chart(canvas, {
+    type: 'pie',
+    data: {
+      labels: ['High', 'Medium', 'Low'],
+      datasets: [
+        {
+          data: [priorityData.high, priorityData.medium, priorityData.low],
+          backgroundColor: [
+            colors.high,
+            colors.medium,
+            colors.low
+          ],
+          borderWidth: 0
+        }
+      ]
+    },
+    options: {
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          position: 'bottom',
+          labels: {
+            boxWidth: 12,
+            padding: 15
           }
         }
       }
@@ -608,276 +567,6 @@ function renderCommentsChart(withComments, withoutComments) {
         }
       },
       cutout: '65%'
-    }
-  });
-}
-
-function renderTimelineChart(data) {
-  const canvas = document.getElementById('timeline-chart');
-  if (!canvas) return;
-  
-  if (charts.timelineChart) {
-    charts.timelineChart.destroy();
-  }
-  
-  // Create datasets based on types
-  const recommendations = {
-    label: 'Recommendations',
-    data: [],
-    backgroundColor: colors.recommendation,
-    borderColor: colors.recommendation,
-    borderWidth: 0
-  };
-  
-  const alerts = {
-    label: 'Alerts',
-    data: [],
-    backgroundColor: colors.alert,
-    borderColor: colors.alert,
-    borderWidth: 0
-  };
-  
-  const rcas = {
-    label: 'RCAs',
-    data: [],
-    backgroundColor: colors.rca,
-    borderColor: colors.rca,
-    borderWidth: 0
-  };
-  
-  // Sort data by timestamp
-  const sortedData = [...data].sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
-  
-  // Format dates for display
-  const dates = sortedData.map(item => {
-    const date = new Date(item.timestamp);
-    return date.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
-  });
-  
-  // Fill datasets
-  sortedData.forEach((item, index) => {
-    if (item.type === 'recommendation') {
-      recommendations.data[index] = 1;
-      alerts.data[index] = null;
-      rcas.data[index] = null;
-    } else if (item.type === 'alert') {
-      recommendations.data[index] = null;
-      alerts.data[index] = 1;
-      rcas.data[index] = null;
-    } else if (item.type === 'rca') {
-      recommendations.data[index] = null;
-      alerts.data[index] = null;
-      rcas.data[index] = 1;
-    }
-  });
-  
-  charts.timelineChart = new Chart(canvas, {
-    type: 'bar',
-    data: {
-      labels: dates,
-      datasets: [recommendations, alerts, rcas]
-    },
-    options: {
-      maintainAspectRatio: false,
-      indexAxis: 'x',
-      plugins: {
-        legend: {
-          position: 'top',
-          labels: {
-            boxWidth: 12,
-            padding: 15
-          }
-        },
-        tooltip: {
-          callbacks: {
-            title: function(tooltipItems) {
-              const idx = tooltipItems[0].dataIndex;
-              return sortedData[idx].title;
-            },
-            label: function(context) {
-              const idx = context.dataIndex;
-              return [
-                'Type: ' + sortedData[idx].type,
-                'Priority: ' + sortedData[idx].priority,
-                'Status: ' + sortedData[idx].status
-              ];
-            }
-          }
-        }
-      },
-      scales: {
-        x: {
-          stacked: true,
-          grid: {
-            display: false
-          }
-        },
-        y: {
-          stacked: true,
-          beginAtZero: true,
-          max: 1.5,
-          ticks: {
-            display: false
-          },
-          grid: {
-            display: false
-          }
-        }
-      }
-    }
-  });
-}
-
-function renderResponseTimeChart() {
-  const canvas = document.getElementById('response-time-chart');
-  if (!canvas) return;
-  
-  if (charts.responseTimeChart) {
-    charts.responseTimeChart.destroy();
-  }
-  
-  const data = generateResponseTimeData();
-  
-  charts.responseTimeChart = new Chart(canvas, {
-    type: 'bar',
-    data: data,
-    options: {
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          display: false
-        },
-        title: {
-          display: false
-        }
-      },
-      scales: {
-        y: {
-          beginAtZero: true,
-          max: 40,
-          title: {
-            display: true,
-            text: 'Number of Actions'
-          }
-        }
-      }
-    }
-  });
-}
-
-function renderImpactChart() {
-  const canvas = document.getElementById('impact-chart');
-  if (!canvas) return;
-  
-  if (charts.impactChart) {
-    charts.impactChart.destroy();
-  }
-  
-  charts.impactChart = new Chart(canvas, {
-    type: 'bar',
-    data: {
-      labels: ['HP Heater 1', 'HP Heater 2', 'HP Heater 3'],
-      datasets: [
-        {
-          label: 'Before Adjustment',
-          data: [220.5, 219.2, 217.8],
-          backgroundColor: 'rgba(0, 70, 173, 0.6)',
-          barPercentage: 0.7
-        },
-        {
-          label: 'After Adjustment',
-          data: [223.1, 221.4, 219.5],
-          backgroundColor: 'rgba(0, 166, 80, 0.6)',
-          barPercentage: 0.7
-        }
-      ]
-    },
-    options: {
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          position: 'top',
-          labels: {
-            boxWidth: 12,
-            padding: 15
-          }
-        },
-        tooltip: {
-          callbacks: {
-            label: function(context) {
-              return context.dataset.label + ': ' + context.raw + '°C';
-            }
-          }
-        }
-      },
-      scales: {
-        y: {
-          min: 215,
-          title: {
-            display: true,
-            text: 'Temperature (°C)'
-          }
-        }
-      }
-    }
-  });
-}
-
-function renderLevelChangesChart() {
-  const canvas = document.getElementById('level-changes-chart');
-  if (!canvas) return;
-  
-  if (charts.levelChangesChart) {
-    charts.levelChangesChart.destroy();
-  }
-  
-  charts.levelChangesChart = new Chart(canvas, {
-    type: 'radar',
-    data: {
-      labels: ['Level Decrease', 'Optimal Level', 'Level Increase', 'Drain Valve', 'Flow Adjustment'],
-      datasets: [
-        {
-          label: 'HP Heater 1',
-          data: [2, 4, 1, 0, 2],
-          backgroundColor: 'rgba(0, 70, 173, 0.2)',
-          borderColor: 'rgba(0, 70, 173, 0.8)',
-          pointBackgroundColor: 'rgba(0, 70, 173, 1)',
-          borderWidth: 1
-        },
-        {
-          label: 'HP Heater 2',
-          data: [1, 3, 2, 1, 1],
-          backgroundColor: 'rgba(0, 166, 80, 0.2)',
-          borderColor: 'rgba(0, 166, 80, 0.8)',
-          pointBackgroundColor: 'rgba(0, 166, 80, 1)',
-          borderWidth: 1
-        },
-        {
-          label: 'HP Heater 3',
-          data: [3, 2, 0, 2, 1],
-          backgroundColor: 'rgba(255, 193, 7, 0.2)',
-          borderColor: 'rgba(255, 193, 7, 0.8)',
-          pointBackgroundColor: 'rgba(255, 193, 7, 1)',
-          borderWidth: 1
-        }
-      ]
-    },
-    options: {
-      maintainAspectRatio: false,
-      elements: {
-        line: {
-          tension: 0.2
-        }
-      },
-      scales: {
-        r: {
-          beginAtZero: true,
-          max: 5,
-          ticks: {
-            display: false
-          }
-        }
-      }
     }
   });
 }
@@ -969,7 +658,7 @@ function filterAdoptionTable() {
   const typeFilter = document.getElementById('type-filter')?.value || 'all';
   const statusFilter = document.getElementById('status-filter')?.value || 'all';
   
-  let filteredData = [...adoptionData];
+  let filteredData = [...adoptionData.data];
   
   if (typeFilter !== 'all') {
     filteredData = filteredData.filter(item => item.type === typeFilter);
