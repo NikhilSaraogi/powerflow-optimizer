@@ -28,6 +28,7 @@
     
     .audio-alert-container:hover {
       background-color: rgba(255, 255, 255, 0.2);
+      transform: scale(1.1);
     }
     
     .audio-alert-icon {
@@ -60,6 +61,22 @@
     
     .audio-alert-badge.active {
       display: flex;
+      animation: pulse 1.5s infinite;
+    }
+    
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(255, 58, 58, 0.7);
+      }
+      70% {
+        transform: scale(1.1);
+        box-shadow: 0 0 0 5px rgba(255, 58, 58, 0);
+      }
+      100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(255, 58, 58, 0);
+      }
     }
 
     /* Audio notification popup */
@@ -136,6 +153,84 @@
       50% {
         height: 12px;
       }
+    }
+    
+    /* Updated header styles */
+    .header-plant-info {
+      display: flex;
+      align-items: center;
+      background-color: rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+      padding: 6px 10px;
+      margin-right: 8px;
+      transition: all 0.2s ease;
+    }
+    
+    .header-plant-info:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+    
+    .header-plant-icon {
+      margin-right: 8px;
+      color: rgba(255, 255, 255, 0.9);
+    }
+    
+    /* Voice selection dropdown */
+    .voice-selection {
+      position: relative;
+      margin-left: 8px;
+    }
+    
+    .voice-dropdown {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      background-color: white;
+      border-radius: 4px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      width: 120px;
+      display: none;
+      z-index: 100;
+    }
+    
+    .voice-dropdown.active {
+      display: block;
+      animation: fadeIn 0.2s ease;
+    }
+    
+    .voice-option {
+      padding: 8px 12px;
+      font-size: 14px;
+      color: #333;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+    
+    .voice-option:hover {
+      background-color: #f3f4f6;
+    }
+    
+    .voice-option.selected {
+      background-color: #e6f7ff;
+    }
+    
+    /* Page animations */
+    .animate-fade-in {
+      animation: fadeIn 0.5s ease;
+    }
+    
+    .animate-slide-up {
+      animation: slideUp 0.5s ease;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    @keyframes slideUp {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
     }
     
     /* Modal styling */
@@ -249,9 +344,14 @@
       </div>
     </div>
     <div class="flex items-center">
-      <div class="text-right mr-4">
-        <div class="text-sm opacity-80">Mundra Power Plant</div>
-        <div class="text-sm opacity-80">Unit 5</div>
+      <div class="header-plant-info">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 header-plant-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+        </svg>
+        <div>
+          <div class="font-medium">Mundra Power Plant</div>
+          <div class="text-sm opacity-80">Unit 5</div>
+        </div>
       </div>
       <!-- Audio Alert Icon -->
       <div class="audio-alert-container" id="audio-alert-toggle">
@@ -259,6 +359,18 @@
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
         </svg>
         <span class="audio-alert-badge" id="audio-alert-badge">1</span>
+      </div>
+      <!-- Voice Selection -->
+      <div class="voice-selection">
+        <div class="audio-alert-container" id="voice-selector-toggle">
+          <svg xmlns="http://www.w3.org/2000/svg" class="audio-alert-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </div>
+        <div class="voice-dropdown" id="voice-dropdown">
+          <div class="voice-option selected" data-voice="male">Male Voice</div>
+          <div class="voice-option" data-voice="female">Female Voice</div>
+        </div>
       </div>
     </div>
   </header>
@@ -307,12 +419,12 @@
     <!-- Main Content -->
     <main id="main-content" class="flex-1 p-6 transition-all duration-300 min-h-screen">
       <!-- Top Bar Stats -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6" id="top-bar-container">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6 animate-fade-in" id="top-bar-container">
         <!-- Top bar items will be populated by JavaScript -->
       </div>
       
       <!-- Heater Cards -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6" id="heater-cards-container">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6 animate-slide-up" id="heater-cards-container">
         <!-- Heater cards will be populated by JavaScript -->
       </div>
       
