@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,203 +9,7 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
   <style>
-    /* General Styles */
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #f4f6f8;
-      color: #333;
-      margin: 0;
-      padding: 0;
-    }
-    
-    .container {
-      max-width: 1200px;
-      margin: 20px auto;
-      padding: 20px;
-      background-color: #fff;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
-    
-    /* Adani Color Palette */
-    .adani-blue {
-      background-color: #0046AD;
-    }
-    
-    .adani-navy {
-      background-color: #002855;
-    }
-    
-    .adani-red {
-      color: #FF3A3A;
-    }
-    
-    .adani-green {
-      color: #00A650;
-    }
-    
-    .adani-yellow {
-      color: #FFC20E;
-    }
-    
-    .adani-gray {
-      background-color: #F0F4F8;
-    }
-    
-    .adani-light-blue {
-      background-color: #E5F1FF;
-    }
-    
-    /* Typography */
-    h1, h2, h3 {
-      color: #002855;
-    }
-    
-    /* Layout */
-    .grid-container {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 20px;
-    }
-    
-    /* Cards */
-    .card {
-      background-color: #fff;
-      border-radius: 8px;
-      padding: 20px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
-    
-    /* Buttons */
-    button {
-      background-color: #0046AD;
-      color: white;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-    
-    button:hover {
-      background-color: #002855;
-    }
-    
-    /* Input Fields */
-    input[type="text"],
-    input[type="number"] {
-      width: 100%;
-      padding: 8px;
-      margin: 8px 0;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      box-sizing: border-box;
-    }
-    
-    /* Utility Classes */
-    .text-center {
-      text-align: center;
-    }
-    
-    .mt-2 {
-      margin-top: 2em;
-    }
-    
-    /* Sidebar Styles */
-    #sidebar {
-      width: 250px;
-      background-color: #002855;
-      color: white;
-      height: 100vh;
-      position: fixed;
-      top: 0;
-      left: 0;
-      overflow-x: hidden;
-      padding-top: 60px;
-    }
-    
-    #sidebar a {
-      padding: 15px;
-      text-decoration: none;
-      font-size: 18px;
-      color: white;
-      display: block;
-      transition: 0.3s;
-    }
-    
-    #sidebar a:hover {
-      background-color: #0046AD;
-    }
-    
-    #main-content {
-      margin-left: 250px; /* Same as the width of the sidebar */
-      padding: 20px;
-    }
-    
-    /* Responsive adjustments */
-    @media screen and (max-width: 768px) {
-      #sidebar {
-        width: 100%;
-        position: static;
-        height: auto;
-        padding-top: 0;
-      }
-      #main-content {
-        margin-left: 0;
-      }
-    }
-    
-    /* Dashboard specific styles */
-    .dashboard-item {
-      background-color: #fff;
-      border-radius: 8px;
-      padding: 15px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      margin-bottom: 15px;
-    }
-    
-    /* Chart container */
-    .chart-container {
-      position: relative;
-      height: 300px;
-    }
-    
-    /* Notification Styles */
-    .notification-item {
-      padding: 10px;
-      border-bottom: 1px solid #eee;
-    }
-    
-    .notification-item:last-child {
-      border-bottom: none;
-    }
-    
-    /* Table Styles */
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
-    }
-    
-    th, td {
-      border: 1px solid #ddd;
-      padding: 8px;
-      text-align: left;
-    }
-    
-    th {
-      background-color: #f0f0f0;
-    }
-    
-    /* Form Styles */
-    form {
-      margin-top: 20px;
-    }
-    
-    label {
-      display: block;
-      margin-bottom: 5px;
-    }
+    /* ... keep existing code */
     
     /* Audio Alert Icon Styles */
     .audio-alert-container {
@@ -223,7 +28,6 @@
     
     .audio-alert-container:hover {
       background-color: rgba(255, 255, 255, 0.2);
-      transform: scale(1.1);
     }
     
     .audio-alert-icon {
@@ -256,22 +60,6 @@
     
     .audio-alert-badge.active {
       display: flex;
-      animation: pulse 1.5s infinite;
-    }
-    
-    @keyframes pulse {
-      0% {
-        transform: scale(1);
-        box-shadow: 0 0 0 0 rgba(255, 58, 58, 0.7);
-      }
-      70% {
-        transform: scale(1.1);
-        box-shadow: 0 0 0 5px rgba(255, 58, 58, 0);
-      }
-      100% {
-        transform: scale(1);
-        box-shadow: 0 0 0 0 rgba(255, 58, 58, 0);
-      }
     }
 
     /* Audio notification popup */
@@ -348,84 +136,6 @@
       50% {
         height: 12px;
       }
-    }
-    
-    /* Updated header styles */
-    .header-plant-info {
-      display: flex;
-      align-items: center;
-      background-color: rgba(255, 255, 255, 0.1);
-      border-radius: 4px;
-      padding: 6px 10px;
-      margin-right: 8px;
-      transition: all 0.2s ease;
-    }
-    
-    .header-plant-info:hover {
-      background-color: rgba(255, 255, 255, 0.2);
-    }
-    
-    .header-plant-icon {
-      margin-right: 8px;
-      color: rgba(255, 255, 255, 0.9);
-    }
-    
-    /* Voice selection dropdown */
-    .voice-selection {
-      position: relative;
-      margin-left: 8px;
-    }
-    
-    .voice-dropdown {
-      position: absolute;
-      top: 100%;
-      right: 0;
-      background-color: white;
-      border-radius: 4px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-      width: 120px;
-      display: none;
-      z-index: 100;
-    }
-    
-    .voice-dropdown.active {
-      display: block;
-      animation: fadeIn 0.2s ease;
-    }
-    
-    .voice-option {
-      padding: 8px 12px;
-      font-size: 14px;
-      color: #333;
-      cursor: pointer;
-      transition: background-color 0.2s ease;
-    }
-    
-    .voice-option:hover {
-      background-color: #f3f4f6;
-    }
-    
-    .voice-option.selected {
-      background-color: #e6f7ff;
-    }
-    
-    /* Page animations */
-    .animate-fade-in {
-      animation: fadeIn 0.5s ease;
-    }
-    
-    .animate-slide-up {
-      animation: slideUp 0.5s ease;
-    }
-    
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-    
-    @keyframes slideUp {
-      from { transform: translateY(20px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
     }
     
     /* Modal styling */
@@ -526,32 +236,32 @@
 <body class="bg-gray-50 min-h-screen overflow-x-hidden">
   <!-- Header -->
   <header class="bg-adani-blue text-white p-4 flex justify-between items-center shadow-md fixed top-0 left-0 right-0 z-20">
-  <div class="flex items-center">
-    <button id="sidebar-toggle" class="mr-4 focus:outline-none">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-      </svg>
-    </button>
-    <img src="https://www.adanipower.com/-/media/Project/Power/Header-Footer/logo.png" alt="Adani Power Logo" class="h-8 mr-3">
     <div class="flex items-center">
-      <!-- Sound Toggle Icon -->
-      <div class="audio-alert-container mr-3" id="audio-alert-toggle">
+      <button id="sidebar-toggle" class="mr-4 focus:outline-none">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
+      <img src="https://www.adanipower.com/-/media/Project/Power/Header-Footer/logo.png" alt="Adani Power Logo" class="h-8 mr-3">
+      <div>
+        <h1 class="text-xl font-bold">HP Heater Optimization</h1>
+        <div class="text-sm opacity-80" id="current-time"></div>
+      </div>
+    </div>
+    <div class="flex items-center">
+      <div class="text-right mr-4">
+        <div class="text-sm opacity-80">Mundra Power Plant</div>
+        <div class="text-sm opacity-80">Unit 5</div>
+      </div>
+      <!-- Audio Alert Icon -->
+      <div class="audio-alert-container" id="audio-alert-toggle">
         <svg xmlns="http://www.w3.org/2000/svg" class="audio-alert-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" id="audio-alert-icon">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
         </svg>
         <span class="audio-alert-badge" id="audio-alert-badge">1</span>
       </div>
-      
-      <div>
-        <h1 class="text-xl font-bold flex items-center">
-          <span class="mr-2">Mundra Power Plant</span>
-          <span class="text-sm bg-white/20 px-2 py-1 rounded">Unit 5</span>
-        </h1>
-        <div class="text-sm opacity-80" id="current-time"></div>
-      </div>
     </div>
-  </div>
-</header>
+  </header>
 
   <div class="flex pt-16">
     <!-- Sidebar -->
@@ -597,12 +307,12 @@
     <!-- Main Content -->
     <main id="main-content" class="flex-1 p-6 transition-all duration-300 min-h-screen">
       <!-- Top Bar Stats -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6 animate-fade-in" id="top-bar-container">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6" id="top-bar-container">
         <!-- Top bar items will be populated by JavaScript -->
       </div>
       
       <!-- Heater Cards -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6 animate-slide-up" id="heater-cards-container">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6" id="heater-cards-container">
         <!-- Heater cards will be populated by JavaScript -->
       </div>
       
