@@ -1,4 +1,3 @@
-
 // Sample data - Replace with your API calls
 let dashboardData = {
   topBarData: {
@@ -96,6 +95,34 @@ let dashboardData = {
   ]
 };
 
+// Sample voice message data
+const voiceAlertSamples = [
+  {
+    id: "v1",
+    title: "Critical Alert: HP Heater 3",
+    message: "Critical alert for HP Heater 3. Heater level has reached 78%. Please reduce to 60% immediately to prevent damage.",
+    priority: "high",
+    voiceMessage: "Critical alert for HP Heater 3. Heater level has reached 78 percent. Please reduce to 60 percent immediately to prevent damage.",
+    timestamp: new Date()
+  },
+  {
+    id: "v2",
+    title: "Warning: HP Heater 2",
+    message: "Warning for HP Heater 2. Heat transfer efficiency decreasing. Adjust level to 55% for optimal performance.",
+    priority: "medium",
+    voiceMessage: "Warning for HP Heater 2. Heat transfer efficiency decreasing. Adjust level to 55 percent for optimal performance.",
+    timestamp: new Date()
+  },
+  {
+    id: "v3",
+    title: "Recommendation: Eco Inlet Temperature",
+    message: "Recommendation: Adjust HP Heater 1 level to 52% to increase eco inlet temperature to 223.1°C for improved efficiency.",
+    priority: "low",
+    voiceMessage: "Recommendation: Adjust HP Heater 1 level to 52 percent to increase eco inlet temperature to 223.1 degrees for improved efficiency.",
+    timestamp: new Date()
+  }
+];
+
 // Initialize sidebar state and handle toggle
 let sidebarCollapsed = false;
 const sidebar = document.getElementById('sidebar');
@@ -108,6 +135,22 @@ let closeCommentModal;
 let commentText;
 let saveCommentBtn;
 let currentNotificationId = null;
+
+// Audio alert elements
+let audioAlertEnabled = true;
+let audioAlertToggle;
+let audioAlertIcon;
+let audioAlertBadge;
+let notificationSound;
+let voiceMessage;
+let audioNotification;
+let audioNotificationTitle;
+let audioNotificationMessage;
+let pendingAudioAlerts = [];
+let isPlayingAudio = false;
+let lastAlertTime = 0;
+const alertCooldown = 10000; // 10 seconds between alerts
+const testMode = true; // Set to true to test with sample data, false for API mode
 
 function toggleSidebar() {
   sidebarCollapsed = !sidebarCollapsed;
@@ -191,6 +234,7 @@ function initDashboard() {
   renderHeaterCards();
   renderNotifications();
   initNotificationActions();
+  initAudioAlerts();
   
   // Set up sidebar toggle
   if (sidebarToggle) {
@@ -233,6 +277,227 @@ function initNotificationActions() {
       commentModal.style.display = 'none';
     }
   });
+}
+
+// Initialize Audio Alert functionality
+function initAudioAlerts() {
+  audioAlertToggle = document.getElementById('audio-alert-toggle');
+  audioAlertIcon = document.getElementById('audio-alert-icon');
+  audioAlertBadge = document.getElementById('audio-alert-badge');
+  notificationSound = document.getElementById('notification-sound');
+  voiceMessage = document.getElementById('voice-message');
+  audioNotification = document.getElementById('audio-notification');
+  audioNotificationTitle = document.getElementById('audio-notification-title');
+  audioNotificationMessage = document.getElementById('audio-notification-message');
+
+  // Set up audio alert toggle
+  if (audioAlertToggle) {
+    audioAlertToggle.addEventListener('click', toggleAudioAlerts);
+  }
+
+  // Set up voice message audio ended event
+  if (voiceMessage) {
+    voiceMessage.addEventListener('ended', onVoiceMessageEnded);
+  }
+
+  // Start test audio alert if in test mode
+  if (testMode) {
+    // Start first test alert after 5 seconds
+    setTimeout(() => {
+      fetchAudioAlerts();
+    }, 5000);
+
+    // Set up interval for periodic alerts (every 30 seconds)
+    setInterval(() => {
+      fetchAudioAlerts();
+    }, 30000);
+  }
+}
+
+// Toggle audio alerts on/off
+function toggleAudioAlerts() {
+  audioAlertEnabled = !audioAlertEnabled;
+  
+  // Update icon state
+  if (audioAlertIcon) {
+    if (audioAlertEnabled) {
+      audioAlertIcon.innerHTML = `
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+      `;
+    } else {
+      // X mark on the speaker icon to indicate it's off
+      audioAlertIcon.innerHTML = `
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
+      `;
+    }
+  }
+  
+  // Add visual indication that audio is disabled
+  if (audioAlertEnabled) {
+    audioAlertToggle.classList.remove('opacity-50');
+  } else {
+    audioAlertToggle.classList.add('opacity-50');
+    hideAudioNotification(); // Hide any active notification
+  }
+  
+  console.log(`Audio alerts ${audioAlertEnabled ? 'enabled' : 'disabled'}`);
+}
+
+// Fetch audio alerts from API
+function fetchAudioAlerts() {
+  // Check if we should ignore this alert (cooldown period)
+  const now = Date.now();
+  if (now - lastAlertTime < alertCooldown) {
+    console.log('Alert cooldown in effect, skipping this alert check');
+    return;
+  }
+  
+  if (testMode) {
+    // In test mode, simulate an API response with sample data
+    const randomSample = voiceAlertSamples[Math.floor(Math.random() * voiceAlertSamples.length)];
+    processAudioAlert(randomSample);
+  } else {
+    // In normal mode, make an actual API call
+    fetch('https://api.example.com/audio-alerts', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer YOUR_API_KEY'
+      }
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('API request failed');
+      }
+      return response.json();
+    })
+    .then(data => {
+      // Process the audio alert
+      if (data && data.alerts && data.alerts.length > 0) {
+        processAudioAlert(data.alerts[0]);
+      }
+    })
+    .catch(error => {
+      console.error('Error fetching audio alerts:', error);
+    });
+  }
+}
+
+// Process an incoming audio alert
+function processAudioAlert(alertData) {
+  console.log('Processing audio alert:', alertData);
+  
+  // Update last alert time
+  lastAlertTime = Date.now();
+  
+  // If audio is disabled, just update the badge
+  if (!audioAlertEnabled) {
+    updateAudioAlertBadge(true);
+    return;
+  }
+  
+  // Add to pending alerts queue
+  pendingAudioAlerts.push(alertData);
+  
+  // Update badge
+  updateAudioAlertBadge(true);
+  
+  // If not currently playing audio, play the alert
+  if (!isPlayingAudio) {
+    playNextAudioAlert();
+  }
+}
+
+// Play the next audio alert in the queue
+function playNextAudioAlert() {
+  if (pendingAudioAlerts.length === 0 || !audioAlertEnabled) {
+    isPlayingAudio = false;
+    updateAudioAlertBadge(pendingAudioAlerts.length > 0);
+    return;
+  }
+  
+  isPlayingAudio = true;
+  const alertData = pendingAudioAlerts.shift();
+  
+  // Show visual notification
+  showAudioNotification(alertData);
+  
+  // Play notification sound first
+  notificationSound.play();
+  
+  // When notification sound ends, play voice message
+  notificationSound.onended = function() {
+    // In a real implementation, you would get text-to-speech audio from an API
+    // For demo purposes, we're simulating this with the Web Speech API
+    if ('speechSynthesis' in window) {
+      const speech = new SpeechSynthesisUtterance(alertData.voiceMessage);
+      speech.rate = 1;
+      speech.pitch = 1;
+      speech.volume = 1;
+      speech.onend = onVoiceMessageEnded;
+      window.speechSynthesis.speak(speech);
+    } else {
+      // Fallback if speech synthesis is not available
+      console.log('Speech synthesis not available in this browser');
+      setTimeout(onVoiceMessageEnded, 2000); // Simulate voice message duration
+    }
+  };
+}
+
+// Handle voice message ended event
+function onVoiceMessageEnded() {
+  console.log('Voice message playback completed');
+  
+  // Hide the notification after a short delay
+  setTimeout(() => {
+    hideAudioNotification();
+    
+    // Play next alert if any
+    setTimeout(() => {
+      playNextAudioAlert();
+    }, 1000);
+  }, 1000);
+}
+
+// Show audio notification
+function showAudioNotification(alertData) {
+  if (!audioNotification) return;
+  
+  // Set notification content
+  audioNotificationTitle.textContent = alertData.title;
+  audioNotificationMessage.textContent = alertData.message;
+  
+  // Apply priority styling
+  audioNotification.className = 'audio-notification show';
+  if (alertData.priority === 'high') {
+    audioNotification.style.borderLeftColor = '#FF3A3A';
+  } else if (alertData.priority === 'medium') {
+    audioNotification.style.borderLeftColor = '#FFC107';
+  } else {
+    audioNotification.style.borderLeftColor = '#0046AD';
+  }
+  
+  // Show the notification
+  audioNotification.classList.add('show');
+}
+
+// Hide audio notification
+function hideAudioNotification() {
+  if (!audioNotification) return;
+  audioNotification.classList.remove('show');
+}
+
+// Update the audio alert badge
+function updateAudioAlertBadge(show) {
+  if (!audioAlertBadge) return;
+  
+  if (show && pendingAudioAlerts.length > 0) {
+    audioAlertBadge.textContent = pendingAudioAlerts.length;
+    audioAlertBadge.classList.add('active');
+  } else {
+    audioAlertBadge.classList.remove('active');
+  }
 }
 
 // Render Top Bar
@@ -621,6 +886,20 @@ function updateDashboard(data) {
   renderNotifications();
 }
 
+// API endpoint for voice alerts (mock implementation)
+// In a real application, this would be an actual API endpoint
+// For demo purposes, we're simulating this with a local function
+async function fetchVoiceAlert() {
+  // Simulate API request delay
+  await new Promise(resolve => setTimeout(resolve, 500));
+  
+  // Return a random sample voice alert
+  return {
+    success: true,
+    alert: voiceAlertSamples[Math.floor(Math.random() * voiceAlertSamples.length)]
+  };
+}
+
 // Initialize the dashboard when the page loads
 document.addEventListener('DOMContentLoaded', function() {
   initDashboard();
@@ -634,4 +913,3 @@ window.updateNotificationStatus = updateNotificationStatus;
 window.openCommentModal = openCommentModal;
 window.saveNotificationComment = saveNotificationComment;
 window.showCommentTooltip = showCommentTooltip;
-
