@@ -7,6 +7,7 @@
     <title>Heater Parameter Details</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
 </head>
 <body class="bg-gray-50 min-h-screen">
     <!-- Status Summary Cards -->
@@ -16,6 +17,20 @@
             <div class="mt-2 flex justify-between items-baseline">
                 <p class="text-2xl font-semibold text-adani-navy">328.5°C</p>
                 <span class="status-healthy px-2 py-1 rounded-full text-xs">Healthy</span>
+            </div>
+        </div>
+        <div class="bg-white rounded-lg shadow-md p-4 border-l-4 border-adani-blue">
+            <h3 class="text-sm font-medium text-gray-500">Current Load</h3>
+            <div class="mt-2 flex justify-between items-baseline">
+                <p class="text-2xl font-semibold text-adani-navy">560 MW</p>
+                <span class="status-healthy px-2 py-1 rounded-full text-xs">Healthy</span>
+            </div>
+        </div>
+        <div class="bg-white rounded-lg shadow-md p-4 border-l-4 border-adani-yellow">
+            <h3 class="text-sm font-medium text-gray-500">Header Pressure</h3>
+            <div class="mt-2 flex justify-between items-baseline">
+                <p class="text-2xl font-semibold text-adani-navy">16.8 Mpa</p>
+                <span class="status-warning px-2 py-1 rounded-full text-xs">Warning</span>
             </div>
         </div>
         <div class="bg-white rounded-lg shadow-md p-4 border-l-4 border-adani-yellow">
@@ -37,11 +52,27 @@
         </div>
     </div>
 
+    <div class="p-6">
+        <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+            <h2 class="text-xl font-bold text-adani-navy mb-4">HP Heater Parameters</h2>
+            <p class="text-sm text-gray-500 mb-4">Drag and drop parameters to reorder them. Click on any parameter to see detailed analysis.</p>
+            
+            <div class="mb-4">
+                <label for="heater-selector" class="block text-sm font-medium text-gray-700 mb-2">Select Heater:</label>
+                <select id="heater-selector" class="rounded border border-gray-300 p-2 w-full md:w-64">
+                    <option value="1">HP Heater 1</option>
+                    <option value="2">HP Heater 2</option>
+                    <option value="3">HP Heater 3</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
     <!-- Main Content -->
     <div class="flex">
         <!-- Parameter Cards Container -->
         <main class="flex-1 p-6">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="parameter-cards">
+            <div id="parameter-cards" class="grid grid-cols-1 md:grid-cols-3 gap-6 sortable-container">
                 <!-- Cards will be populated by JavaScript -->
             </div>
         </main>
@@ -73,9 +104,10 @@
                         <thead>
                             <tr class="bg-gray-50">
                                 <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Load (MW)</th>
-                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Q1 (25%)</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Lower Bound</th>
                                 <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Median</th>
-                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Q3 (75%)</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Upper Bound</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Design</th>
                             </tr>
                         </thead>
                         <tbody id="benchmark-table">
