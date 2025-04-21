@@ -6,15 +6,202 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Heater Parameter Details</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="parameterPerformance.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@2.1.0/dist/chartjs-plugin-annotation.min.js"></script>
 </head>
 <body class="bg-gray-50 min-h-screen">
-    <!-- Main Content -->
+    <!-- Header -->
+    <header class="bg-adani-blue text-white p-4 flex justify-between items-center shadow-md">
+        <div class="flex items-center">
+            <button id="sidebar-toggle" class="mr-4 focus:outline-none">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+            </button>
+            <img src="https://www.adanipower.com/-/media/Project/Power/Header-Footer/logo.png" alt="Adani Power Logo" class="h-8 mr-3">
+            <div>
+                <h1 class="text-xl font-bold">Heater Parameter Details</h1>
+                <div class="text-sm opacity-80">Mundra Power Plant - Unit 5</div>
+            </div>
+        </div>
+        <div class="text-right">
+            <div class="text-sm opacity-80">Current Load: 560 MW</div>
+            <div class="text-sm opacity-80">Inlet Temperature: 328.5°C</div>
+        </div>
+    </header>
+
     <div class="flex">
-        <!-- Parameter Cards Container -->
-        <main class="flex-1 p-6">
+        <!-- Left Sidebar -->
+        <aside id="left-sidebar" class="bg-adani-navy text-white fixed h-full transition-all duration-300 shadow-lg w-64">
+            <nav class="p-4">
+                <ul class="space-y-2">
+                    <li>
+                        <a href="index.html" class="block p-2 rounded hover:bg-white hover:bg-opacity-10 flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                            </svg>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="heaterDetails.html" class="block p-2 rounded bg-white bg-opacity-20 flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+                            </svg>
+                            <span>Heater Details</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="parameterPerformance.html" class="block p-2 rounded hover:bg-white hover:bg-opacity-10 flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                            </svg>
+                            <span>Parameter Performance</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="reports.html" class="block p-2 rounded hover:bg-white hover:bg-opacity-10 flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                            <span>Reports</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            
+            <!-- Status Summary Cards -->
+            <div class="p-4 border-t border-white border-opacity-10 mt-4">
+                <h3 class="text-sm font-medium mb-3 opacity-80">Status Summary</h3>
+                <div class="grid grid-cols-3 gap-2">
+                    <div class="text-center bg-white bg-opacity-10 p-2 rounded">
+                        <span class="text-xl font-bold text-red-400" id="critical-count">1</span>
+                        <p class="text-xs opacity-70">Critical</p>
+                    </div>
+                    <div class="text-center bg-white bg-opacity-10 p-2 rounded">
+                        <span class="text-xl font-bold text-yellow-400" id="warning-count">2</span>
+                        <p class="text-xs opacity-70">Warning</p>
+                    </div>
+                    <div class="text-center bg-white bg-opacity-10 p-2 rounded">
+                        <span class="text-xl font-bold text-green-400" id="healthy-count">3</span>
+                        <p class="text-xs opacity-70">Healthy</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="p-4 border-t border-white border-opacity-10">
+                <h3 class="text-sm font-medium mb-3 opacity-80">Plant Status</h3>
+                <div class="space-y-2">
+                    <div class="flex justify-between">
+                        <span class="text-xs opacity-70">Load:</span>
+                        <span class="text-xs font-semibold">560 MW</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-xs opacity-70">Inlet Temp:</span>
+                        <span class="text-xs font-semibold">328.5 °C</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-xs opacity-70">Header Pressure:</span>
+                        <span class="text-xs font-semibold">16.8 Mpa</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main id="main-content" class="flex-1 p-6 ml-64 transition-all duration-300">
+            <!-- Top Status Cards -->
+            <div class="top-bar mb-6 flex flex-wrap gap-4">
+                <div class="top-bar-item flex-1">
+                    <div class="top-bar-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h4 class="text-sm font-medium text-gray-500">Eco Inlet Temperature</h4>
+                        <p class="text-lg font-semibold text-adani-navy">328.5°C</p>
+                        <div class="ai-scan-overlay scanning"></div>
+                    </div>
+                </div>
+                <div class="top-bar-item flex-1">
+                    <div class="top-bar-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h4 class="text-sm font-medium text-gray-500">Current Load</h4>
+                        <p class="text-lg font-semibold text-adani-navy">560 MW</p>
+                        <div class="ai-scan-overlay scanning"></div>
+                    </div>
+                </div>
+                <div class="top-bar-item flex-1">
+                    <div class="top-bar-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h4 class="text-sm font-medium text-gray-500">Header Pressure</h4>
+                        <p class="text-lg font-semibold text-adani-navy">16.8 Mpa</p>
+                        <div class="ai-scan-overlay scanning"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Status Summary Cards -->
+            <div class="status-summary-grid mb-6">
+                <div class="status-summary-card critical">
+                    <div class="count" id="critical-summary">1</div>
+                    <div class="label">Critical</div>
+                </div>
+                <div class="status-summary-card warning">
+                    <div class="count" id="warning-summary">2</div>
+                    <div class="label">Warning</div>
+                </div>
+                <div class="status-summary-card healthy">
+                    <div class="count" id="healthy-summary">3</div>
+                    <div class="label">Healthy</div>
+                </div>
+            </div>
+
+            <!-- Parameter Cards Container -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="parameter-cards">
                 <!-- Cards will be populated by JavaScript -->
+            </div>
+            
+            <!-- Comprehensive Report Section -->
+            <div class="mt-8 bg-white rounded-lg shadow-md p-6 ai-enhanced-card">
+                <h2 class="text-xl font-bold text-adani-navy mb-4">Parameter Analysis Report</h2>
+                
+                <table class="parameter-table">
+                    <thead>
+                        <tr>
+                            <th>Description</th>
+                            <th>Tag</th>
+                            <th>Status</th>
+                            <th>Load</th>
+                            <th>Current Value</th>
+                            <th>Design Value</th>
+                            <th>Benchmark Range</th>
+                            <th>Unit</th>
+                        </tr>
+                    </thead>
+                    <tbody id="report-table-body">
+                        <!-- Will be populated by JavaScript -->
+                    </tbody>
+                </table>
+                
+                <button id="export-report" class="export-button mt-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    Export Report
+                </button>
+                
+                <div class="ai-scan-overlay"></div>
             </div>
         </main>
 
@@ -30,7 +217,7 @@
                     </button>
                 </div>
 
-                <!-- Benchmark Graph -->
+                <!-- Parameter Graph -->
                 <div class="mb-6">
                     <h3 class="text-lg font-semibold mb-3">Performance Trend</h3>
                     <div class="chart-container" style="height: 300px;">
@@ -39,17 +226,18 @@
                 </div>
 
                 <!-- Benchmark Table -->
-                <div class="overflow-x-auto">
+                <div class="benchmark-table-container">
                     <h3 class="text-lg font-semibold mb-3">Benchmark Values</h3>
-                    <table class="min-w-full bg-white border border-gray-200">
+                    <table class="benchmark-table">
                         <thead>
-                            <tr class="bg-gray-50">
-                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Load (MW)</th>
-                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Q1 (25%)</th>
-                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Median</th>
-                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Q3 (75%)</th>
-                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Mean</th>
-                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">SD</th>
+                            <tr>
+                                <th>Load (MW)</th>
+                                <th>Sample</th>
+                                <th>Q1 (25%)</th>
+                                <th>Median</th>
+                                <th>Q3 (75%)</th>
+                                <th>Mean</th>
+                                <th>SD</th>
                             </tr>
                         </thead>
                         <tbody id="benchmark-table">
@@ -57,35 +245,65 @@
                         </tbody>
                     </table>
                 </div>
+                
+                <!-- IQR Analysis -->
+                <div class="mt-6">
+                    <h3 class="text-lg font-semibold mb-3">Parameter Analysis</h3>
+                    <div class="analysis-box">
+                        <div id="parameter-assessment" class="text-sm">
+                            <!-- Will be populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
             </div>
         </aside>
     </div>
 
     <script>
-        // Sample benchmark data
-        const benchmarkData = {
-            data: [
-                { load: 250, sampleSize: 29, q1: 5.875, median: 5.921, q3: 6.053, mean: 5.938, sd: 0.244 },
-                { load: 300, sampleSize: 136, q1: 4.812, median: 5.141, q3: 5.391, mean: 5.092, sd: 0.483 },
-                { load: 350, sampleSize: 8054, q1: 4.739, median: 4.945, q3: 5.152, mean: 4.953, sd: 0.484 },
-                { load: 400, sampleSize: 2889, q1: 4.671, median: 5.312, q3: 5.814, mean: 5.212, sd: 1.01 },
-                { load: 450, sampleSize: 3748, q1: 4.708, median: 5.364, q3: 5.85, mean: 5.213, sd: 1.095 },
-                { load: 500, sampleSize: 4513, q1: 4.404, median: 5.032, q3: 5.558, mean: 4.938, sd: 1.036 },
-                { load: 550, sampleSize: 6737, q1: 4.49, median: 4.917, q3: 5.232, mean: 4.823, sd: 0.777 },
-                { load: 600, sampleSize: 18493, q1: 4.72, median: 4.941, q3: 5.18, mean: 4.926, sd: 0.405 },
-                { load: 650, sampleSize: 5081, q1: 4.739, median: 4.921, q3: 5.142, mean: 4.934, sd: 0.308 }
-            ]
-        };
-
         // Sample heater parameters
         const heaterParameters = [
-            { name: "TTD", value: 4.8, unit: "°C", status: "healthy" },
-            { name: "DCA", value: 5.2, unit: "°C", status: "warning" },
-            { name: "Flow", value: 630, unit: "t/h", status: "healthy" },
-            { name: "Heat Load", value: 52.4, unit: "MW", status: "critical" },
-            { name: "Level", value: 65, unit: "%", status: "warning" },
-            { name: "TR", value: 0.92, unit: "", status: "healthy" }
+            { 
+                name: "Heater 1 TTD", 
+                tag: "Tiroda_HP_TTD1",
+                value: 4.8, 
+                unit: "°C", 
+                status: "healthy",
+                benchmarkData: [
+                    { load: 250, sampleSize: 29, q1: 5.875, median: 5.921, q3: 6.053, mean: 5.938, sd: 0.244 },
+                    { load: 300, sampleSize: 136, q1: 4.812, median: 5.141, q3: 5.391, mean: 5.092, sd: 0.483 },
+                    { load: 350, sampleSize: 8054, q1: 4.739, median: 4.945, q3: 5.152, mean: 4.953, sd: 0.484 },
+                    { load: 400, sampleSize: 2889, q1: 4.671, median: 5.312, q3: 5.814, mean: 5.212, sd: 1.01 },
+                    { load: 450, sampleSize: 3748, q1: 4.708, median: 5.364, q3: 5.85, mean: 5.213, sd: 1.095 },
+                    { load: 500, sampleSize: 4513, q1: 4.404, median: 5.032, q3: 5.558, mean: 4.938, sd: 1.036 },
+                    { load: 550, sampleSize: 6737, q1: 4.49, median: 4.917, q3: 5.232, mean: 4.823, sd: 0.777 },
+                    { load: 600, sampleSize: 18493, q1: 4.72, median: 4.941, q3: 5.18, mean: 4.926, sd: 0.405 },
+                    { load: 650, sampleSize: 5081, q1: 4.739, median: 4.921, q3: 5.142, mean: 4.934, sd: 0.308 }
+                ],
+                designData: [
+                    { load: 250, value: 5.2 },
+                    { load: 300, value: 5.2 },
+                    { load: 350, value: 5.2 },
+                    { load: 400, value: 5.2 },
+                    { load: 450, value: 5.2 },
+                    { load: 500, value: 5.2 },
+                    { load: 550, value: 5.2 },
+                    { load: 600, value: 5.2 },
+                    { load: 650, value: 5.2 }
+                ]
+            },
+            { name: "Heater 2 TTD", value: 5.2, unit: "°C", status: "warning", tag: "Tiroda_HP_TTD2" },
+            { name: "Heater 1 DCA", value: 7.3, unit: "°C", status: "critical", tag: "Tiroda_HP_DCA1" },
+            { name: "Heater 2 DCA", value: 4.9, unit: "°C", status: "healthy", tag: "Tiroda_HP_DCA2" },
+            { name: "Heater 3 TTD", value: 5.0, unit: "°C", status: "healthy", tag: "Tiroda_HP_TTD3" },
+            { name: "Heater 3 DCA", value: 5.3, unit: "°C", status: "warning", tag: "Tiroda_HP_DCA3" }
         ];
+
+        // Current plant data
+        const currentPlantData = {
+            load: 560,
+            inletTemperature: 328.5,
+            headerPressure: 16.8
+        };
 
         let currentChart = null;
 
@@ -93,23 +311,50 @@
         document.addEventListener('DOMContentLoaded', () => {
             renderParameterCards();
             initializeSidebar();
+            updateStatusCounts();
+            renderReportTable();
+            initializeAIScanEffects();
+            
+            // Set up export report button
+            document.getElementById('export-report').addEventListener('click', exportReport);
         });
+
+        // Update status counts
+        function updateStatusCounts() {
+            const criticalCount = heaterParameters.filter(param => param.status === 'critical').length;
+            const warningCount = heaterParameters.filter(param => param.status === 'warning').length;
+            const healthyCount = heaterParameters.filter(param => param.status === 'healthy').length;
+            
+            // Update count elements in sidebar
+            document.getElementById('critical-count').textContent = criticalCount;
+            document.getElementById('warning-count').textContent = warningCount;
+            document.getElementById('healthy-count').textContent = healthyCount;
+            
+            // Update count elements in main summary
+            document.getElementById('critical-summary').textContent = criticalCount;
+            document.getElementById('warning-summary').textContent = warningCount;
+            document.getElementById('healthy-summary').textContent = healthyCount;
+        }
 
         function renderParameterCards() {
             const container = document.getElementById('parameter-cards');
             
             heaterParameters.forEach(param => {
                 const card = document.createElement('div');
-                card.className = `bg-white rounded-lg shadow-md p-6 border border-gray-100 cursor-pointer hover:shadow-lg transition-all duration-300 ai-enhanced-card`;
+                card.className = `parameter-card bg-white rounded-lg shadow-md p-6 cursor-pointer hover:shadow-lg transition-all duration-300 border-l-4 ${getStatusBorderClass(param.status)}`;
                 card.innerHTML = `
                     <div class="flex items-center justify-between mb-4">
                         <h3 class="text-lg font-semibold text-adani-navy">${param.name}</h3>
-                        <span class="text-sm text-gray-500">${param.unit}</span>
+                        <span class="text-sm text-gray-500">${param.tag}</span>
                     </div>
                     <div class="flex items-end justify-between">
-                        <p class="text-3xl font-bold ${getStatusColorClass(param.status)}">${param.value}</p>
-                        <div class="ai-scan-overlay"></div>
+                        <div>
+                            <p class="parameter-value ${getStatusColorClass(param.status)}">${param.value}</p>
+                            <p class="text-xs text-gray-500 mt-1">${param.unit}</p>
+                        </div>
+                        <span class="status-indicator ${param.status}">${capitalizeFirstLetter(param.status)}</span>
                     </div>
+                    <div class="ai-scan-overlay"></div>
                 `;
                 
                 card.addEventListener('click', () => showParameterDetails(param));
@@ -120,37 +365,80 @@
         function initializeSidebar() {
             const sidebar = document.getElementById('parameter-sidebar');
             const closeBtn = document.getElementById('close-sidebar');
+            const mainContent = document.getElementById('main-content');
 
             closeBtn.addEventListener('click', () => {
                 sidebar.style.width = '0';
+                mainContent.classList.remove('sidebar-open');
             });
         }
 
         function showParameterDetails(parameter) {
             const sidebar = document.getElementById('parameter-sidebar');
             const parameterTitle = document.getElementById('parameter-title');
+            const mainContent = document.getElementById('main-content');
             
             sidebar.style.width = '600px';
+            mainContent.classList.add('sidebar-open');
             parameterTitle.textContent = `${parameter.name} Analysis`;
             
-            renderBenchmarkTable();
-            renderParameterChart(parameter);
+            // Only render detailed data if we have it
+            if (parameter.benchmarkData && parameter.designData) {
+                renderBenchmarkTable(parameter);
+                renderParameterChart(parameter);
+                renderParameterAnalysis(parameter);
+            } else {
+                // Show placeholder
+                document.getElementById('benchmark-table').innerHTML = `
+                    <tr>
+                        <td colspan="7" class="text-center py-4">Detailed benchmark data not available for this parameter.</td>
+                    </tr>
+                `;
+                document.getElementById('parameter-assessment').innerHTML = `
+                    <p class="mb-2">Detailed analysis data is not available for ${parameter.name}.</p>
+                    <p>Current value is ${parameter.value} ${parameter.unit} with status: ${parameter.status}.</p>
+                `;
+                
+                // Destroy previous chart if it exists
+                if (currentChart) {
+                    currentChart.destroy();
+                    currentChart = null;
+                }
+            }
+            
+            // Add AI scanning effect
+            document.querySelectorAll('#parameter-sidebar .chart-container').forEach(container => {
+                const overlay = document.createElement('div');
+                overlay.className = 'ai-scan-overlay scanning';
+                container.appendChild(overlay);
+                
+                setTimeout(() => {
+                    overlay.classList.remove('scanning');
+                }, 4000);
+            });
         }
 
-        function renderBenchmarkTable() {
+        function renderBenchmarkTable(parameter) {
             const tableBody = document.getElementById('benchmark-table');
             tableBody.innerHTML = '';
 
-            benchmarkData.data.forEach(row => {
+            parameter.benchmarkData.forEach(row => {
                 const tr = document.createElement('tr');
-                tr.className = 'border-t border-gray-200 hover:bg-gray-50';
+                
+                // Highlight current load row
+                const isCurrentLoad = (row.load >= currentPlantData.load - 50 && row.load <= currentPlantData.load + 50);
+                if (isCurrentLoad) {
+                    tr.classList.add('current-load');
+                }
+                
                 tr.innerHTML = `
-                    <td class="px-4 py-2">${row.load}</td>
-                    <td class="px-4 py-2">${row.q1.toFixed(3)}</td>
-                    <td class="px-4 py-2">${row.median.toFixed(3)}</td>
-                    <td class="px-4 py-2">${row.q3.toFixed(3)}</td>
-                    <td class="px-4 py-2">${row.mean.toFixed(3)}</td>
-                    <td class="px-4 py-2">${row.sd.toFixed(3)}</td>
+                    <td>${row.load}</td>
+                    <td>${row.sampleSize}</td>
+                    <td>${row.q1.toFixed(3)}</td>
+                    <td>${row.median.toFixed(3)}</td>
+                    <td>${row.q3.toFixed(3)}</td>
+                    <td>${row.mean.toFixed(3)}</td>
+                    <td>${row.sd.toFixed(3)}</td>
                 `;
                 tableBody.appendChild(tr);
             });
@@ -163,10 +451,11 @@
                 currentChart.destroy();
             }
 
-            const loads = benchmarkData.data.map(d => d.load);
-            const medians = benchmarkData.data.map(d => d.median);
-            const upperBand = benchmarkData.data.map(d => d.q3);
-            const lowerBand = benchmarkData.data.map(d => d.q1);
+            const loads = parameter.benchmarkData.map(d => d.load);
+            const medians = parameter.benchmarkData.map(d => d.median);
+            const upperBand = parameter.benchmarkData.map(d => d.q3);
+            const lowerBand = parameter.benchmarkData.map(d => d.q1);
+            const designValues = parameter.designData.map(d => d.value);
 
             currentChart = new Chart(ctx, {
                 type: 'line',
@@ -174,11 +463,21 @@
                     labels: loads,
                     datasets: [
                         {
-                            label: 'Actual Value',
+                            label: 'Design Value',
+                            data: designValues,
+                            borderColor: '#8B5CF6',
+                            borderWidth: 2,
+                            borderDash: [5, 5],
+                            pointRadius: 0,
+                            fill: false
+                        },
+                        {
+                            label: 'Current Value',
                             data: loads.map(() => parameter.value),
                             borderColor: '#FF3A3A',
                             borderWidth: 2,
                             pointRadius: 4,
+                            pointBackgroundColor: '#FF3A3A',
                             fill: false
                         },
                         {
@@ -186,6 +485,7 @@
                             data: medians,
                             borderColor: '#0046AD',
                             borderWidth: 2,
+                            pointRadius: 0,
                             fill: false
                         },
                         {
@@ -193,6 +493,7 @@
                             data: upperBand,
                             borderColor: 'rgba(0, 70, 173, 0.3)',
                             borderWidth: 1,
+                            pointRadius: 0,
                             fill: false
                         },
                         {
@@ -200,7 +501,9 @@
                             data: lowerBand,
                             borderColor: 'rgba(0, 70, 173, 0.3)',
                             borderWidth: 1,
-                            fill: '-1'
+                            pointRadius: 0,
+                            fill: '+1',
+                            backgroundColor: 'rgba(0, 70, 173, 0.1)'
                         }
                     ]
                 },
@@ -225,16 +528,198 @@
                         title: {
                             display: true,
                             text: `${parameter.name} vs Load`
+                        },
+                        annotation: {
+                            annotations: {
+                                line1: {
+                                    type: 'line',
+                                    mode: 'vertical',
+                                    scaleID: 'x',
+                                    value: currentPlantData.load,
+                                    borderColor: 'rgba(139, 92, 246, 0.7)',
+                                    borderWidth: 2,
+                                    label: {
+                                        content: 'Current Load',
+                                        enabled: true,
+                                        position: 'top'
+                                    }
+                                }
+                            }
                         }
                     }
                 }
             });
         }
 
+        function renderParameterAnalysis(parameter) {
+            const analysisContainer = document.getElementById('parameter-assessment');
+            
+            // Find benchmark data for current load
+            const currentLoadBenchmark = parameter.benchmarkData.find(d => 
+                d.load >= currentPlantData.load - 50 && d.load <= currentPlantData.load + 50
+            ) || parameter.benchmarkData[4];
+            
+            // Find design value for current load
+            const currentLoadDesign = parameter.designData.find(d => 
+                d.load >= currentPlantData.load - 50 && d.load <= currentPlantData.load + 50
+            ) || parameter.designData[4];
+            
+            const lowerBound = currentLoadBenchmark.q1;
+            const upperBound = currentLoadBenchmark.q3;
+            const median = currentLoadBenchmark.median;
+            const design = currentLoadDesign.value;
+            
+            let analysisHTML = '';
+            
+            // Analyze the value position relative to IQR
+            if (parameter.value < lowerBound) {
+                analysisHTML += `<p class="mb-2"><span class="font-semibold">Current value (${parameter.value}${parameter.unit})</span> is <span class="text-adani-red font-semibold">below the lower quartile (${lowerBound.toFixed(2)}${parameter.unit})</span>.</p>`;
+            } else if (parameter.value > upperBound) {
+                analysisHTML += `<p class="mb-2"><span class="font-semibold">Current value (${parameter.value}${parameter.unit})</span> is <span class="text-adani-yellow font-semibold">above the upper quartile (${upperBound.toFixed(2)}${parameter.unit})</span>.</p>`;
+            } else {
+                analysisHTML += `<p class="mb-2"><span class="font-semibold">Current value (${parameter.value}${parameter.unit})</span> is <span class="text-adani-green font-semibold">within the normal IQR range</span> (${lowerBound.toFixed(2)} - ${upperBound.toFixed(2)}${parameter.unit}).</p>`;
+            }
+            
+            // Compare to design value
+            const designDiff = parameter.value - design;
+            if (Math.abs(designDiff) < 0.3) {
+                analysisHTML += `<p class="mb-2">Value is closely matching design value of ${design}${parameter.unit} (${designDiff > 0 ? '+' : ''}${designDiff.toFixed(2)}${parameter.unit}).</p>`;
+            } else if (designDiff > 0) {
+                analysisHTML += `<p class="mb-2">Value is ${designDiff.toFixed(2)}${parameter.unit} higher than the design value of ${design}${parameter.unit}.</p>`;
+            } else {
+                analysisHTML += `<p class="mb-2">Value is ${Math.abs(designDiff).toFixed(2)}${parameter.unit} lower than the design value of ${design}${parameter.unit}.</p>`;
+            }
+            
+            // Add statistical context
+            const stdevs = Math.abs(parameter.value - median) / currentLoadBenchmark.sd;
+            if (stdevs > 2) {
+                analysisHTML += `<p class="mb-2">Current value is <span class="text-adani-red font-semibold">${stdevs.toFixed(1)} standard deviations</span> from the median, indicating a significant deviation.</p>`;
+            } else if (stdevs > 1) {
+                analysisHTML += `<p class="mb-2">Current value is <span class="text-adani-yellow font-semibold">${stdevs.toFixed(1)} standard deviations</span> from the median.</p>`;
+            } else {
+                analysisHTML += `<p class="mb-2">Current value is <span class="text-adani-green font-semibold">within 1 standard deviation</span> of the median.</p>`;
+            }
+            
+            // Add AI recommendation based on status
+            analysisHTML += `<div class="analysis-recommendation ${parameter.status}">
+                <h4 class="font-semibold mb-1">AI Recommendation:</h4>
+                <p>${getAIRecommendation(parameter)}</p>
+            </div>`;
+            
+            analysisContainer.innerHTML = analysisHTML;
+        }
+        
+        function renderReportTable() {
+            const tableBody = document.getElementById('report-table-body');
+            tableBody.innerHTML = '';
+            
+            heaterParameters.forEach(param => {
+                const tr = document.createElement('tr');
+                
+                // Get benchmark data if available
+                const benchmarkData = param.benchmarkData ? 
+                    (param.benchmarkData.find(d => d.load >= currentPlantData.load - 50 && d.load <= currentPlantData.load + 50) || param.benchmarkData[4]) : 
+                    null;
+                
+                // Get design data if available
+                const designData = param.designData ? 
+                    (param.designData.find(d => d.load >= currentPlantData.load - 50 && d.load <= currentPlantData.load + 50) || param.designData[4]) : 
+                    null;
+                
+                const benchmarkRange = benchmarkData ? 
+                    `${benchmarkData.q1.toFixed(2)} - ${benchmarkData.q3.toFixed(2)}` : 
+                    'N/A';
+                
+                const designValue = designData ? designData.value : 'N/A';
+                
+                tr.innerHTML = `
+                    <td>${param.name}</td>
+                    <td>${param.tag}</td>
+                    <td><span class="status-indicator ${param.status}">${capitalizeFirstLetter(param.status)}</span></td>
+                    <td>${currentPlantData.load} MW</td>
+                    <td class="${getStatusColorClass(param.status)} font-medium">${param.value} ${param.unit}</td>
+                    <td>${designValue}</td>
+                    <td>${benchmarkRange}</td>
+                    <td>${param.unit}</td>
+                `;
+                
+                tableBody.appendChild(tr);
+            });
+        }
+        
+        function exportReport() {
+            // In a real app, this would generate a downloadable file
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                Exporting parameter report...
+            `;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.classList.add('fade-out');
+                setTimeout(() => notification.remove(), 500);
+            }, 2000);
+        }
+        
+        function initializeAIScanEffects() {
+            // Add scanning effect to cards with a staggered delay
+            const cards = document.querySelectorAll('.parameter-card');
+            cards.forEach((card, index) => {
+                setTimeout(() => {
+                    const overlay = card.querySelector('.ai-scan-overlay');
+                    overlay.classList.add('scanning');
+                    
+                    // Remove scanning after animation completes
+                    setTimeout(() => {
+                        overlay.classList.remove('scanning');
+                    }, 2500);
+                }, index * 300);
+            });
+            
+            // Add scanning effect to other AI enhanced cards
+            const enhancedCards = document.querySelectorAll('.ai-enhanced-card');
+            enhancedCards.forEach(card => {
+                const overlay = card.querySelector('.ai-scan-overlay');
+                if (overlay) {
+                    overlay.classList.add('scanning');
+                    
+                    // Remove scanning after animation
+                    setTimeout(() => {
+                        overlay.classList.remove('scanning');
+                    }, 2500);
+                }
+            });
+        }
+
+        // Helper functions
+        function capitalizeFirstLetter(string) {
+            return string.charAt(0).toUpperCase() + string.slice(1);
+        }
+
         function getStatusColorClass(status) {
             return status === 'critical' ? 'text-adani-red' : 
-                   status === 'warning' ? 'text-adani-yellow' : 
-                   'text-adani-green';
+                  status === 'warning' ? 'text-adani-yellow' : 
+                  'text-adani-green';
+        }
+
+        function getStatusBorderClass(status) {
+            return status === 'critical' ? 'border-adani-red' : 
+                  status === 'warning' ? 'border-adani-yellow' : 
+                  'border-adani-green';
+        }
+
+        function getAIRecommendation(parameter) {
+            if (parameter.status === 'critical') {
+                return `Immediate attention required. ${parameter.name} is significantly out of range. Consider adjusting heater level control or checking extraction pressure.`;
+            } else if (parameter.status === 'warning') {
+                return `Monitor ${parameter.name} closely. Current value trending toward limit. Verify control valve operation and extraction steam path.`;
+            } else {
+                return `${parameter.name} is operating within optimal range. Continue normal monitoring.`;
+            }
         }
     </script>
 </body>
