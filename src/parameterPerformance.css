@@ -1,4 +1,3 @@
-
 /* AI-Enhanced Dashboard Styles */
 
 /* Animated AI scanning effects */
@@ -183,21 +182,22 @@
   z-index: 100;
   overflow-y: auto;
   scrollbar-width: thin;
-  scrollbar-color: rgba(139, 92, 246, 0.3) transparent;
+  scrollbar-color: var(--ai-processing, #8B5CF6) #f0f0f5;
   width: 0;
   position: fixed;
   right: 0;
   top: 0;
   height: 100%;
   transition: width 0.3s ease;
+  max-width: 100vw;
 }
 
 #parameter-sidebar.active {
-  width: 600px;
+  width: 750px;
 }
 
 #parameter-sidebar::-webkit-scrollbar {
-  width: 5px;
+  width: 8px;
 }
 
 #parameter-sidebar::-webkit-scrollbar-track {
@@ -205,8 +205,8 @@
 }
 
 #parameter-sidebar::-webkit-scrollbar-thumb {
-  background-color: rgba(139, 92, 246, 0.3);
-  border-radius: 10px;
+  background: linear-gradient(135deg, var(--ai-accent, #40E0D0), var(--ai-processing, #8B5CF6));
+  border-radius: 6px;
 }
 
 /* Current load marker */
@@ -630,5 +630,118 @@
   100% {
     top: 100%;
     opacity: 0;
+  }
+}
+
+/* Parameter Analysis Box Redesign */
+#parameter-assessment {
+  background: linear-gradient(109.6deg, #e7f0fd 11.2%, #d6bcfa 91.1%);
+  border-radius: 16px;
+  border: 2.5px solid var(--ai-accent, #40E0D0);
+  box-shadow: 0 4px 32px 0 rgba(64, 224, 208, 0.12), 0 1.5px 12px 0 rgba(139, 92, 246, 0.10);
+  color: #1A1F2C;
+  font-size: 1.1rem;
+  margin: 0 auto 0 auto;
+  margin-top: 8px;
+  margin-bottom: 4px;
+  padding: 2rem 1.5rem 1.5rem 1.5rem;
+  position: relative;
+  min-height: 110px;
+  animation: fade-in 0.8s cubic-bezier(0.4,0,0.2,1);
+  /* Subtle glow */
+  box-shadow: 0 0 20px 2px var(--ai-accent-glow, #40E0D045), 0 1px 10px rgba(60,50,130,0.12);
+  transition: box-shadow 0.4s, border-color 0.3s;
+}
+
+#parameter-assessment .ai-assessment-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  background: linear-gradient(92deg, var(--ai-processing, #8B5CF6), var(--ai-accent, #40E0D0) 70%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-fill-color: transparent;
+  margin-bottom: 0.4rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+}
+
+#parameter-assessment .ai-assessment-title .ai-icon {
+  display: inline-block;
+  background: var(--ai-accent, #40E0D0);
+  color: white;
+  border-radius: 50%;
+  padding: 8px;
+  margin-right: 6px;
+  font-size: 1.2em;
+  box-shadow: 0 1px 6px 0 var(--ai-processing-glow, #8B5CF6AA);
+  animation: ai-rotation 2.1s linear infinite;
+}
+
+@keyframes ai-rotation {
+  from { transform: rotate(0); }
+  to { transform: rotate(359deg); }
+}
+
+#parameter-assessment .ai-insight {
+  margin-top: 0.7em;
+  padding: 0.7em 1em;
+  border-left: 4px solid var(--ai-processing, #8B5CF6);
+  background: rgba(255,255,255,0.77);
+  font-size: 1rem;
+  color: #293145;
+  border-radius: 10px;
+  font-style: italic;
+  margin-bottom: 0.4em;
+  box-shadow: 0 2px 12px 0 rgba(139,92,246,0.04);
+}
+
+#parameter-assessment .ai-highlight {
+  padding: 2.5px 7px;
+  border-radius: 5px;
+  background: linear-gradient(90deg, var(--ai-accent, #40E0D0) 10%, var(--ai-processing, #8B5CF6) 100%);
+  color: white;
+  font-size: 1em;
+  font-weight: 700;
+  margin: 0 2px;
+}
+
+#parameter-assessment .ai-status {
+  display: inline-block;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.95em;
+  font-weight: 700;
+  margin: 0.4em 0;
+  padding: 3.5px 13px;
+  border-radius: 20px;
+  box-shadow: 0 0 6px var(--ai-accent-glow, #40E0D044);
+}
+#parameter-assessment .ai-status.healthy {
+  background: rgba(0, 178, 89, 0.1);
+  color: #00A650;
+  border-left: 5px solid #00A650;
+}
+#parameter-assessment .ai-status.warning {
+  background: rgba(255, 193, 7, 0.14);
+  color: #FFC107;
+  border-left: 5px solid #FFC107;
+}
+#parameter-assessment .ai-status.critical {
+  background: rgba(255, 58, 58, 0.11);
+  color: #FF3A3A;
+  border-left: 5px solid #FF3A3A;
+}
+
+/* Subtle hover highlighting in sidebar */
+#parameter-sidebar.active {
+  box-shadow: -12px 0 38px rgba(64, 224, 208, 0.12), 0 1.5px 12px 0 rgba(139, 92, 246, 0.10);
+  border-left: 3px solid var(--ai-processing, #8B5CF6);
+  background: linear-gradient(120deg, #fff 80%, #D6BCFA 100%);
+}
+
+@media (max-width: 900px) {
+  #parameter-sidebar.active {
+    width: 98vw !important;
   }
 }
