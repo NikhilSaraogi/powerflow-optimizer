@@ -4,91 +4,152 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Heater Parameter Details</title>
+    <title>Heater Parameter Performance</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="parameterPerformance.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@2.1.0/dist/chartjs-plugin-annotation.min.js"></script>
 </head>
 <body class="bg-gray-50 min-h-screen">
-    <!-- Status Summary Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 p-6">
-        <div class="bg-white rounded-lg shadow-md p-4 border-l-4 border-adani-green ai-enhanced-card">
-            <h3 class="text-sm font-medium text-gray-500">Eco Inlet Temperature</h3>
-            <div class="mt-2 flex justify-between items-baseline">
-                <p class="text-2xl font-semibold text-adani-navy">328.5°C</p>
-                <span class="status-healthy px-2 py-1 rounded-full text-xs">Healthy</span>
+    <!-- Header -->
+    <header class="bg-adani-blue text-white p-4 flex justify-between items-center shadow-md">
+        <div class="flex items-center">
+            <button id="sidebar-toggle" class="mr-4 focus:outline-none">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+            </button>
+            <img src="https://www.adanipower.com/-/media/Project/Power/Header-Footer/logo.png" alt="Adani Power Logo" class="h-8 mr-3">
+            <div>
+                <h1 class="text-xl font-bold">Heater Parameter Performance</h1>
+                <div class="text-sm opacity-80">Mundra Power Plant - Unit 5</div>
             </div>
-            <div class="ai-scan-overlay"></div>
         </div>
-        <div class="bg-white rounded-lg shadow-md p-4 border-l-4 border-adani-blue ai-enhanced-card">
-            <h3 class="text-sm font-medium text-gray-500">Current Load</h3>
-            <div class="mt-2 flex justify-between items-baseline">
-                <p class="text-2xl font-semibold text-adani-navy">560 MW</p>
-                <span class="status-healthy px-2 py-1 rounded-full text-xs">Healthy</span>
-            </div>
-            <div class="ai-scan-overlay"></div>
+        <div class="text-right">
+            <div class="text-sm opacity-80">Current Load: 560 MW</div>
+            <div class="text-sm opacity-80">Inlet Temperature: 328.5°C</div>
         </div>
-        <div class="bg-white rounded-lg shadow-md p-4 border-l-4 border-adani-yellow ai-enhanced-card">
-            <h3 class="text-sm font-medium text-gray-500">Header Pressure</h3>
-            <div class="mt-2 flex justify-between items-baseline">
-                <p class="text-2xl font-semibold text-adani-navy">16.8 Mpa</p>
-                <span class="status-warning px-2 py-1 rounded-full text-xs">Warning</span>
-            </div>
-            <div class="ai-scan-overlay"></div>
-        </div>
-        <div class="bg-white rounded-lg shadow-md p-4 border-l-4 border-adani-yellow ai-enhanced-card">
-            <h3 class="text-sm font-medium text-gray-500">Status Summary</h3>
-            <div class="grid grid-cols-3 gap-2 mt-2">
-                <div class="text-center">
-                    <span class="text-xl font-bold text-red-600" id="critical-count">0</span>
-                    <p class="text-xs text-gray-500">Critical</p>
-                </div>
-                <div class="text-center">
-                    <span class="text-xl font-bold text-yellow-500" id="warning-count">0</span>
-                    <p class="text-xs text-gray-500">Warning</p>
-                </div>
-                <div class="text-center">
-                    <span class="text-xl font-bold text-green-500" id="healthy-count">0</span>
-                    <p class="text-xs text-gray-500">Healthy</p>
-                </div>
-            </div>
-            <div class="ai-scan-overlay"></div>
-        </div>
-    </div>
+    </header>
 
-    <div class="p-6">
-        <div class="bg-white rounded-lg shadow-md p-6 mb-6 ai-enhanced-card">
-            <h2 class="text-xl font-bold text-adani-navy mb-4">HP Heater Parameters</h2>
-            <p class="text-sm text-gray-500 mb-4">Drag and drop parameters to reorder them. Click on any parameter to see detailed analysis.</p>
-            
-            <div class="mb-4">
-                <label for="heater-selector" class="block text-sm font-medium text-gray-700 mb-2">Select Heater:</label>
-                <select id="heater-selector" class="rounded border border-gray-300 p-2 w-full md:w-64">
-                    <option value="1">HP Heater 1</option>
-                    <option value="2">HP Heater 2</option>
-                    <option value="3">HP Heater 3</option>
-                </select>
-            </div>
-            
-            <div class="ai-confidence mb-4">
-                <span class="ai-confidence-label">AI Analysis Confidence:</span>
-                <div class="ai-confidence-bar">
-                    <div class="ai-confidence-fill" style="width: 92%"></div>
-                </div>
-            </div>
-            
-            <div class="ai-analysis-summary mb-2 text-sm text-adani-navy">
-                <span class="ai-typewriter">AI is monitoring parameters in real-time. Analyzing 15 parameters for optimal performance.</span>
-            </div>
-        </div>
-    </div>
-
-    <!-- Main Content -->
     <div class="flex">
-        <!-- Parameter Cards Container -->
-        <main class="flex-1 p-6">
+        <!-- Sidebar -->
+        <aside id="sidebar" class="bg-adani-navy text-white fixed h-full transition-all duration-300 shadow-lg w-64">
+            <nav class="p-4">
+                <ul class="space-y-2">
+                    <li>
+                        <a href="index.html" class="block p-2 rounded hover:bg-white hover:bg-opacity-10 flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 sidebar-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                            </svg>
+                            <span class="sidebar-text">Dashboard</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="parameterPerformance.html" class="block p-2 rounded bg-white bg-opacity-20 flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 sidebar-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                            </svg>
+                            <span class="sidebar-text">Parameter Performance</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="reports.html" class="block p-2 rounded hover:bg-white hover:bg-opacity-10 flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 sidebar-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                            <span class="sidebar-text">Reports</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="block p-2 rounded hover:bg-white hover:bg-opacity-10 flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 sidebar-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                            <span class="sidebar-text">Settings</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main id="main-content" class="flex-1 p-6 ml-64 transition-all duration-300">
+            <!-- Status Summary Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                <div class="bg-white rounded-lg shadow-md p-4 border-l-4 border-adani-green ai-enhanced-card">
+                    <h3 class="text-sm font-medium text-gray-500">Eco Inlet Temperature</h3>
+                    <div class="mt-2 flex justify-between items-baseline">
+                        <p class="text-2xl font-semibold text-adani-navy">328.5°C</p>
+                        <span class="status-indicator healthy px-2 py-1 rounded-full text-xs">Healthy</span>
+                    </div>
+                    <div class="ai-scan-overlay"></div>
+                </div>
+                <div class="bg-white rounded-lg shadow-md p-4 border-l-4 border-adani-blue ai-enhanced-card">
+                    <h3 class="text-sm font-medium text-gray-500">Current Load</h3>
+                    <div class="mt-2 flex justify-between items-baseline">
+                        <p class="text-2xl font-semibold text-adani-navy">560 MW</p>
+                        <span class="status-indicator healthy px-2 py-1 rounded-full text-xs">Healthy</span>
+                    </div>
+                    <div class="ai-scan-overlay"></div>
+                </div>
+                <div class="bg-white rounded-lg shadow-md p-4 border-l-4 border-adani-yellow ai-enhanced-card">
+                    <h3 class="text-sm font-medium text-gray-500">Header Pressure</h3>
+                    <div class="mt-2 flex justify-between items-baseline">
+                        <p class="text-2xl font-semibold text-adani-navy">16.8 Mpa</p>
+                        <span class="status-indicator warning px-2 py-1 rounded-full text-xs">Warning</span>
+                    </div>
+                    <div class="ai-scan-overlay"></div>
+                </div>
+                <div class="bg-white rounded-lg shadow-md p-4 border-l-4 border-adani-yellow ai-enhanced-card">
+                    <h3 class="text-sm font-medium text-gray-500">Status Summary</h3>
+                    <div class="grid grid-cols-3 gap-2 mt-2">
+                        <div class="text-center">
+                            <span class="text-xl font-bold text-red-600" id="critical-count">0</span>
+                            <p class="text-xs text-gray-500">Critical</p>
+                        </div>
+                        <div class="text-center">
+                            <span class="text-xl font-bold text-yellow-500" id="warning-count">0</span>
+                            <p class="text-xs text-gray-500">Warning</p>
+                        </div>
+                        <div class="text-center">
+                            <span class="text-xl font-bold text-green-500" id="healthy-count">0</span>
+                            <p class="text-xs text-gray-500">Healthy</p>
+                        </div>
+                    </div>
+                    <div class="ai-scan-overlay"></div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md p-6 mb-6 ai-enhanced-card">
+                <h2 class="text-xl font-bold text-adani-navy mb-4">HP Heater Parameters</h2>
+                <p class="text-sm text-gray-500 mb-4">Drag and drop parameters to reorder them. Click on any parameter to see detailed analysis.</p>
+                
+                <div class="mb-4">
+                    <label for="heater-selector" class="block text-sm font-medium text-gray-700 mb-2">Select Heater:</label>
+                    <select id="heater-selector" class="rounded border border-gray-300 p-2 w-full md:w-64">
+                        <option value="1">HP Heater 1</option>
+                        <option value="2">HP Heater 2</option>
+                        <option value="3">HP Heater 3</option>
+                    </select>
+                </div>
+                
+                <div class="ai-confidence mb-4">
+                    <span class="ai-confidence-label">AI Analysis Confidence:</span>
+                    <div class="ai-confidence-bar">
+                        <div class="ai-confidence-fill" style="width: 92%"></div>
+                    </div>
+                </div>
+                
+                <div class="ai-analysis-summary mb-2 text-sm text-adani-navy">
+                    <span class="ai-typewriter">AI is monitoring parameters in real-time. Analyzing 15 parameters for optimal performance.</span>
+                </div>
+            </div>
+
+            <!-- Parameter Cards Container -->
             <div id="parameter-cards" class="grid grid-cols-1 md:grid-cols-3 gap-6 sortable-container">
-                <!-- Cards will be populated by JavaScript -->
+                <!-- Will be populated by JavaScript -->
             </div>
             
             <!-- Comprehensive Report Section -->
@@ -123,20 +184,21 @@
                         <h3 class="text-lg font-semibold text-adani-navy mb-3">AI Recommendations</h3>
                         <ul class="space-y-2 text-sm text-gray-600" id="ai-recommendations">
                             <li class="flex items-start">
-                                <span class="text-adani-green mr-2">•</span>
-                                <p>Monitor increasing DCA trend in HP Heater 2. Currently at 7.3°C (critical).</p>
+                                <span class="text-adani-red mr-2">•</span>
+                                <p>Monitor increasing DCA trend in HP Heater 1. Currently at 7.3°C (critical).</p>
                             </li>
                             <li class="flex items-start">
                                 <span class="text-adani-yellow mr-2">•</span>
-                                <p>Consider optimizing level in HP Heater 2 to improve heat transfer rate.</p>
+                                <p>Consider optimizing level in HP Heater 3 to improve heat transfer rate.</p>
                             </li>
                             <li class="flex items-start">
-                                <span class="text-adani-blue mr-2">•</span>
+                                <span class="text-adani-green mr-2">•</span>
                                 <p>All heaters maintaining proper TTD values within acceptable range.</p>
                             </li>
                         </ul>
                     </div>
                 </div>
+                <!-- Parameter summary table will be added here by JavaScript -->
             </div>
         </main>
 
@@ -185,7 +247,6 @@
                 <div class="mt-6">
                     <h3 class="text-lg font-semibold mb-3">Parameter Analysis</h3>
                     <div class="p-4 border border-gray-200 rounded-lg bg-gray-50">
-                        <h4 class="font-medium text-sm mb-2">Current Value Assessment:</h4>
                         <div id="parameter-assessment" class="text-sm">
                             <!-- Will be populated by JavaScript -->
                         </div>
