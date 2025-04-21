@@ -3,209 +3,246 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=1200, initial-scale=1.0">
     <title>Heater Parameter Performance</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="parameterPerformance.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@2.1.0/dist/chartjs-plugin-annotation.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/lucide-static@0.462.0/font/lucide.css">
+    <style>
+      .adani-header-img { height: 2.2rem; }
+      .sidebar-transition { transition: width 0.3s; }
+      .sidebar-collapsed { width: 64px !important; }
+      .sidebar-expanded { width: 256px !important; }
+      .sidebar-icon { min-width: 20px; }
+      .sidebar-hide-label { opacity: 0!important; width: 0!important; }
+      .sidebar-show-label { opacity: 1!important; width: auto!important; }
+      .notification-dot {
+        position: absolute; top: -2px; right: -2px;
+        background: #ea384c;
+        color: #fff;
+        border-radius: 50%;
+        font-size: 11px;
+        height: 16px;
+        width: 16px;
+        display: flex;align-items: center;justify-content: center;
+        z-index: 9;
+        border: 2px solid #fff;
+        font-weight: 600;
+      }
+      .sidebar-menu-link.active {
+        background: #0046ad;
+      }
+      /* Responsive: stack sidebar as drawer */
+      @media (max-width: 960px) {
+        .custom-sidebar { position: fixed; top: 58px; left: 0; height: calc(100vh - 58px); z-index:80; }
+        .main-content { margin-left: 0!important; }
+        .sidebar-expanded, .sidebar-collapsed { width:200px!important; }
+      }
+      /* Sidebar improved look */
+    </style>
 </head>
 <body class="bg-gray-50 min-h-screen">
-    <!-- Header -->
-    <header class="bg-adani-blue text-white p-4 flex justify-between items-center shadow-md">
-        <div class="flex items-center">
-            <button id="sidebar-toggle" class="mr-4 focus:outline-none">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-            </button>
-            <img src="https://www.adanipower.com/-/media/Project/Power/Header-Footer/logo.png" alt="Adani Power Logo" class="h-8 mr-3">
-            <div>
-                <h1 class="text-xl font-bold">Heater Parameter Performance</h1>
-                <div class="text-sm opacity-80">Mundra Power Plant - Unit 5</div>
-            </div>
+  <!-- HEADER (React style, live date/time via JS) -->
+  <header id="custom-header" class="glassmorphism sticky top-0 z-40 flex items-center justify-between px-5 py-3 border-b border-gray-200 shadow" style="background:linear-gradient(92deg,#fff 60%, #e2d1c3 150%)">
+    <div class="flex items-center gap-4">
+      <button id="sidebar-toggle-btn" class="p-2 rounded-full hover:bg-gray-100 cursor-pointer transition-colors" aria-label="Toggle sidebar">
+        <i class="lucide lucide-menu text-adani-navy" style="font-size:1.5em;"></i>
+      </button>
+      <div class="flex items-center gap-2">
+        <img src="https://www.adanipower.com/-/media/Project/Power/Header-Footer/logo.png"
+             alt="Adani Power Logo"
+             class="adani-header-img mr-2" />
+        <div>
+          <h1 class="font-bold text-adani-blue text-lg leading-tight">Adani Power</h1>
+          <p class="text-xs text-adani-navy">HP Heater Optimization</p>
         </div>
-        <div class="text-right">
-            <div class="text-sm opacity-80" id="header-load">Current Load: -- MW</div>
-            <div class="text-sm opacity-80" id="header-eco-temp">Inlet Temperature: -- °C</div>
-        </div>
-    </header>
-
-    <div class="flex">
-        <!-- Sidebar -->
-        <aside id="sidebar" class="bg-adani-navy text-white fixed h-full transition-all duration-300 shadow-lg w-64">
-            <nav class="p-4">
-                <ul class="space-y-2">
-                    <li>
-                        <a href="index.html" class="block p-2 rounded hover:bg-white hover:bg-opacity-10 flex items-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 sidebar-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                            </svg>
-                            <span class="sidebar-text">Dashboard</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="parameterPerformance.html" class="block p-2 rounded bg-white bg-opacity-20 flex items-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 sidebar-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                            </svg>
-                            <span class="sidebar-text">Parameter Performance</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="reports.html" class="block p-2 rounded hover:bg-white hover:bg-opacity-10 flex items-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 sidebar-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                            </svg>
-                            <span class="sidebar-text">Reports</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" class="block p-2 rounded hover:bg-white hover:bg-opacity-10 flex items-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 sidebar-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                            </svg>
-                            <span class="sidebar-text">Settings</span>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-        </aside>
-
-        <!-- Main Content -->
-        <main id="main-content" class="flex-1 p-6 ml-64 transition-all duration-300">
-            <!-- Status Summary Cards -->
-            <div class="status-summary-grid mb-6">
-                <div class="status-summary-card critical">
-                    <div class="count" id="critical-summary">0</div>
-                    <div class="label">Critical</div>
-                </div>
-                <div class="status-summary-card warning">
-                    <div class="count" id="warning-summary">0</div>
-                    <div class="label">Warning</div>
-                </div>
-                <div class="status-summary-card healthy">
-                    <div class="count" id="healthy-summary">0</div>
-                    <div class="label">Healthy</div>
-                </div>
-            </div>
-            
-            <!-- Top bar with key metrics -->
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6" id="top-metrics">
-                <!-- Will be populated by JavaScript -->
-            </div>
-            
-            <!-- Parameter Cards -->
-            <div class="parameter-cards-grid" id="parameter-cards">
-                <!-- Will be populated by JavaScript -->
-            </div>
-            
-            <!-- Parameter Summary Table Section -->
-            <div class="summary-section">
-                <div class="summary-header">
-                    <h2 class="summary-title">Parameter Summary</h2>
-                    <button id="export-data" class="export-button">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                        </svg>
-                        Export Report
-                    </button>
-                </div>
-                <div class="overflow-x-auto">
-                    <table class="parameter-table">
-                        <thead>
-                            <tr>
-                                <th>Description</th>
-                                <th>Tag</th>
-                                <th>Status</th>
-                                <th>Load</th>
-                                <th>Current Value</th>
-                                <th>Design Value</th>
-                                <th>Unit</th>
-                            </tr>
-                        </thead>
-                        <tbody id="parameter-summary-table">
-                            <!-- Will be populated by JavaScript -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </main>
-
-        <!-- Parameter Details Sidebar -->
-        <aside id="parameter-sidebar">
-            <div class="p-6">
-                <div class="parameter-detail-header">
-                    <div>
-                        <div class="parameter-detail-name" id="parameter-detail-name">Parameter Details</div>
-                        <div class="parameter-detail-tag" id="parameter-detail-tag"></div>
-                    </div>
-                    <button class="parameter-detail-close" id="close-sidebar">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                    </button>
-                </div>
-
-                <div class="parameter-detail-metrics">
-                    <div class="parameter-detail-metric">
-                        <div class="metric-label">Current Value</div>
-                        <div class="metric-value" id="detail-current-value">--</div>
-                    </div>
-                    <div class="parameter-detail-metric">
-                        <div class="metric-label">Design Value</div>
-                        <div class="metric-value" id="detail-design-value">--</div>
-                    </div>
-                    <div class="parameter-detail-metric">
-                        <div class="metric-label">Status</div>
-                        <div id="detail-status">--</div>
-                    </div>
-                </div>
-
-                <!-- Parameter Graph -->
-                <div class="mb-6">
-                    <h3 class="text-lg font-semibold mb-3">Performance Trend</h3>
-                    <div class="chart-container" style="height: 300px;">
-                        <canvas id="parameter-chart"></canvas>
-                    </div>
-                </div>
-
-                <!-- Benchmark Table -->
-                <div class="overflow-x-auto">
-                    <h3 class="text-lg font-semibold mb-3">Benchmark Values</h3>
-                    <table class="benchmark-table w-full">
-                        <thead>
-                            <tr>
-                                <th>Load (MW)</th>
-                                <th>Sample</th>
-                                <th>Q1 (25%)</th>
-                                <th>Median</th>
-                                <th>Q3 (75%)</th>
-                                <th>Mean</th>
-                                <th>SD</th>
-                            </tr>
-                        </thead>
-                        <tbody id="benchmark-table">
-                            <!-- Will be populated by JavaScript -->
-                        </tbody>
-                    </table>
-                </div>
-                
-                <!-- IQR Analysis -->
-                <div class="mt-6">
-                    <h3 class="text-lg font-semibold mb-3">Parameter Analysis</h3>
-                    <div class="p-4 border border-gray-200 rounded-lg bg-gray-50">
-                        <div id="parameter-assessment" class="text-sm">
-                            <!-- Will be populated by JavaScript -->
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </aside>
+      </div>
     </div>
+    <div class="flex items-center gap-6">
+      <div class="flex items-center gap-2 text-sm text-adani-navy">
+        <i class="lucide lucide-calendar" style="font-size:1.1em;"></i>
+        <span id="header-date"></span>
+      </div>
+      <div class="flex items-center gap-2 text-sm text-adani-navy">
+        <span id="header-time"></span>
+      </div>
+      <div class="flex items-center gap-2 text-sm text-adani-navy">
+        <i class="lucide lucide-map-pin" style="font-size:1.1em;"></i>
+        <span>Mundra, Gujarat</span>
+      </div>
+      <div class="relative">
+        <i class="lucide lucide-bell hover:text-adani-blue cursor-pointer text-adani-navy" style="font-size:1.3em;"></i>
+        <span class="notification-dot" id="head-notification-dot">3</span>
+      </div>
+    </div>
+  </header>
 
-    <script src="parameterPerformance.js"></script>
+  <div class="flex" style="min-height:100vh;">
+    <!-- SIDEBAR (React style navigation) -->
+    <aside id="custom-sidebar" class="custom-sidebar sidebar-transition sidebar-expanded bg-adani-navy text-white fixed h-full z-30">
+      <div class="flex flex-col h-full">
+        <div class="p-5 pb-2 border-b border-adani-navy-light">
+          <h2 class="text-xl font-bold transition-all duration-300 whitespace-nowrap overflow-hidden sidebar-show-label" id="sidebar-title">
+            Heater Optimization
+          </h2>
+        </div>
+        <nav class="flex-1 py-4 px-2">
+          <ul class="space-y-2">
+            <li>
+              <a href="index.html" class="sidebar-menu-link flex items-center p-3 rounded-lg transition-all hover:bg-adani-blue/60" id="link-dashboard">
+                <i class="lucide lucide-home sidebar-icon"></i>
+                <span class="ml-3 sidebar-show-label">Dashboard</span>
+              </a>
+            </li>
+            <li>
+              <a href="analytics.html" class="sidebar-menu-link flex items-center p-3 rounded-lg transition-all hover:bg-adani-blue/60" id="link-analytics">
+                <i class="lucide lucide-line-chart sidebar-icon"></i>
+                <span class="ml-3 sidebar-show-label">Analytics</span>
+              </a>
+            </li>
+            <li>
+              <a href="reports.html" class="sidebar-menu-link flex items-center p-3 rounded-lg transition-all hover:bg-adani-blue/60" id="link-reports">
+                <i class="lucide lucide-file-text sidebar-icon"></i>
+                <span class="ml-3 sidebar-show-label">Reports</span>
+              </a>
+            </li>
+            <li>
+              <a href="feedback.html" class="sidebar-menu-link flex items-center p-3 rounded-lg transition-all hover:bg-adani-blue/60" id="link-feedback">
+                <i class="lucide lucide-message-square-text sidebar-icon"></i>
+                <span class="ml-3 sidebar-show-label">Feedback</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+        <div class="p-4 border-t border-adani-navy-light">
+          <a href="#" class="sidebar-menu-link flex items-center p-3 rounded-lg transition-all hover:bg-adani-blue/60" id="link-settings">
+            <i class="lucide lucide-settings sidebar-icon"></i>
+            <span class="ml-3 sidebar-show-label">Settings</span>
+          </a>
+        </div>
+      </div>
+    </aside>
+    <!-- MAIN CONTENT -->
+    <main id="main-content" class="flex-1 p-6 transition-all duration-300 ml-64" style="margin-left:256px;">
+      <!-- Status Summary Cards -->
+      <div class="status-summary-grid mb-6">
+        <div class="status-summary-card critical">
+          <div class="count" id="critical-summary"></div>
+          <div class="label">Critical</div>
+        </div>
+        <div class="status-summary-card warning">
+          <div class="count" id="warning-summary"></div>
+          <div class="label">Warning</div>
+        </div>
+        <div class="status-summary-card healthy">
+          <div class="count" id="healthy-summary"></div>
+          <div class="label">Healthy</div>
+        </div>
+      </div>
+      <!-- Top bar with key metrics -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6" id="top-metrics">
+        <!-- Will be populated by JavaScript -->
+      </div>
+      <!-- Parameter Cards -->
+      <div class="parameter-cards-grid" id="parameter-cards">
+        <!-- Will be populated by JavaScript -->
+      </div>
+      <!-- Parameter Summary Table Section -->
+      <div class="summary-section">
+        <div class="summary-header">
+          <h2 class="summary-title">Parameter Summary</h2>
+          <button id="export-data" class="export-button">
+            <i class="lucide lucide-download" style="font-size:1.1em;"></i>
+            Export Report
+          </button>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="parameter-table">
+            <thead>
+              <tr>
+                <th>Description</th>
+                <th>Tag</th>
+                <th>Status</th>
+                <th>Load</th>
+                <th>Current Value</th>
+                <th>Design Value</th>
+                <th>Unit</th>
+              </tr>
+            </thead>
+            <tbody id="parameter-summary-table">
+              <!-- Will be populated by JavaScript -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+
+    <!-- PARAMETER DETAILS SIDEBAR (Right) -->
+    <aside id="parameter-sidebar" class="">
+      <div class="p-6">
+        <div class="parameter-detail-header flex justify-between items-center mb-6">
+          <div>
+            <div class="parameter-detail-name" id="parameter-detail-name">Parameter Details</div>
+            <div class="parameter-detail-tag" id="parameter-detail-tag"></div>
+          </div>
+          <button class="parameter-detail-close" id="close-sidebar" style="background:none;border:none;"><i class="lucide lucide-x" style="font-size:2.1em;color:#888"></i></button>
+        </div>
+        <div class="parameter-detail-metrics mb-5 flex gap-5">
+          <div class="parameter-detail-metric">
+            <div class="metric-label">Current Value</div>
+            <div class="metric-value" id="detail-current-value">--</div>
+          </div>
+          <div class="parameter-detail-metric">
+            <div class="metric-label">Design Value</div>
+            <div class="metric-value" id="detail-design-value">--</div>
+          </div>
+          <div class="parameter-detail-metric">
+            <div class="metric-label">Status</div>
+            <div id="detail-status">--</div>
+          </div>
+        </div>
+        <!-- Parameter Graph -->
+        <div class="mb-6">
+          <h3 class="text-lg font-semibold mb-3">Performance Trend</h3>
+          <div class="chart-container" style="height: 300px;">
+            <canvas id="parameter-chart"></canvas>
+          </div>
+        </div>
+        <!-- Benchmark Table -->
+        <div class="overflow-x-auto">
+          <h3 class="text-lg font-semibold mb-3">Benchmark Values</h3>
+          <table class="benchmark-table w-full">
+            <thead>
+              <tr>
+                <th>Load (MW)</th>
+                <th>Sample</th>
+                <th>Q1 (25%)</th>
+                <th>Median</th>
+                <th>Q3 (75%)</th>
+                <th>Mean</th>
+                <th>SD</th>
+              </tr>
+            </thead>
+            <tbody id="benchmark-table">
+              <!-- Will be populated by JavaScript -->
+            </tbody>
+          </table>
+        </div>
+        <!-- IQR Analysis -->
+        <div class="mt-6 mb-1">
+          <h3 class="text-lg font-semibold mb-3">Parameter Analysis</h3>
+          <div id="parameter-assessment" class="text-sm">
+            <!-- Populated by JS and uses the new, improved CSS box -->
+          </div>
+        </div>
+      </div>
+    </aside>
+  </div>
+  <script src="sidebar.js"></script>
+  <script src="header.js"></script>
+  <script src="parameterPerformance.js"></script>
 </body>
 </html>
