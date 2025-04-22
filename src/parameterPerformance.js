@@ -1,4 +1,3 @@
-
 document.addEventListener('DOMContentLoaded', function() {
     // Parameter data
     const heaterParameters = [
@@ -388,26 +387,39 @@ document.addEventListener('DOMContentLoaded', function() {
         
         if (parameter.status === 'healthy') {
             assessmentText = `
-                <p class="mb-2"><strong>Status: Healthy</strong></p>
-                <p>Current value of ${parameter.value} ${parameter.unit} is within acceptable range for the current load of ${currentLoad} MW.</p>
+                <div class="ai-assessment-title">
+                    <i class="lucide lucide-check-circle-2 ai-icon"></i>
+                    Parameter Analysis
+                </div>
+                <p>Current value of <span class="ai-highlight">${parameter.value} ${parameter.unit}</span> is within acceptable range for the current load of ${currentLoad} MW.</p>
                 <p class="mt-2">The parameter is ${isWithinIQR ? 'within' : 'outside'} the IQR (${closestBenchmark.q1} - ${closestBenchmark.q3} ${parameter.unit}) and ${isWithinOneSD ? 'within' : 'outside'} one standard deviation of the mean.</p>
+                <div class="ai-insight">This parameter is performing as expected. No action required at this time.</div>
                 <p class="mt-2">Deviation from design value: ${deviationFromDesign}%</p>
+                <span class="ai-status healthy">Healthy</span>
             `;
         } else if (parameter.status === 'warning') {
             assessmentText = `
-                <p class="mb-2"><strong>Status: Warning</strong></p>
-                <p>Current value of ${parameter.value} ${parameter.unit} is slightly outside the optimal range for the current load of ${currentLoad} MW.</p>
+                <div class="ai-assessment-title">
+                    <i class="lucide lucide-alert-triangle ai-icon"></i>
+                    Parameter Analysis
+                </div>
+                <p>Current value of <span class="ai-highlight">${parameter.value} ${parameter.unit}</span> is slightly outside the optimal range for the current load of ${currentLoad} MW.</p>
                 <p class="mt-2">The parameter is ${isWithinIQR ? 'within' : 'outside'} the IQR (${closestBenchmark.q1} - ${closestBenchmark.q3} ${parameter.unit}) but deviates from expected performance.</p>
-                <p class="mt-2">Recommended action: Monitor this parameter closely for further degradation.</p>
+                <div class="ai-insight">Recommended action: Monitor this parameter closely for further degradation. Consider checking for early signs of fouling or control issues.</div>
                 <p class="mt-2">Deviation from design value: ${deviationFromDesign}%</p>
+                <span class="ai-status warning">Warning</span>
             `;
         } else if (parameter.status === 'critical') {
             assessmentText = `
-                <p class="mb-2"><strong>Status: Critical</strong></p>
-                <p>Current value of ${parameter.value} ${parameter.unit} is significantly outside the acceptable range for the current load of ${currentLoad} MW.</p>
+                <div class="ai-assessment-title">
+                    <i class="lucide lucide-alert-circle ai-icon"></i>
+                    Parameter Analysis
+                </div>
+                <p>Current value of <span class="ai-highlight">${parameter.value} ${parameter.unit}</span> is significantly outside the acceptable range for the current load of ${currentLoad} MW.</p>
                 <p class="mt-2">The parameter is outside the IQR (${closestBenchmark.q1} - ${closestBenchmark.q3} ${parameter.unit}) and deviates from expected performance.</p>
-                <p class="mt-2">Recommended action: Immediate attention required. Check for potential issues with heater performance, tube fouling, or control system problems.</p>
+                <div class="ai-insight">Immediate attention required. Check for potential issues with heater performance, tube fouling, or control system problems. Schedule inspection at next opportunity.</div>
                 <p class="mt-2">Deviation from design value: ${deviationFromDesign}%</p>
+                <span class="ai-status critical">Critical</span>
             `;
         }
         
